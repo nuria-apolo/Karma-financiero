@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
-import { BLOG_POSTS } from "@/lib/blog-posts";
+import { blogPosts } from "@/lib/blog-posts";
 
 const BASE_URL = "https://pixel-pretty-build.lovable.app";
 
@@ -17,7 +17,7 @@ export const Route = createFileRoute("/sitemap.xml")({
         const entries: SitemapEntry[] = [
           { path: "/", changefreq: "weekly", priority: "1.0" },
           { path: "/blog", changefreq: "weekly", priority: "0.8" },
-          ...BLOG_POSTS.map((p) => ({
+          ...blogPosts.map((p) => ({
             path: `/blog/${p.slug}`,
             changefreq: "monthly" as const,
             priority: "0.6",
