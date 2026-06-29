@@ -12,16 +12,16 @@
   --text-xl: clamp(1.5rem, 1.2rem + 1.25vw, 2.25rem);
   --text-2xl: clamp(2rem, 1.2rem + 2.5vw, 3.5rem);
 
-  --bg: #f3f1ec;
+  --bg: #f1f3f4;
   --surface: #fbfaf7;
-  --surface-2: #eef3e7;
-  --surface-3: #f5f09c;
-  --surface-4: #dbe3ee;
+  --surface-2: #c3d6b6;
+  --surface-3: #e6ec84;
+  --surface-4: #cbd6df;
   --text: #161616;
   --muted: #5f625c;
   --border-c: rgba(22, 22, 22, 0.08);
-  --accent: #b9cfad;
-  --accent-2: #dbe3ee;
+  --accent: #c3d6b6;
+  --accent-2: #cbd6df;
   --radius: 1.75rem;
   --shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
   --font-display: "Cormorant Garamond", serif;
@@ -82,7 +82,7 @@ a {
   top: 0;
   z-index: 20;
   backdrop-filter: blur(12px);
-  background: rgba(243, 241, 236, 0.74);
+  background: rgba(241, 243, 244, 0.74);
   border-bottom: 1px solid rgba(22, 22, 22, 0.05);
 }
 .nav {
@@ -183,7 +183,7 @@ h2 {
   gap: 0.8rem;
 }
 .hero-card {
-  background: linear-gradient(180deg, #eef3e7 0%, #dbe3ee 100%);
+  background: linear-gradient(180deg, var(--surface-2) 0%, var(--surface-4) 100%);
   padding: 1.5rem;
   display: grid;
   grid-template-rows: auto 1fr auto;
@@ -320,7 +320,7 @@ h2 {
   background: var(--surface);
 }
 .pricing.highlight {
-  background: linear-gradient(135deg, #eef3e7 0%, #fbfaf7 100%);
+  background: linear-gradient(135deg, var(--surface-2) 0%, var(--surface) 100%);
 }
 .price {
   font-family: var(--font-display);
@@ -398,4 +398,13 @@ h2 {
   .hero-actions .btn {
     width: 100%;
   }
+}
+
+.brand-logo {
+  height: 28px;
+  width: auto;
+  display: block;
+}
+@media (max-width: 640px) {
+  .brand-logo { height: 24px; }
 }

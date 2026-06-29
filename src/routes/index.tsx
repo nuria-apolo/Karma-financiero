@@ -1,4 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
+import karmaLogo from "@/assets/karma-logo.svg.asset.json";
+import karmaIcon from "@/assets/karma-icon.png.asset.json";
+
 
 const APP_URL = "https://app.karmafinanciero.com/";
 
@@ -27,7 +30,9 @@ function Landing() {
     <>
       <header className="site-header">
         <div className="container-x nav">
-          <a href="#top" className="brand">Karma Financiero</a>
+          <a href="#top" className="brand" aria-label="Karma Financiero">
+            <img src={karmaLogo.url} alt="Karma Financiero" className="brand-logo" />
+          </a>
           <nav className="nav-links" aria-label="Principal">
             <a href="#como-funciona">Cómo funciona</a>
             <a href="#beneficios">Beneficios</a>
