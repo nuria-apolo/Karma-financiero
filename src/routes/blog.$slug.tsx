@@ -20,13 +20,15 @@ export const Route = createFileRoute("/blog/$slug")({
         { property: "og:title", content: post.title },
         { property: "og:description", content: post.excerpt },
         { property: "og:type", content: "article" },
+        { property: "og:image", content: post.cover },
+        { property: "twitter:image", content: post.cover },
       ],
     };
   },
   notFoundComponent: () => (
     <div className="container-x section">
       <h1>Artículo no encontrado</h1>
-      <p className="sublead" style={{ marginTop: "1rem" }}>
+      <p style={{ marginTop: "1rem", color: "var(--muted)" }}>
         Puede que el enlace esté roto o el post haya cambiado de sitio.
       </p>
       <Link to="/blog" className="btn btn-soft" style={{ marginTop: "1.5rem" }}>Volver al blog</Link>
@@ -42,68 +44,79 @@ function BlogPostPage() {
   return (
     <>
       <header className="site-header">
-        <div className="container-x nav">
-          <Link to="/" className="brand" aria-label="Karma Financiero">
+        <div className="nav-pill">
+          <Link to="/" aria-label="Karma Financiero">
             <img src={karmaLogo.url} alt="Karma Financiero" className="brand-logo" />
           </Link>
           <nav className="nav-links" aria-label="Principal">
-            <Link to="/" hash="como-funciona">Cómo funciona</Link>
+            <Link to="/" hash="features">Funciones</Link>
             <Link to="/" hash="beneficios">Beneficios</Link>
             <Link to="/" hash="planes">Planes</Link>
             <Link to="/blog">Blog</Link>
           </nav>
-          <div className="btns">
-            <a className="btn btn-soft" href={APP_URL} target="_blank" rel="noopener noreferrer">Ver app</a>
-            <a className="btn btn-primary" href={APP_URL} target="_blank" rel="noopener noreferrer">Empieza gratis</a>
-          </div>
+          <a className="nav-cta" href={APP_URL} target="_blank" rel="noopener noreferrer">
+            Probar gratis
+          </a>
         </div>
       </header>
 
-      <main>
-        <article className="section">
-          <div className="container-x" style={{ maxWidth: "760px" }}>
-            <div className="eyebrow"><span className="dot"></span> {post.tag}</div>
-            <h1 style={{ marginTop: "1.2rem", fontSize: "clamp(2.4rem, 5vw, 4.2rem)", maxWidth: "20ch" }}>
-              {post.title}
-            </h1>
-            <p className="sublead" style={{ marginTop: "1.2rem" }}>
-              {post.date} · {post.readingTime} de lectura
-            </p>
+      <main className="post-page">
+        <div className="container-x" style={{ marginBottom: "1.5rem" }}>
+          <Link to="/blog" className="back-link">← Volver al diario</Link>
+        </div>
 
-            <div style={{ marginTop: "2.5rem", display: "grid", gap: "1.3rem", fontSize: "var(--text-lg)", lineHeight: 1.65 }}>
-              {post.content.map((para: string, i: number) => (
-                <p key={i}>{para}</p>
-              ))}
-            </div>
+        <div className="post-cover">
+          <img src={post.cover} alt={post.title} width={1600} height={900} />
+          <span className="story-year">{post.year}</span>
+        </div>
 
-            <div className="cta-box" style={{ marginTop: "3rem" }}>
+        <header className="post-head">
+          <span className="eyebrow"><span className="dot" /> {post.tag}</span>
+          <h1>{post.title}</h1>
+          <p className="post-meta">{post.date} · {post.readingTime} de lectura</p>
+        </header>
+
+        <article className="post-content">
+          {post.content.map((para: string, i: number) => (
+            <p key={i}>{para}</p>
+          ))}
+        </article>
+
+        <section className="section">
+          <div className="container-x">
+            <div className="cta-box">
               <h2 style={{ fontSize: "clamp(1.8rem, 3vw, 2.6rem)" }}>Pruébalo en tu hogar</h2>
               <p>Abre Karma Financiero y empieza a llevar las cuentas compartidas con un poco más de calma.</p>
               <a className="btn btn-primary" href={APP_URL} target="_blank" rel="noopener noreferrer">Abrir la app</a>
             </div>
           </div>
-        </article>
+        </section>
 
         {related.length > 0 && (
-          <section className="section" style={{ paddingTop: 0 }}>
-            <div className="container-x">
-              <h2 style={{ fontSize: "clamp(1.8rem, 3vw, 2.6rem)" }}>Sigue leyendo</h2>
-              <div className="feature-grid" style={{ gridTemplateColumns: "repeat(2, 1fr)" }}>
-                {related.map((p) => (
-                  <article key={p.slug} className="panel">
-                    <div className="eyebrow" style={{ marginBottom: "1rem" }}>{p.tag}</div>
-                    <h3 style={{ fontFamily: "var(--font-display)", fontSize: "1.6rem", lineHeight: 1.1, marginBottom: "0.6rem" }}>
-                      {p.title}
-                    </h3>
+          <section className="container-x" style={{ paddingBottom: "5rem" }}>
+            <h2 style={{
+              fontFamily: "var(--font-display)", fontStyle: "italic",
+              fontSize: "clamp(1.8rem, 3vw, 2.6rem)", marginBottom: "1.5rem", textAlign: "center"
+            }}>
+              Sigue leyendo
+            </h2>
+            <div className="story-grid">
+              {related.map((p) => (
+                <Link key={p.slug} to="/blog/$slug" params={{ slug: p.slug }} className="story-card">
+                  <div className="story-cover">
+                    <img src={p.cover} alt={p.title} loading="lazy" width={1024} height={1024} />
+                    <span className="story-year">{p.year}</span>
+                  </div>
+                  <div className="story-body">
+                    <h3>{p.title}</h3>
                     <p>{p.excerpt}</p>
-                    <div style={{ marginTop: "1.2rem" }}>
-                      <Link to="/blog/$slug" params={{ slug: p.slug }} style={{ fontWeight: 600 }}>
-                        Leer →
-                      </Link>
+                    <div className="story-meta">
+                      <span>{p.tag} · {p.readingTime}</span>
+                      <span className="arrow">Leer →</span>
                     </div>
-                  </article>
-                ))}
-              </div>
+                  </div>
+                </Link>
+              ))}
             </div>
           </section>
         )}
