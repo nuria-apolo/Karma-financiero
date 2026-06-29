@@ -45,7 +45,7 @@ function useReveal() {
 function Landing() {
   useReveal();
 
-  const barHeights = [42, 68, 55, 80, 62, 90, 74, 58, 88, 70, 95, 82];
+
 
   return (
     <>
@@ -99,54 +99,69 @@ function Landing() {
           <div className="hero-device-wrap reveal d4">
             <div className="hero-device">
               <div className="device-inner">
-                <aside className="device-side">
-                  <div className="side-brand">
-                    <i /> Karma
+                <div className="app-topbar">
+                  <span className="app-brand">
+                    Karma <i aria-hidden="true">𝄁</i> Financiero
+                  </span>
+                  <div className="app-topbar-actions">
+                    <button type="button" className="icon-btn" aria-label="Actualizar">↻</button>
+                    <button type="button" className="icon-btn" aria-label="Ajustes">⚙</button>
+                    <span className="avatar" aria-hidden="true" />
                   </div>
-                  <div className="side-item active">🏠 Inicio</div>
-                  <div className="side-item">👥 Hogar</div>
-                  <div className="side-item">💸 Movimientos</div>
-                  <div className="side-item">🎯 Objetivos</div>
-                  <div className="side-section">Herramientas</div>
-                  <div className="side-item">📊 Resumen</div>
-                  <div className="side-item">💳 Deuda</div>
-                  <div className="side-item">📁 Categorías</div>
-                </aside>
-                <div className="device-main">
-                  <div className="device-top">
-                    <h4>Hola, familia</h4>
-                    <span>Junio 2026</span>
+                </div>
+
+                <div className="app-greet">
+                  <h4>Hola Invitado</h4>
+                  <p>tu resumen financiero.</p>
+                </div>
+
+                <div className="app-period">
+                  <div>
+                    <h5>Ingresos, gastos, disponible y deuda</h5>
+                    <span>Junio De 2026</span>
                   </div>
-                  <div className="kpis">
-                    <div className="kpi">
-                      <span>Ingresos</span>
-                      <strong>€3.420</strong>
-                      <em>+8.2%</em>
+                  <div className="period-controls">
+                    <div className="seg">
+                      <button type="button" className="active">Mes</button>
+                      <button type="button">Año</button>
                     </div>
-                    <div className="kpi">
-                      <span>Gastos</span>
-                      <strong>€1.980</strong>
-                      <em>−4.1%</em>
-                    </div>
-                    <div className="kpi">
-                      <span>Disponible</span>
-                      <strong>€1.440</strong>
-                      <em>+12%</em>
-                    </div>
-                    <div className="kpi warn">
-                      <span>Deuda</span>
-                      <strong>12%</strong>
-                      <em>−1.4%</em>
+                    <div className="month-picker">
+                      <span>‹</span>
+                      <strong>Junio De 2026</strong>
+                      <span>›</span>
                     </div>
                   </div>
-                  <div className="chart-card">
-                    <h5>Flujo del mes</h5>
-                    <div className="chart">
-                      {barHeights.map((h, i) => (
-                        <div key={i} className="bar" style={{ height: `${h}%` }} />
-                      ))}
-                    </div>
+                </div>
+
+                <div className="kpis">
+                  <div className="kpi k-yellow">
+                    <div className="kpi-head"><span className="kpi-ico">↗</span><span className="kpi-label">INGRESOS</span></div>
+                    <strong>0,00 €</strong>
+                    <em>Total Recibido</em>
                   </div>
+                  <div className="kpi k-gray">
+                    <div className="kpi-head"><span className="kpi-ico">↘</span><span className="kpi-label">GASTOS</span></div>
+                    <strong>0,00 €</strong>
+                    <em>Total Gastado</em>
+                  </div>
+                  <div className="kpi k-green">
+                    <div className="kpi-head"><span className="kpi-ico">▢</span><span className="kpi-label">DISPONIBLE</span></div>
+                    <strong>0,00 €</strong>
+                    <em>Patrimonio Neto</em>
+                  </div>
+                  <div className="kpi k-white">
+                    <div className="kpi-head"><span className="kpi-ico kpi-ico-red">◎</span><span className="kpi-label">DEUDA</span></div>
+                    <strong>0,00 €</strong>
+                    <em>100% Cubierto</em>
+                  </div>
+                </div>
+
+                <div className="app-bottomnav" aria-hidden="true">
+                  <span className="bn active">▦<i>Resumen</i></span>
+                  <span className="bn">💵<i>Deudas</i></span>
+                  <span className="bn">📈<i>Inversiones</i></span>
+                  <span className="bn">🏷<i>Categorías</i></span>
+                  <span className="bn">✨<i>Visión</i></span>
                 </div>
               </div>
             </div>
