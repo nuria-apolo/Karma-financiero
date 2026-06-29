@@ -71,7 +71,7 @@ function BlogPostPage() {
             </p>
 
             <div style={{ marginTop: "2.5rem", display: "grid", gap: "1.3rem", fontSize: "var(--text-lg)", lineHeight: 1.65 }}>
-              {post.content.map((para, i) => (
+              {post.content.map((para: string, i: number) => (
                 <p key={i}>{para}</p>
               ))}
             </div>
