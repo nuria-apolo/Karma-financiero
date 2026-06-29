@@ -7,13 +7,13 @@ const APP_URL = "https://app.karmafinanciero.com/";
 export const Route = createFileRoute("/blog/")({
   head: () => ({
     meta: [
-      { title: "Blog — Karma Financiero" },
+      { title: "Diario de Karma — Blog de finanzas compartidas" },
       {
         name: "description",
         content:
-          "Ideas y rituales prácticos para hablar de dinero en pareja, montar un presupuesto del hogar y alcanzar objetivos compartidos con calma.",
+          "Lecturas cortas sobre cómo hablar de dinero en pareja, montar un presupuesto del hogar y construir objetivos compartidos con calma.",
       },
-      { property: "og:title", content: "Blog — Karma Financiero" },
+      { property: "og:title", content: "Diario de Karma — Blog" },
       {
         property: "og:description",
         content:
@@ -24,63 +24,59 @@ export const Route = createFileRoute("/blog/")({
   component: BlogIndex,
 });
 
-const toneClass: Record<string, string> = {
-  green: "soft-green",
-  yellow: "soft-yellow",
-  blue: "soft-blue",
-};
-
 function BlogIndex() {
   return (
     <>
       <header className="site-header">
-        <div className="container-x nav">
-          <Link to="/" className="brand" aria-label="Karma Financiero">
+        <div className="nav-pill">
+          <Link to="/" aria-label="Karma Financiero">
             <img src={karmaLogo.url} alt="Karma Financiero" className="brand-logo" />
           </Link>
           <nav className="nav-links" aria-label="Principal">
-            <Link to="/" hash="como-funciona">Cómo funciona</Link>
+            <Link to="/" hash="features">Funciones</Link>
             <Link to="/" hash="beneficios">Beneficios</Link>
             <Link to="/" hash="planes">Planes</Link>
             <Link to="/blog">Blog</Link>
           </nav>
-          <div className="btns">
-            <a className="btn btn-soft" href={APP_URL} target="_blank" rel="noopener noreferrer">Ver app</a>
-            <a className="btn btn-primary" href={APP_URL} target="_blank" rel="noopener noreferrer">Empieza gratis</a>
-          </div>
+          <a className="nav-cta" href={APP_URL} target="_blank" rel="noopener noreferrer">
+            Probar gratis
+          </a>
         </div>
       </header>
 
-      <main>
-        <section className="section">
-          <div className="container-x">
-            <div className="eyebrow"><span className="dot"></span> Diario de Karma</div>
-            <h1 style={{ marginTop: "1rem" }}>El blog de las finanzas compartidas.</h1>
-            <p className="sublead" style={{ marginTop: "1rem", maxWidth: "55ch" }}>
-              Lecturas cortas sobre cómo hablar de dinero en casa, montar un presupuesto que dure y construir objetivos comunes sin agotar la conversación.
-            </p>
-          </div>
+      <main className="blog-page">
+        <section className="container-x blog-hero">
+          <span className="eyebrow"><span className="dot" /> Diario de Karma</span>
+          <h1>Historias de finanzas compartidas.</h1>
+          <p>
+            Karma acompaña a hogares que quieren hablar de dinero sin discutir.
+            Aquí recogemos rituales, métodos y conversaciones reales que sostienen el hábito.
+          </p>
         </section>
 
-        <section className="section" style={{ paddingTop: 0 }}>
-          <div className="container-x">
-            <div className="feature-grid">
-              {blogPosts.map((post) => (
-                <article key={post.slug} className={`panel ${toneClass[post.tone]}`}>
-                  <div className="eyebrow" style={{ marginBottom: "1rem" }}>{post.tag}</div>
-                  <h3 style={{ fontFamily: "var(--font-display)", fontSize: "1.8rem", lineHeight: 1.1, marginBottom: "0.8rem" }}>
-                    {post.title}
-                  </h3>
+        <section className="container-x" style={{ paddingBottom: "5rem" }}>
+          <div className="story-grid">
+            {blogPosts.map((post) => (
+              <Link
+                key={post.slug}
+                to="/blog/$slug"
+                params={{ slug: post.slug }}
+                className="story-card"
+              >
+                <div className="story-cover">
+                  <img src={post.cover} alt={post.title} loading="lazy" width={1024} height={1024} />
+                  <span className="story-year">{post.year}</span>
+                </div>
+                <div className="story-body">
+                  <h3>{post.title}</h3>
                   <p>{post.excerpt}</p>
-                  <div style={{ marginTop: "1.4rem", display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "var(--text-sm)", color: "var(--muted)" }}>
-                    <span>{post.date} · {post.readingTime}</span>
-                    <Link to="/blog/$slug" params={{ slug: post.slug }} style={{ fontWeight: 600, color: "var(--text)" }}>
-                      Leer →
-                    </Link>
+                  <div className="story-meta">
+                    <span>{post.tag} · {post.readingTime}</span>
+                    <span className="arrow">Leer →</span>
                   </div>
-                </article>
-              ))}
-            </div>
+                </div>
+              </Link>
+            ))}
           </div>
         </section>
       </main>
