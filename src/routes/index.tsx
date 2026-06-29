@@ -1,4 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
+import karmaLogo from "@/assets/karma-logo.svg.asset.json";
+import karmaIcon from "@/assets/karma-icon.png.asset.json";
+
 
 const APP_URL = "https://app.karmafinanciero.com/";
 
