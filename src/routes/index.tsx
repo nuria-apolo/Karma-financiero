@@ -235,8 +235,18 @@ function Landing() {
               </ol>
             </div>
             <div className="integ-cloud reveal d1">
-              {["💳", "🏦", "📊", "📅", "📈", "🎯", "🏡", "💬"].map((e, i) => (
-                <div key={i} className={`integ-ico i-${i}`}>{e}</div>
+              {[
+                { l: "Banco", s: "BBVA" },
+                { l: "Tarjeta", s: "Visa" },
+                { l: "Cuenta", s: "N26" },
+                { l: "Hipoteca", s: "ING" },
+                { l: "Inversión", s: "MyInvestor" },
+                { l: "Calendario", s: "Google" },
+              ].map((it, i) => (
+                <div key={i} className={`integ-ico i-${i}`}>
+                  <strong>{it.l}</strong>
+                  <span>{it.s}</span>
+                </div>
               ))}
             </div>
           </div>
