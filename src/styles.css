@@ -12,16 +12,16 @@
   --text-xl: clamp(1.5rem, 1.2rem + 1.25vw, 2.25rem);
   --text-2xl: clamp(2rem, 1.2rem + 2.5vw, 3.5rem);
 
-  --bg: #f3f1ec;
+  --bg: #f1f3f4;
   --surface: #fbfaf7;
-  --surface-2: #eef3e7;
-  --surface-3: #f5f09c;
-  --surface-4: #dbe3ee;
+  --surface-2: #c3d6b6;
+  --surface-3: #e6ec84;
+  --surface-4: #cbd6df;
   --text: #161616;
   --muted: #5f625c;
   --border-c: rgba(22, 22, 22, 0.08);
-  --accent: #b9cfad;
-  --accent-2: #dbe3ee;
+  --accent: #c3d6b6;
+  --accent-2: #cbd6df;
   --radius: 1.75rem;
   --shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
   --font-display: "Cormorant Garamond", serif;
