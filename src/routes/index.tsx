@@ -45,7 +45,7 @@ function useReveal() {
 function Landing() {
   useReveal();
 
-  const barHeights = [42, 68, 55, 80, 62, 90, 74, 58, 88, 70, 95, 82];
+
 
   return (
     <>
