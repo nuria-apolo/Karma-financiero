@@ -90,6 +90,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:description", content: "Design Landing Studio creates responsive landing pages from provided designs." },
       { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/b3e621a5-19c3-437c-b117-f75bd423afda/id-preview-39e0ba93--bd362deb-31c9-4ee6-bb28-d4ef669fb4b9.lovable.app-1782749356901.png" },
       { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/b3e621a5-19c3-437c-b117-f75bd423afda/id-preview-39e0ba93--bd362deb-31c9-4ee6-bb28-d4ef669fb4b9.lovable.app-1782749356901.png" },
+      { name: "google-site-verification", content: "8C6kEq8rh_zhbOv-p8zNrO9arQpp8wvoG-s6cbpftiY" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
