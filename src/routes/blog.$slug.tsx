@@ -77,7 +77,7 @@ function BlogPostPage() {
         </header>
 
         <article className="post-content">
-          {post.content.map((para, i) => (
+          {post.content.map((para: string, i: number) => (
             <p key={i}>{para}</p>
           ))}
         </article>
