@@ -43,9 +43,9 @@ function useReveal() {
 }
 
 const TABS = [
-  { id: "resumen", icon: "▦", label: "Resumen del hogar" },
+  { id: "resumen", icon: "◧", label: "Resumen del hogar" },
   { id: "objetivos", icon: "◎", label: "Objetivos" },
-  { id: "deudas", icon: "💳", label: "Deudas" },
+  { id: "deudas", icon: "◐", label: "Deudas" },
   { id: "vision", icon: "✦", label: "Visión" },
 ] as const;
 
