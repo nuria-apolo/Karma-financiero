@@ -399,3 +399,12 @@ h2 {
     width: 100%;
   }
 }
+
+.brand-logo {
+  height: 28px;
+  width: auto;
+  display: block;
+}
+@media (max-width: 640px) {
+  .brand-logo { height: 24px; }
+}
