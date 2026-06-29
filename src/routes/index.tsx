@@ -37,6 +37,7 @@ function Landing() {
             <a href="#como-funciona">Cómo funciona</a>
             <a href="#beneficios">Beneficios</a>
             <a href="#planes">Planes</a>
+            <a href="/blog">Blog</a>
           </nav>
           <div className="btns">
             <a className="btn btn-soft" href={APP_URL} target="_blank" rel="noopener noreferrer">Ver app</a>
