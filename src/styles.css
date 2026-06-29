@@ -220,75 +220,133 @@ a { color: inherit; text-decoration: none; }
   box-shadow: var(--shadow-lg);
 }
 .device-inner {
-  background: var(--surface);
-  border-radius: 14px;
-  padding: 1.2rem;
+  background: #eef0f2;
+  border-radius: 18px;
+  padding: 1.1rem;
   display: grid;
-  grid-template-columns: 220px 1fr;
   gap: 1rem;
-  min-height: 460px;
+  min-height: 520px;
   text-align: left;
 }
-.device-side {
-  background: #f3f1ec;
-  border-radius: 12px;
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  font-size: 0.85rem;
+
+/* Top pill bar */
+.app-topbar {
+  background: #fff;
+  border-radius: 999px;
+  padding: .55rem .8rem .55rem 1.2rem;
+  display: flex; align-items: center; justify-content: space-between;
+  box-shadow: 0 1px 0 rgba(0,0,0,.04);
 }
-.device-side .side-brand {
-  display: flex; align-items: center; gap: .5rem;
-  font-weight: 600; margin-bottom: .8rem;
+.app-brand {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  letter-spacing: .01em;
+  color: var(--ink);
+  display: inline-flex; align-items: center; gap: .35rem;
 }
-.device-side .side-brand i {
-  width: 18px; height: 18px; border-radius: 50%;
-  background: var(--sage);
-  display: inline-block;
+.app-brand i { font-style: normal; opacity: .6; }
+.app-topbar-actions { display: flex; align-items: center; gap: .5rem; }
+.icon-btn {
+  width: 34px; height: 34px; border-radius: 50%;
+  border: 1px solid rgba(0,0,0,.08); background: #fff;
+  color: var(--ink); font-size: .95rem; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center;
 }
-.side-item {
-  padding: 0.55rem 0.7rem;
-  border-radius: 8px;
+.avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--sage); display: inline-block; }
+
+/* Greeting */
+.app-greet { padding: .4rem .4rem 0; }
+.app-greet h4 {
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--ink);
+}
+.app-greet p {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.4rem;
   color: var(--muted);
-  display: flex; align-items: center; gap: .5rem;
+  margin-top: .15rem;
 }
-.side-item.active { background: #fff; color: var(--ink); font-weight: 500; }
-.side-section { font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: .8rem 0 .2rem .5rem; }
-.device-main { display: grid; gap: 1rem; align-content: start; }
-.device-top {
-  display: flex; justify-content: space-between; align-items: center;
+
+/* Period row */
+.app-period {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 1rem; padding: 0 .4rem;
 }
-.device-top h4 { font-size: 1rem; font-weight: 600; }
-.device-top span { font-size: .8rem; color: var(--muted); }
-.kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: .8rem; }
+.app-period h5 {
+  font-family: var(--font-display);
+  font-size: 1.1rem; font-weight: 500; color: var(--ink);
+}
+.app-period span { font-size: .82rem; color: var(--muted); }
+.period-controls { display: flex; gap: .5rem; align-items: center; }
+.seg {
+  background: #fff; border-radius: 999px; padding: .2rem; display: flex; gap: .2rem;
+  border: 1px solid rgba(0,0,0,.06);
+}
+.seg button {
+  border: 0; background: transparent; border-radius: 999px;
+  padding: .35rem .85rem; font-size: .8rem; color: var(--muted); cursor: pointer;
+}
+.seg button.active { background: var(--ink); color: #fff; }
+.month-picker {
+  background: #fff; border-radius: 999px; border: 1px solid rgba(0,0,0,.06);
+  padding: .35rem .8rem; display: flex; gap: .7rem; align-items: center;
+  font-size: .82rem; color: var(--ink);
+}
+.month-picker span { color: var(--muted); cursor: pointer; }
+.month-picker strong { font-weight: 500; }
+
+/* KPI cards (real app palette) */
+.kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: .9rem; }
 .kpi {
+  border-radius: 18px;
+  padding: 1rem 1.1rem 1.1rem;
+  min-height: 150px;
+  display: flex; flex-direction: column; justify-content: space-between;
+  border: 1px solid rgba(0,0,0,.04);
+}
+.kpi-head { display: flex; align-items: center; justify-content: space-between; }
+.kpi-ico { font-size: 1rem; color: var(--ink); opacity: .75; }
+.kpi-ico-red { color: #d96a6a; opacity: 1; }
+.kpi-label { font-size: .68rem; letter-spacing: .12em; color: var(--muted); font-weight: 500; }
+.kpi strong {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.7rem;
+  color: var(--ink);
+  display: block;
+  margin-top: .6rem;
+}
+.kpi em { font-style: normal; font-size: .82rem; color: var(--muted); margin-top: .2rem; }
+.k-yellow { background: #eef07f; }
+.k-gray   { background: #cbd6df; }
+.k-green  { background: #c3d6b6; }
+.k-white  { background: #fff; }
+
+/* Bottom nav pill */
+.app-bottomnav {
+  margin-top: auto;
+  align-self: center;
   background: #fff;
-  border: 1px solid rgba(0,0,0,0.05);
-  border-radius: 12px;
-  padding: .9rem;
+  border-radius: 999px;
+  padding: .4rem .5rem;
+  display: inline-flex;
+  gap: .25rem;
+  box-shadow: 0 8px 24px -12px rgba(0,0,0,.15);
+  border: 1px solid rgba(0,0,0,.05);
 }
-.kpi span { font-size: .7rem; text-transform: uppercase; color: var(--muted); letter-spacing: .06em; }
-.kpi strong { display: block; font-size: 1.3rem; font-weight: 600; margin-top: .25rem; }
-.kpi em { font-style: normal; font-size: .72rem; color: #2d8a5f; font-weight: 600; }
-.kpi.warn em { color: #c04a4a; }
-.chart-card {
-  background: #fff;
-  border: 1px solid rgba(0,0,0,0.05);
-  border-radius: 12px;
-  padding: 1rem;
+.bn {
+  display: inline-flex; align-items: center; gap: .4rem;
+  padding: .5rem .9rem; border-radius: 999px;
+  font-size: .8rem; color: var(--muted);
 }
-.chart-card h5 { font-size: .9rem; font-weight: 600; margin-bottom: .6rem; }
-.chart {
-  display: flex; align-items: flex-end; gap: 6px;
-  height: 130px;
-}
-.chart .bar {
-  flex: 1;
-  background: linear-gradient(180deg, var(--sage), #a7c298);
-  border-radius: 6px 6px 0 0;
-  opacity: .9;
-}
+.bn i { font-style: normal; }
+.bn.active { background: var(--ink); color: #fff; }
+
+
 
 /* ============ SECTION TITLES ============ */
 .section-eyebrow {
