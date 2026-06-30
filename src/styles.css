@@ -299,18 +299,17 @@ button { font-family: inherit; }
   font-weight: 500;
 }
 .section-title {
-  font-family: var(--font-sans);
-  font-weight: 600;
-  font-size: clamp(2rem, 4.4vw, 3.6rem);
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2.2rem, 4.8vw, 4rem);
   text-align: center;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.015em;
   line-height: 1.05;
   max-width: 18ch;
   margin: 0 auto 1rem;
   color: var(--ink);
 }
 .section-title em {
-  font-family: var(--font-display);
   font-style: italic;
   font-weight: 500;
 }
