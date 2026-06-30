@@ -1,8 +1,10 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import karmaLogo from "@/assets/karma-logo.svg.asset.json";
+import { SiteHeader } from "@/components/SiteHeader";
+import { SiteFooter } from "@/components/SiteFooter";
 import { getPost, blogPosts } from "@/lib/blog-posts";
 
 const APP_URL = "https://app.karmafinanciero.com/";
+
 
 export const Route = createFileRoute("/blog/$slug")({
   loader: ({ params }) => {
@@ -43,22 +45,8 @@ function BlogPostPage() {
 
   return (
     <>
-      <header className="site-header">
-        <div className="nav-pill">
-          <Link to="/" aria-label="Karma Financiero">
-            <img src={karmaLogo.url} alt="Karma Financiero" className="brand-logo" />
-          </Link>
-          <nav className="nav-links" aria-label="Principal">
-            <Link to="/" hash="features">Funciones</Link>
-            <Link to="/" hash="beneficios">Beneficios</Link>
-            <Link to="/" hash="planes">Planes</Link>
-            <Link to="/blog">Blog</Link>
-          </nav>
-          <a className="nav-cta" href={APP_URL} target="_blank" rel="noopener noreferrer">
-            Probar gratis
-          </a>
-        </div>
-      </header>
+      <SiteHeader />
+
 
       <main className="post-page">
         <div className="container-x" style={{ marginBottom: "1.5rem" }}>
@@ -122,12 +110,8 @@ function BlogPostPage() {
         )}
       </main>
 
-      <footer className="site-footer">
-        <div className="container-x footer-grid">
-          <div>Karma Financiero — Finanzas compartidas con calma.</div>
-          <a href={APP_URL} target="_blank" rel="noopener noreferrer">app.karmafinanciero.com</a>
-        </div>
-      </footer>
+      <SiteFooter />
+
     </>
   );
 }
