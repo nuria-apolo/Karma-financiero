@@ -12,6 +12,9 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
+import { Route as LegalPrivacidadRouteImport } from './routes/legal.privacidad'
+import { Route as LegalCookiesRouteImport } from './routes/legal.cookies'
+import { Route as LegalAvisoLegalRouteImport } from './routes/legal.aviso-legal'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -29,6 +32,21 @@ const BlogIndexRoute = BlogIndexRouteImport.update({
   path: '/blog/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LegalPrivacidadRoute = LegalPrivacidadRouteImport.update({
+  id: '/legal/privacidad',
+  path: '/legal/privacidad',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LegalCookiesRoute = LegalCookiesRouteImport.update({
+  id: '/legal/cookies',
+  path: '/legal/cookies',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LegalAvisoLegalRoute = LegalAvisoLegalRouteImport.update({
+  id: '/legal/aviso-legal',
+  path: '/legal/aviso-legal',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
   id: '/blog/$slug',
   path: '/blog/$slug',
@@ -39,12 +57,18 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/legal/aviso-legal': typeof LegalAvisoLegalRoute
+  '/legal/cookies': typeof LegalCookiesRoute
+  '/legal/privacidad': typeof LegalPrivacidadRoute
   '/blog/': typeof BlogIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/legal/aviso-legal': typeof LegalAvisoLegalRoute
+  '/legal/cookies': typeof LegalCookiesRoute
+  '/legal/privacidad': typeof LegalPrivacidadRoute
   '/blog': typeof BlogIndexRoute
 }
 export interface FileRoutesById {
@@ -52,20 +76,48 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/legal/aviso-legal': typeof LegalAvisoLegalRoute
+  '/legal/cookies': typeof LegalCookiesRoute
+  '/legal/privacidad': typeof LegalPrivacidadRoute
   '/blog/': typeof BlogIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/sitemap.xml' | '/blog/$slug' | '/blog/'
+  fullPaths:
+    | '/'
+    | '/sitemap.xml'
+    | '/blog/$slug'
+    | '/legal/aviso-legal'
+    | '/legal/cookies'
+    | '/legal/privacidad'
+    | '/blog/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/sitemap.xml' | '/blog/$slug' | '/blog'
-  id: '__root__' | '/' | '/sitemap.xml' | '/blog/$slug' | '/blog/'
+  to:
+    | '/'
+    | '/sitemap.xml'
+    | '/blog/$slug'
+    | '/legal/aviso-legal'
+    | '/legal/cookies'
+    | '/legal/privacidad'
+    | '/blog'
+  id:
+    | '__root__'
+    | '/'
+    | '/sitemap.xml'
+    | '/blog/$slug'
+    | '/legal/aviso-legal'
+    | '/legal/cookies'
+    | '/legal/privacidad'
+    | '/blog/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   BlogSlugRoute: typeof BlogSlugRoute
+  LegalAvisoLegalRoute: typeof LegalAvisoLegalRoute
+  LegalCookiesRoute: typeof LegalCookiesRoute
+  LegalPrivacidadRoute: typeof LegalPrivacidadRoute
   BlogIndexRoute: typeof BlogIndexRoute
 }
 
@@ -92,6 +144,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/legal/privacidad': {
+      id: '/legal/privacidad'
+      path: '/legal/privacidad'
+      fullPath: '/legal/privacidad'
+      preLoaderRoute: typeof LegalPrivacidadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/legal/cookies': {
+      id: '/legal/cookies'
+      path: '/legal/cookies'
+      fullPath: '/legal/cookies'
+      preLoaderRoute: typeof LegalCookiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/legal/aviso-legal': {
+      id: '/legal/aviso-legal'
+      path: '/legal/aviso-legal'
+      fullPath: '/legal/aviso-legal'
+      preLoaderRoute: typeof LegalAvisoLegalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/blog/$slug': {
       id: '/blog/$slug'
       path: '/blog/$slug'
@@ -106,6 +179,9 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   BlogSlugRoute: BlogSlugRoute,
+  LegalAvisoLegalRoute: LegalAvisoLegalRoute,
+  LegalCookiesRoute: LegalCookiesRoute,
+  LegalPrivacidadRoute: LegalPrivacidadRoute,
   BlogIndexRoute: BlogIndexRoute,
 }
 export const routeTree = rootRouteImport

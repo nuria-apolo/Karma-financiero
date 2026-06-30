@@ -1,8 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import karmaLogo from "@/assets/karma-logo.svg.asset.json";
+import { SiteFooter } from "@/components/SiteFooter";
 
 const APP_URL = "https://app.karmafinanciero.com/";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -168,18 +170,8 @@ function Landing() {
 
           </div>
 
-          {/* Logo strip */}
-          <div className="container-x">
-            <div className="g-logos reveal">
-              <span>Pensado para hogares de</span>
-              <em>parejas</em>
-              <em>familias</em>
-              <em>pisos compartidos</em>
-              <em>convivencias</em>
-              <em>cuidadores</em>
-            </div>
-          </div>
         </section>
+
 
         {/* FEATURES - tabbed (Grovia "Built for high performance") */}
         <section className="section" id="features">
@@ -313,32 +305,8 @@ function Landing() {
         </section>
       </main>
 
-      <footer className="site-footer g-footer">
-        <div className="container-x g-foot-grid">
-          <div className="g-foot-brand">
-            <img src={karmaLogo.url} alt="Karma Financiero" className="brand-logo" />
-            <p>Finanzas compartidas con calma.</p>
-          </div>
-          <form className="g-newsletter" onSubmit={(e) => e.preventDefault()}>
-            <label>Suscríbete a la newsletter</label>
-            <div className="g-news-row">
-              <input type="email" placeholder="tu@email.com" aria-label="Email" />
-              <button type="submit">Suscribir</button>
-            </div>
-          </form>
-          <nav className="g-foot-links" aria-label="Pies">
-            <strong>Páginas</strong>
-            <a href="#features">Funciones</a>
-            <a href="#planes">Planes</a>
-            <a href="/blog">Blog</a>
-            <a href={APP_URL} target="_blank" rel="noopener noreferrer">Abrir app</a>
-          </nav>
-        </div>
-        <div className="container-x g-foot-bottom">
-          <span>© 2026 Karma Financiero</span>
-          <a href={APP_URL} target="_blank" rel="noopener noreferrer">app.karmafinanciero.com</a>
-        </div>
-      </footer>
+      <SiteFooter />
+
     </>
   );
 }
