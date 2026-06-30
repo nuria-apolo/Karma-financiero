@@ -12,9 +12,10 @@ export const Route = createFileRoute("/blog/$slug")({
     if (!post) throw notFound();
     return { post };
   },
-  head: ({ loaderData }) => {
+  head: ({ params, loaderData }) => {
     const post = loaderData?.post;
     if (!post) return { meta: [{ title: "Artículo no encontrado — Karma Financiero" }] };
+    const url = `https://karmafinanciero.com/blog/${params.slug}`;
     return {
       meta: [
         { title: `${post.title} — Karma Financiero` },
@@ -22,8 +23,33 @@ export const Route = createFileRoute("/blog/$slug")({
         { property: "og:title", content: post.title },
         { property: "og:description", content: post.excerpt },
         { property: "og:type", content: "article" },
+        { property: "og:url", content: url },
         { property: "og:image", content: post.cover },
         { property: "twitter:image", content: post.cover },
+      ],
+      links: [{ rel: "canonical", href: url }],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Article",
+            headline: post.title,
+            description: post.excerpt,
+            datePublished: post.date,
+            image: post.cover,
+            author: { "@type": "Organization", name: "Karma Financiero" },
+            publisher: {
+              "@type": "Organization",
+              name: "Karma Financiero",
+              logo: {
+                "@type": "ImageObject",
+                url: "https://karmafinanciero.com/favicon.png",
+              },
+            },
+            mainEntityOfPage: url,
+          }),
+        },
       ],
     };
   },
