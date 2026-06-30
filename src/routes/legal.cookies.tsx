@@ -9,7 +9,9 @@ export const Route = createFileRoute("/legal/cookies")({
       { name: "description", content: "Qué cookies usa Karma Financiero y cómo configurarlas." },
       { property: "og:title", content: "Política de cookies — Karma Financiero" },
       { property: "og:description", content: "Información sobre el uso de cookies en Karma Financiero." },
+      { property: "og:url", content: "https://karmafinanciero.com/legal/cookies" },
     ],
+    links: [{ rel: "canonical", href: "https://karmafinanciero.com/legal/cookies" }],
   }),
   component: CookiesPage,
 });
