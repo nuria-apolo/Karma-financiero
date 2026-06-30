@@ -210,11 +210,14 @@ button { font-family: inherit; }
 .g-people li > div { display: flex; flex-direction: column; min-width: 0; }
 .g-people li strong { font-weight: 600; color: var(--ink); }
 .g-people li span { color: var(--muted); font-size: .78rem; }
-.g-actions { font-size: .85rem; color: var(--ink); letter-spacing: .2em; }
+.g-actions { display: inline-flex; align-items: center; gap: .55rem; font-size: .85rem; color: var(--ink); }
+.g-actions i { font-style: normal; opacity: .75; }
 .ava {
-  width: 32px; height: 32px; border-radius: 50%;
+  width: 36px; height: 36px; border-radius: 50%;
   display: inline-block; flex-shrink: 0;
+  object-fit: cover;
 }
+.ava-img { background: #eee; }
 .ava-sage { background: linear-gradient(135deg, #c3d6b6, #7d9b76); }
 .ava-blue { background: linear-gradient(135deg, #cbd6df, #6b8aa6); }
 .ava-yellow { background: linear-gradient(135deg, #f2f5b8, #c9b94c); }
@@ -235,10 +238,10 @@ button { font-family: inherit; }
   border-radius: 999px;
 }
 .g-bignum {
-  font-family: var(--font-sans);
-  font-weight: 600;
-  font-size: 1.9rem;
-  letter-spacing: -0.02em;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 2.4rem;
+  letter-spacing: -0.01em;
   margin: .2rem 0 .9rem;
   color: var(--ink);
 }
