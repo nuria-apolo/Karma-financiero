@@ -216,49 +216,11 @@ function Landing() {
           </div>
         </section>
 
-        {/* INTEGRACIONES */}
-        <section className="section" id="integraciones">
-          <div className="container-x integ-grid">
-            <div className="reveal">
-              <p className="section-eyebrow" style={{ textAlign: "left" }}>Integraciones</p>
-              <h2 className="integ-title">
-                Conecta tu hogar <br /> sin fricciones
-              </h2>
-              <p className="integ-sub">
-                Importa movimientos, sincroniza objetivos y mantén a todos al día. Trabaja con las
-                herramientas que ya usas para que el dinero compartido fluya sin esfuerzo.
-              </p>
-              <a className="btn-pill btn-pill-dark" href={APP_URL} target="_blank" rel="noopener noreferrer">
-                Empezar <span className="pill-arrow">→</span>
-              </a>
-              <ol className="integ-steps">
-                <li><span>01</span> Conecta tus cuentas con seguridad</li>
-                <li><span>02</span> Invita a tu pareja o familia</li>
-                <li><span>03</span> Sincroniza y deja que Karma ordene</li>
-              </ol>
-            </div>
-            <div className="integ-cloud reveal d1">
-              {[
-                { l: "Banco", s: "BBVA" },
-                { l: "Tarjeta", s: "Visa" },
-                { l: "Cuenta", s: "N26" },
-                { l: "Hipoteca", s: "ING" },
-                { l: "Inversión", s: "MyInvestor" },
-                { l: "Calendario", s: "Google" },
-              ].map((it, i) => (
-                <div key={i} className={`integ-ico i-${i}`}>
-                  <strong>{it.l}</strong>
-                  <span>{it.s}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
 
         {/* PRICING - dark Grovia style */}
         <section className="section" id="planes">
           <div className="container-x">
-            <div className="pricing-dark reveal">
+            <div className="pricing-green reveal">
               <div className="pd-head">
                 <p className="pd-eyebrow">Planes flexibles</p>
                 <h2>Empieza simple, <em>crece tranquilo</em></h2>
