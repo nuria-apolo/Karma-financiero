@@ -711,15 +711,15 @@ button { font-family: inherit; }
   margin: 0 1rem;
 }
 .cta-final h2 {
-  font-family: var(--font-sans);
-  font-weight: 600;
-  font-size: clamp(2rem, 4.4vw, 3.4rem);
-  letter-spacing: -0.03em;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2.2rem, 4.8vw, 3.8rem);
+  letter-spacing: -0.015em;
   line-height: 1.05;
   margin-bottom: 1rem;
   color: var(--ink);
 }
-.cta-final h2 em { font-family: var(--font-display); font-style: italic; font-weight: 500; }
+.cta-final h2 em { font-style: italic; font-weight: 500; }
 .cta-final p { color: #3a3d39; max-width: 46ch; margin: 0 auto 2rem; }
 
 /* ============ FOOTER ============ */
