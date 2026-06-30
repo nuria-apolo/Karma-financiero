@@ -58,11 +58,10 @@ function Landing() {
   const [activeTab, setActiveTab] = useState<TabId>("resumen");
 
   const plans = [
-    { id: "gratis", name: "Gratis", sub: "Para empezar a ordenar", price: "€0", cycle: "/ siempre" },
-    { id: "hogar", name: "Hogar", sub: "Más popular", price: "€6", cycle: "/ mes" },
-    { id: "pro", name: "Pro", sub: "Para hogares ambiciosos", price: "€12", cycle: "/ mes" },
+    { id: "gratis", name: "Gratis", sub: "Pruébalo sin compromiso", price: "0€", cycle: "para siempre" },
+    { id: "pro", name: "Pro", sub: "Pensado para parejas", price: "2,99€", cycle: "/ mes" },
   ];
-  const [activePlan, setActivePlan] = useState<string>("hogar");
+  const [activePlan, setActivePlan] = useState<string>("pro");
   const current = plans.find((p) => p.id === activePlan)!;
 
   return (
