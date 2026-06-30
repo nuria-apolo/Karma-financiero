@@ -78,15 +78,13 @@ button { font-family: inherit; }
   align-items: center;
   gap: 1.5rem;
   padding: 0.5rem 0.5rem 0.5rem 1.4rem;
-  background: rgba(255,255,255,0.85);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  background: #ffffff;
   border: 1px solid rgba(20,20,20,0.06);
   border-radius: 999px;
   box-shadow: 0 8px 30px rgba(0,0,0,0.06);
   max-width: 100%;
 }
-.brand-logo { height: 26px; width: auto; display: block; }
+.brand-logo { height: 22px; width: auto; display: block; }
 .nav-links {
   display: flex;
   gap: 1.4rem;
