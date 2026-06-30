@@ -140,19 +140,19 @@ button { font-family: inherit; }
   align-items: start;
 }
 .g-hero-text h1 {
-  font-family: var(--font-sans);
-  font-weight: 600;
-  font-size: clamp(2.6rem, 5.4vw, 4.8rem);
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2.6rem, 5.8vw, 5.2rem);
   line-height: 1.02;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.02em;
   color: var(--ink);
   margin-bottom: 1.6rem;
 }
 .g-hero-text h1 em {
-  font-family: var(--font-display);
   font-style: italic;
   font-weight: 500;
 }
+.g-hero-text p strong { font-weight: 600; color: var(--ink); }
 .g-hero-text p {
   color: #3a3d39;
   max-width: 46ch;
