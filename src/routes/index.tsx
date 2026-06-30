@@ -238,19 +238,32 @@ function Landing() {
                     <span>{current.cycle}</span>
                   </div>
                   <p>
-                    {current.id === "gratis" && "Para probar Karma y empezar a ordenar tus números sin barreras."}
-                    {current.id === "hogar" && "Ideal para parejas y familias que quieren compartir mejor y planificar objetivos."}
-                    {current.id === "pro" && "Para hogares con varias cuentas, deudas y objetivos a largo plazo."}
+                    {current.id === "gratis" &&
+                      "Pruébalo gratis y siente cómo respira tu economía. Sin tarjeta, sin prisa — solo claridad."}
+                    {current.id === "pro" &&
+                      "Todas las funciones de Karma pensadas para parejas. Suma una persona extra por solo 1,99€/mes."}
                   </p>
                   <a className="pd-cta" href={APP_URL} target="_blank" rel="noopener noreferrer">
-                    Empezar ahora <span className="pill-arrow">→</span>
+                    {current.id === "gratis" ? "Probar gratis" : "Empezar ahora"}{" "}
+                    <span className="pill-arrow">→</span>
                   </a>
                   <ul className="pd-features">
-                    <li>✓ Resumen del hogar</li>
-                    <li>✓ Ingresos, gastos y categorías</li>
-                    <li>✓ Objetivos compartidos</li>
-                    {current.id !== "gratis" && <li>✓ Multi-usuario y permisos</li>}
-                    {current.id === "pro" && <li>✓ Deudas, inversiones y previsión</li>}
+                    {current.id === "gratis" ? (
+                      <>
+                        <li>✓ Resumen del hogar</li>
+                        <li>✓ Ingresos, gastos y categorías</li>
+                        <li>✓ 1 objetivo compartido</li>
+                        <li>✓ Acceso para 1 persona</li>
+                      </>
+                    ) : (
+                      <>
+                        <li>✓ Todo lo del plan Gratis</li>
+                        <li>✓ Objetivos ilimitados</li>
+                        <li>✓ Deudas, inversiones y previsión</li>
+                        <li>✓ 2 personas incluidas (pareja)</li>
+                        <li>✓ +1,99€/mes por usuario extra</li>
+                      </>
+                    )}
                   </ul>
                 </div>
               </div>
