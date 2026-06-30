@@ -72,8 +72,8 @@ function Landing() {
           </a>
           <nav className="nav-links" aria-label="Principal">
             <a href="#features">Funciones</a>
-            <a href="#integraciones">Integraciones</a>
             <a href="#planes">Planes</a>
+            <a href="#planes">Precio</a>
             <a href="/blog">Blog</a>
           </nav>
           <a className="nav-cta" href={APP_URL} target="_blank" rel="noopener noreferrer">
@@ -88,17 +88,17 @@ function Landing() {
           <div className="container-x g-hero-grid">
             <div className="g-hero-text">
               <h1 className="reveal">
-                Calma y claridad <br />
-                para el dinero <br />
-                que <em>compartes</em>.
+                Gestiona lo compartido, <br />
+                vive lo <em>extraordinario</em>
               </h1>
               <p className="reveal d1">
-                Karma Financiero acompaña a parejas, familias y hogares para ordenar ingresos,
-                gastos, deudas y objetivos en un solo lugar — sin hojas de cálculo ni discusiones.
+                <strong>Karma Financiero</strong> acompaña a parejas, familias y hogares para
+                ordenar ingresos, gastos, deudas y objetivos en un solo lugar — sin hojas de
+                cálculo ni discusiones.
               </p>
               <div className="g-hero-actions reveal d2">
                 <a className="btn-pill btn-pill-dark" href={APP_URL} target="_blank" rel="noopener noreferrer">
-                  Probar gratis <span className="pill-arrow">→</span>
+                  Prueba gratis <span className="pill-arrow">→</span>
                 </a>
                 <a className="btn-pill btn-pill-ghost" href="#features">
                   Ver funciones
