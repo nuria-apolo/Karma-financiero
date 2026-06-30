@@ -2,6 +2,15 @@
 @source "../src";
 @import "tw-animate-css";
 
+@font-face {
+  font-family: "AtKing Light";
+  src: url("/__l5e/assets-v1/ef573fab-8dee-4ba7-9100-9462baea54fc/AtKing-Light.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+
 @custom-variant dark (&:is(.dark *));
 
 :root {
