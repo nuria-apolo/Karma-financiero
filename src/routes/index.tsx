@@ -13,12 +13,37 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Organiza el dinero que compartes con claridad, calma y estilo. Karma Financiero te ayuda a gestionar ingresos, gastos, objetivos y deudas en pareja, familia o convivencia.",
+          "Organiza el dinero compartido con calma. Gestiona ingresos, gastos, objetivos y deudas en pareja o familia.",
       },
       { property: "og:title", content: "Karma Financiero — Finanzas compartidas con calma" },
       {
         property: "og:description",
-        content: "Organiza el dinero que compartes con claridad, calma y estilo.",
+        content: "Organiza el dinero que compartes con claridad y calma.",
+      },
+      { property: "og:url", content: "https://karmafinanciero.com/" },
+    ],
+    links: [{ rel: "canonical", href: "https://karmafinanciero.com/" }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "Karma Financiero",
+          url: "https://karmafinanciero.com/",
+          logo: "https://karmafinanciero.com/favicon.png",
+          description:
+            "App para gestionar las finanzas compartidas del hogar con claridad y calma.",
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "Karma Financiero",
+          url: "https://karmafinanciero.com/",
+        }),
       },
     ],
   }),

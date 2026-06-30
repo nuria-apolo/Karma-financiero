@@ -13,7 +13,7 @@ export const Route = createFileRoute("/blog/")({
       {
         name: "description",
         content:
-          "Lecturas cortas sobre cómo hablar de dinero en pareja, montar un presupuesto del hogar y construir objetivos compartidos con calma.",
+          "Lecturas cortas sobre hablar de dinero en pareja, presupuesto del hogar y objetivos compartidos.",
       },
       { property: "og:title", content: "Diario de Karma — Blog" },
       {
@@ -21,7 +21,9 @@ export const Route = createFileRoute("/blog/")({
         content:
           "Ideas prácticas sobre finanzas compartidas, presupuesto del hogar y objetivos en pareja.",
       },
+      { property: "og:url", content: "https://karmafinanciero.com/blog" },
     ],
+    links: [{ rel: "canonical", href: "https://karmafinanciero.com/blog" }],
   }),
   component: BlogIndex,
 });
