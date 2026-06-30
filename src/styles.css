@@ -150,7 +150,7 @@ button { font-family: inherit; }
 }
 .g-hero-text h1 {
   font-family: var(--font-display);
-  font-weight: 500;
+  font-weight: 400;
   font-size: clamp(2.6rem, 5.8vw, 5.2rem);
   line-height: 1.02;
   letter-spacing: -0.02em;
@@ -248,7 +248,7 @@ button { font-family: inherit; }
 }
 .g-bignum {
   font-family: var(--font-display);
-  font-weight: 500;
+  font-weight: 400;
   font-size: 2.4rem;
   letter-spacing: -0.01em;
   margin: .2rem 0 .9rem;
@@ -312,7 +312,7 @@ button { font-family: inherit; }
 }
 .section-title {
   font-family: var(--font-display);
-  font-weight: 500;
+  font-weight: 400;
   font-size: clamp(2.2rem, 4.8vw, 4rem);
   text-align: center;
   letter-spacing: -0.015em;
@@ -413,7 +413,7 @@ button { font-family: inherit; }
 .pv-k strong {
   display: block;
   font-family: var(--font-display);
-  font-weight: 500;
+  font-weight: 400;
   font-size: 1.5rem;
   color: var(--ink);
   margin-top: .4rem;
@@ -430,7 +430,7 @@ button { font-family: inherit; }
 }
 .panel-text h3 {
   font-family: var(--font-display);
-  font-weight: 500;
+  font-weight: 400;
   font-size: clamp(1.8rem, 2.8vw, 2.6rem);
   letter-spacing: -0.01em;
   line-height: 1.1;
@@ -490,7 +490,7 @@ button { font-family: inherit; }
 }
 .integ-title {
   font-family: var(--font-display);
-  font-weight: 500;
+  font-weight: 400;
   font-size: clamp(2.2rem, 4vw, 3.4rem);
   letter-spacing: -0.015em;
   line-height: 1.05;
@@ -573,7 +573,7 @@ button { font-family: inherit; }
 .pd-eyebrow { font-size: .78rem; letter-spacing: .14em; text-transform: uppercase; color: #b9bcb6; margin-bottom: .8rem; }
 .pd-head h2 {
   font-family: var(--font-display);
-  font-weight: 500;
+  font-weight: 400;
   font-size: clamp(2rem, 3.8vw, 3rem);
   line-height: 1.05;
   letter-spacing: -0.015em;
@@ -626,7 +626,7 @@ button { font-family: inherit; }
 }
 .pd-price strong {
   font-family: var(--font-display);
-  font-weight: 500;
+  font-weight: 400;
   font-size: clamp(2.5rem, 5vw, 3.5rem);
   line-height: 1;
   color: #fff;
@@ -670,7 +670,7 @@ button { font-family: inherit; }
 }
 .quote-section blockquote {
   font-family: var(--font-display);
-  font-weight: 500;
+  font-weight: 400;
   font-size: clamp(2rem, 4.4vw, 3.6rem);
   line-height: 1.15;
   letter-spacing: -0.01em;
@@ -724,7 +724,7 @@ button { font-family: inherit; }
 }
 .cta-final h2 {
   font-family: var(--font-display);
-  font-weight: 500;
+  font-weight: 400;
   font-size: clamp(2.2rem, 4.8vw, 3.8rem);
   letter-spacing: -0.015em;
   line-height: 1.05;
