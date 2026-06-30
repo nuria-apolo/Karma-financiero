@@ -657,17 +657,16 @@ button { font-family: inherit; }
   padding: clamp(5rem, 9vw, 9rem) 1rem;
 }
 .quote-section blockquote {
-  font-family: var(--font-sans);
-  font-weight: 600;
-  font-size: clamp(1.8rem, 4vw, 3.2rem);
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2rem, 4.4vw, 3.6rem);
   line-height: 1.15;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.01em;
   max-width: 22ch;
   margin: 0 auto 2.2rem;
   color: var(--ink);
 }
 .quote-section blockquote em {
-  font-family: var(--font-display);
   font-style: italic;
   font-weight: 500;
 }
