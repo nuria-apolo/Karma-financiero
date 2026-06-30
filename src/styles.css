@@ -22,8 +22,8 @@
   --bg-warm: #F4F2EE;
   --surface: #fbfaf7;
   --sage: #c3d6b6;
-  --yellow: #e6ec84;
-  --yellow-soft: #f2f5b8;
+  --yellow: #FEF7AF;
+  --yellow-soft: #FDF8D0;
   --blue: #cbd6df;
   --ink: #141414;
   --ink-soft: #1c1c1c;
@@ -78,15 +78,13 @@ button { font-family: inherit; }
   align-items: center;
   gap: 1.5rem;
   padding: 0.5rem 0.5rem 0.5rem 1.4rem;
-  background: rgba(255,255,255,0.85);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  background: #ffffff;
   border: 1px solid rgba(20,20,20,0.06);
   border-radius: 999px;
   box-shadow: 0 8px 30px rgba(0,0,0,0.06);
   max-width: 100%;
 }
-.brand-logo { height: 26px; width: auto; display: block; }
+.brand-logo { height: 22px; width: auto; display: block; }
 .nav-links {
   display: flex;
   gap: 1.4rem;
@@ -152,8 +150,8 @@ button { font-family: inherit; }
 .g-hero-text h1 {
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: clamp(2.6rem, 5.8vw, 5.2rem);
-  line-height: 1.02;
+  font-size: clamp(2.4rem, 5vw, 4.6rem);
+  line-height: 1.05;
   letter-spacing: -0.02em;
   color: var(--ink);
   margin-bottom: 1.6rem;
@@ -230,7 +228,7 @@ button { font-family: inherit; }
 .ava-img { background: #eee; }
 .ava-sage { background: linear-gradient(135deg, #c3d6b6, #7d9b76); }
 .ava-blue { background: linear-gradient(135deg, #cbd6df, #6b8aa6); }
-.ava-yellow { background: linear-gradient(135deg, #f2f5b8, #c9b94c); }
+.ava-yellow { background: linear-gradient(135deg, #FEF7AF, #E8D990); }
 
 .g-card-foot {
   display: inline-block;
@@ -314,11 +312,11 @@ button { font-family: inherit; }
 .section-title {
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: clamp(2.2rem, 4.8vw, 4rem);
+  font-size: clamp(2rem, 4.2vw, 3.4rem);
   text-align: center;
   letter-spacing: -0.015em;
-  line-height: 1.05;
-  max-width: 18ch;
+  line-height: 1.08;
+  max-width: 20ch;
   margin: 0 auto 1rem;
   color: var(--ink);
 }
@@ -432,9 +430,9 @@ button { font-family: inherit; }
 .panel-text h3 {
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: clamp(1.8rem, 2.8vw, 2.6rem);
+  font-size: clamp(1.6rem, 2.4vw, 2.2rem);
   letter-spacing: -0.01em;
-  line-height: 1.1;
+  line-height: 1.12;
   margin-bottom: 1rem;
   color: var(--ink);
 }
@@ -469,7 +467,7 @@ button { font-family: inherit; }
   font-weight: 500;
 }
 .tag.green { background: #d6ecc8; color: #3a6b2a; }
-.tag.yellow { background: #f1f1b8; color: #6b5a1a; }
+.tag.yellow { background: #FDF8D0; color: #6b5a1a; }
 .tag.blue { background: #cfdbe6; color: #2a4a6b; }
 
 .mock-goals { display: grid; gap: .7rem; }
@@ -492,9 +490,9 @@ button { font-family: inherit; }
 .integ-title {
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: clamp(2.2rem, 4vw, 3.4rem);
+  font-size: clamp(1.9rem, 3.4vw, 2.8rem);
   letter-spacing: -0.015em;
-  line-height: 1.05;
+  line-height: 1.08;
   margin: .5rem 0 1.2rem;
   color: var(--ink);
 }
@@ -566,7 +564,7 @@ button { font-family: inherit; }
   position: absolute;
   inset: auto auto -20% -10%;
   width: 40%; height: 60%;
-  background: radial-gradient(circle, rgba(230,236,132,0.45), transparent 60%);
+  background: radial-gradient(circle, rgba(254,247,175,0.45), transparent 60%);
   filter: blur(40px);
   pointer-events: none;
 }
@@ -575,8 +573,8 @@ button { font-family: inherit; }
 .pd-head h2 {
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: clamp(2rem, 3.8vw, 3rem);
-  line-height: 1.05;
+  font-size: clamp(1.8rem, 3.2vw, 2.6rem);
+  line-height: 1.08;
   letter-spacing: -0.015em;
   color: var(--ink);
 }
@@ -631,7 +629,7 @@ button { font-family: inherit; }
 .pd-price strong {
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  font-size: clamp(2.2rem, 4.2vw, 3.2rem);
   line-height: 1;
   color: var(--ink);
 }
@@ -675,10 +673,10 @@ button { font-family: inherit; }
 .quote-section blockquote {
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: clamp(2rem, 4.4vw, 3.6rem);
-  line-height: 1.15;
+  font-size: clamp(1.8rem, 3.8vw, 3rem);
+  line-height: 1.18;
   letter-spacing: -0.01em;
-  max-width: 22ch;
+  max-width: 24ch;
   margin: 0 auto 2.2rem;
   color: var(--ink);
 }
@@ -729,9 +727,9 @@ button { font-family: inherit; }
 .cta-final h2 {
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: clamp(2.2rem, 4.8vw, 3.8rem);
+  font-size: clamp(2rem, 4vw, 3.2rem);
   letter-spacing: -0.015em;
-  line-height: 1.05;
+  line-height: 1.08;
   margin-bottom: 1rem;
   color: var(--ink);
 }
@@ -830,12 +828,12 @@ button { font-family: inherit; }
   font-family: var(--font-display);
   font-style: italic;
   font-weight: 500;
-  font-size: clamp(2.8rem, 7vw, 5.6rem);
-  line-height: 1.02;
+  font-size: clamp(2.4rem, 5.5vw, 4.5rem);
+  line-height: 1.05;
   letter-spacing: -0.02em;
   color: var(--ink);
   margin: 1.2rem auto;
-  max-width: 14ch;
+  max-width: 16ch;
 }
 .blog-hero p {
   max-width: 56ch;
@@ -932,8 +930,8 @@ button { font-family: inherit; }
   font-family: var(--font-display);
   font-style: italic;
   font-weight: 500;
-  font-size: clamp(2.2rem, 4.8vw, 4rem);
-  line-height: 1.05;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  line-height: 1.08;
   letter-spacing: -0.02em;
   color: var(--ink);
   margin: 1.2rem 0;
@@ -1008,10 +1006,10 @@ button { font-family: inherit; }
 }
 .legal-content h1 {
   font-family: var(--font-display);
-  font-size: clamp(2.4rem, 5vw, 3.6rem);
+  font-size: clamp(2.1rem, 4.2vw, 3rem);
   font-weight: 400;
   margin: 1rem 0 .4rem;
-  line-height: 1.1;
+  line-height: 1.12;
 }
 .legal-content h2 {
   font-family: var(--font-display);
