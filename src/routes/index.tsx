@@ -107,62 +107,65 @@ function Landing() {
             </div>
 
             <div className="g-hero-cards reveal d3">
-              {/* Card A: customers / cuentas compartidas */}
+              {/* Card A: Hogar / personas */}
               <div className="g-card card-a">
                 <div className="g-card-head">
-                  <strong>Personas del hogar</strong>
+                  <strong>Hogar</strong>
                   <span className="g-sort">Más reciente ▾</span>
                 </div>
                 <ul className="g-people">
                   <li className="active">
-                    <span className="ava ava-sage" />
+                    <img className="ava ava-img" src="https://i.pravatar.cc/80?img=47" alt="" />
                     <div>
-                      <strong>Maggie Johnson</strong>
-                      <span>Gastos compartidos</span>
+                      <strong>María</strong>
+                      <span>Propietario</span>
                     </div>
-                    <span className="g-actions">✎ ★ ⋯</span>
+                    <span className="g-actions" aria-hidden="true">
+                      <i>✎</i><i>☆</i><i>💬</i><i>⋯</i>
+                    </span>
                   </li>
                   <li>
-                    <span className="ava ava-blue" />
+                    <img className="ava ava-img" src="https://i.pravatar.cc/80?img=12" alt="" />
                     <div>
-                      <strong>Chris Friedkly</strong>
-                      <span>Hipoteca · 50%</span>
+                      <strong>Oscar</strong>
+                      <span>Invitado</span>
                     </div>
                   </li>
                   <li>
-                    <span className="ava ava-yellow" />
+                    <img className="ava ava-img" src="https://i.pravatar.cc/80?img=33" alt="" />
                     <div>
-                      <strong>Gael Harry</strong>
-                      <span>Suministros · 33%</span>
+                      <strong>Gael</strong>
+                      <span>Invitado</span>
                     </div>
                   </li>
                 </ul>
-                <a className="g-card-foot" href={APP_URL}>Ver todos →</a>
+                <a className="g-card-foot" href={APP_URL}>Todos los usuarios ⊕</a>
               </div>
 
-              {/* Card B: bar chart */}
+              {/* Card B: Total ahorrado */}
               <div className="g-card card-b">
                 <div className="g-card-head">
-                  <span className="g-mini-label">Promedio semanal</span>
-                  <span className="g-mini-pill">+€30 esta semana</span>
+                  <span className="g-mini-label">Total Ahorrado</span>
+                  <span className="g-mini-label">esta semana</span>
                 </div>
-                <div className="g-bignum">€2.420</div>
+                <div className="g-bignum">325,67€</div>
                 <div className="g-bars" aria-hidden="true">
-                  {[60, 75, 50, 90, 65, 80, 45].map((h, i) => (
+                  {[60, 75, 90, 80, 55, 65, 50].map((h, i) => (
                     <div key={i} className="g-bar-col">
-                      <i className="seg-yellow" style={{ height: `${h * 0.35}%` }} />
-                      <i className="seg-sage" style={{ height: `${h * 0.5}%` }} />
+                      <i className="seg-sage" style={{ height: `${h * 0.45}%` }} />
+                      <i className="seg-yellow" style={{ height: `${h * 0.3}%` }} />
                       <i className="seg-blue" style={{ height: `${h * 0.25}%` }} />
                     </div>
                   ))}
                 </div>
                 <div className="g-bars-x">
-                  {["L", "M", "X", "J", "V", "S", "D"].map((d) => (
-                    <span key={d}>{d}</span>
+                  {["M", "T", "W", "T", "O", "I", "S"].map((d, i) => (
+                    <span key={i}>{d}</span>
                   ))}
                 </div>
               </div>
             </div>
+
           </div>
 
           {/* Logo strip */}
