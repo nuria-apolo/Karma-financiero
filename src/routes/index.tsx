@@ -220,7 +220,7 @@ function Landing() {
         {/* PRICING - dark Grovia style */}
         <section className="section" id="planes">
           <div className="container-x">
-            <div className="pricing-dark reveal">
+            <div className="pricing-green reveal">
               <div className="pd-head">
                 <p className="pd-eyebrow">Planes flexibles</p>
                 <h2>Empieza simple, <em>crece tranquilo</em></h2>
