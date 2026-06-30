@@ -238,10 +238,10 @@ button { font-family: inherit; }
   border-radius: 999px;
 }
 .g-bignum {
-  font-family: var(--font-sans);
-  font-weight: 600;
-  font-size: 1.9rem;
-  letter-spacing: -0.02em;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 2.4rem;
+  letter-spacing: -0.01em;
   margin: .2rem 0 .9rem;
   color: var(--ink);
 }
