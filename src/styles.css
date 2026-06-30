@@ -137,11 +137,12 @@ button { font-family: inherit; }
 
 /* ============ HERO (Grovia split) ============ */
 .g-hero {
-  padding-top: 8rem;
-  padding-bottom: 3rem;
+  padding-top: 11rem;
+  padding-bottom: 4rem;
   background: var(--bg);
   position: relative;
 }
+
 .g-hero-grid {
   display: grid;
   grid-template-columns: 1.05fr 1fr;
@@ -794,7 +795,7 @@ button { font-family: inherit; }
 /* ============ RESPONSIVE ============ */
 @media (max-width: 980px) {
   .nav-links { display: none; }
-  .g-hero { padding-top: 7rem; }
+  .g-hero { padding-top: 8.5rem; }
   .g-hero-grid, .panel-grid, .pd-grid, .g-foot-grid {
     grid-template-columns: 1fr;
     gap: 2.5rem;

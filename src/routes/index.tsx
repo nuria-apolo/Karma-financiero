@@ -168,18 +168,8 @@ function Landing() {
 
           </div>
 
-          {/* Logo strip */}
-          <div className="container-x">
-            <div className="g-logos reveal">
-              <span>Pensado para hogares de</span>
-              <em>parejas</em>
-              <em>familias</em>
-              <em>pisos compartidos</em>
-              <em>convivencias</em>
-              <em>cuidadores</em>
-            </div>
-          </div>
         </section>
+
 
         {/* FEATURES - tabbed (Grovia "Built for high performance") */}
         <section className="section" id="features">
