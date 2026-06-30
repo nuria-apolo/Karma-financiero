@@ -72,8 +72,8 @@ function Landing() {
           </a>
           <nav className="nav-links" aria-label="Principal">
             <a href="#features">Funciones</a>
-            <a href="#integraciones">Integraciones</a>
             <a href="#planes">Planes</a>
+            <a href="#planes">Precio</a>
             <a href="/blog">Blog</a>
           </nav>
           <a className="nav-cta" href={APP_URL} target="_blank" rel="noopener noreferrer">
