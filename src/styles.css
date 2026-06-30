@@ -228,7 +228,7 @@ button { font-family: inherit; }
 .ava-img { background: #eee; }
 .ava-sage { background: linear-gradient(135deg, #c3d6b6, #7d9b76); }
 .ava-blue { background: linear-gradient(135deg, #cbd6df, #6b8aa6); }
-.ava-yellow { background: linear-gradient(135deg, #f2f5b8, #c9b94c); }
+.ava-yellow { background: linear-gradient(135deg, #FEF7AF, #E8D990); }
 
 .g-card-foot {
   display: inline-block;
@@ -467,7 +467,7 @@ button { font-family: inherit; }
   font-weight: 500;
 }
 .tag.green { background: #d6ecc8; color: #3a6b2a; }
-.tag.yellow { background: #f1f1b8; color: #6b5a1a; }
+.tag.yellow { background: #FDF8D0; color: #6b5a1a; }
 .tag.blue { background: #cfdbe6; color: #2a4a6b; }
 
 .mock-goals { display: grid; gap: .7rem; }
@@ -564,7 +564,7 @@ button { font-family: inherit; }
   position: absolute;
   inset: auto auto -20% -10%;
   width: 40%; height: 60%;
-  background: radial-gradient(circle, rgba(230,236,132,0.45), transparent 60%);
+  background: radial-gradient(circle, rgba(254,247,175,0.45), transparent 60%);
   filter: blur(40px);
   pointer-events: none;
 }
