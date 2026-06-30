@@ -560,14 +560,14 @@ button { font-family: inherit; }
 .pd-head { position: relative; z-index: 1; text-align: left; max-width: 30ch; margin-bottom: 2.5rem; }
 .pd-eyebrow { font-size: .78rem; letter-spacing: .14em; text-transform: uppercase; color: #b9bcb6; margin-bottom: .8rem; }
 .pd-head h2 {
-  font-family: var(--font-sans);
-  font-weight: 600;
-  font-size: clamp(1.8rem, 3.6vw, 2.8rem);
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2rem, 3.8vw, 3rem);
   line-height: 1.05;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.015em;
   color: #fff;
 }
-.pd-head h2 em { font-family: var(--font-display); font-style: italic; font-weight: 500; color: var(--yellow); }
+.pd-head h2 em { font-style: italic; font-weight: 500; color: var(--yellow); }
 .pd-grid {
   display: grid;
   grid-template-columns: 1fr 1.2fr;
