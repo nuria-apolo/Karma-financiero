@@ -1,9 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import karmaLogo from "@/assets/karma-logo.svg.asset.json";
 import { SiteFooter } from "@/components/SiteFooter";
 
 const APP_URL = "https://app.karmafinanciero.com/";
+const SIGNUP_PATH = "/acceso";
 
 
 export const Route = createFileRoute("/")({
@@ -102,9 +103,9 @@ function Landing() {
             <a href="#planes">Precio</a>
             <a href="/blog">Blog</a>
           </nav>
-          <a className="nav-cta" href={APP_URL} target="_blank" rel="noopener noreferrer">
+          <Link className="nav-cta" to={SIGNUP_PATH}>
             Probar gratis →
-          </a>
+          </Link>
         </div>
       </header>
 
@@ -123,9 +124,9 @@ function Landing() {
                 cálculo ni discusiones.
               </p>
               <div className="g-hero-actions reveal d2">
-                <a className="btn-pill btn-pill-dark" href={APP_URL} target="_blank" rel="noopener noreferrer">
+                <Link className="btn-pill btn-pill-dark" to={SIGNUP_PATH}>
                   Prueba gratis <span className="pill-arrow">→</span>
-                </a>
+                </Link>
                 <a className="btn-pill btn-pill-ghost" href="#features">
                   Ver funciones
                 </a>
@@ -268,10 +269,10 @@ function Landing() {
                     {current.id === "pro" &&
                       "Todas las funciones de Karma pensadas para parejas. Suma una persona extra por solo 1,99€/mes."}
                   </p>
-                  <a className="pd-cta" href={APP_URL} target="_blank" rel="noopener noreferrer">
+                  <Link className="pd-cta" to={SIGNUP_PATH}>
                     {current.id === "gratis" ? "Probar gratis" : "Empezar ahora"}{" "}
                     <span className="pill-arrow">→</span>
-                  </a>
+                  </Link>
                   <ul className="pd-features">
                     {current.id === "gratis" ? (
                       <>
@@ -335,9 +336,9 @@ function Landing() {
               Una forma más tranquila y bonita de llevar las finanzas que compartes. Convierte el
               dinero en una conversación más fácil.
             </p>
-            <a className="btn-pill btn-pill-dark" href={APP_URL} target="_blank" rel="noopener noreferrer">
+            <Link className="btn-pill btn-pill-dark" to={SIGNUP_PATH}>
               Abrir la app <span className="pill-arrow">→</span>
-            </a>
+            </Link>
           </div>
         </section>
       </main>

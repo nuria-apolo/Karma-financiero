@@ -1026,3 +1026,114 @@ button { font-family: inherit; }
 .legal-content ul li { margin-bottom: .35rem; }
 .legal-content a { color: var(--ink); text-decoration: underline; }
 .legal-meta { color: var(--muted); font-size: .9rem; margin-bottom: 1rem; }
+
+/* ============ ACCESO ANTICIPADO ============ */
+.acceso-main { padding: 9rem 0 4rem; min-height: 100vh; }
+.acceso-wrap {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+}
+.acceso-copy h1 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2.2rem, 5vw, 4.2rem);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  margin: 1.2rem 0 1.4rem;
+}
+.acceso-copy h1 em { font-style: italic; }
+.acceso-copy p { color: var(--muted); font-size: 1.05rem; max-width: 48ch; line-height: 1.6; }
+.acceso-tag {
+  display: inline-flex; align-items: center; gap: .55rem;
+  background: #eaf0e3;
+  color: var(--ink);
+  padding: .5rem 1rem;
+  border-radius: 999px;
+  font-size: .78rem;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.acceso-tag .dot { width: 8px; height: 8px; border-radius: 50%; background: #7d9b76; }
+.acceso-chips { list-style: none; display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1.6rem; }
+.acceso-chips li {
+  background: #fff;
+  border: 1px solid var(--border-c);
+  padding: .55rem 1rem;
+  border-radius: 999px;
+  font-size: .9rem;
+  color: var(--ink);
+}
+.acceso-card {
+  background: #fff;
+  border-radius: var(--radius-lg);
+  padding: clamp(1.5rem, 3vw, 2.4rem);
+  box-shadow: var(--shadow-card);
+  display: flex; flex-direction: column;
+}
+.acceso-card h2 {
+  font-family: var(--font-body);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: .3rem;
+}
+.acceso-sub { color: var(--muted); font-size: .95rem; margin-bottom: 1.3rem; }
+.acceso-label {
+  font-size: .9rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin: .9rem 0 .35rem;
+}
+.acceso-card input[type="text"],
+.acceso-card input[type="email"],
+.acceso-card select,
+.acceso-card textarea {
+  width: 100%;
+  background: #f7f5f0;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  padding: .85rem 1rem;
+  font: inherit;
+  color: var(--ink);
+  transition: border-color .2s, background .2s;
+}
+.acceso-card textarea { resize: vertical; min-height: 90px; }
+.acceso-card input:focus,
+.acceso-card select:focus,
+.acceso-card textarea:focus {
+  outline: none;
+  border-color: #c3d6b6;
+  background: #fff;
+}
+.acceso-check {
+  display: flex; align-items: flex-start; gap: .6rem;
+  margin: 1.1rem 0 .4rem;
+  font-size: .9rem;
+  color: var(--ink);
+  line-height: 1.4;
+}
+.acceso-check input { margin-top: .2rem; accent-color: var(--ink); }
+.acceso-cta {
+  margin-top: 1rem;
+  background: var(--ink);
+  color: #fff;
+  border: 0;
+  border-radius: 999px;
+  padding: 1rem 1.4rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform .15s, opacity .2s;
+}
+.acceso-cta:hover:not(:disabled) { transform: translateY(-1px); }
+.acceso-cta:disabled { opacity: .7; cursor: progress; }
+.acceso-error { color: #a13636; font-size: .9rem; margin-top: .8rem; }
+.acceso-ok { color: #3b6b34; font-size: .95rem; margin-top: .8rem; }
+
+@media (max-width: 860px) {
+  .acceso-main { padding: 7rem 0 3rem; }
+  .acceso-wrap { grid-template-columns: 1fr; }
+}
