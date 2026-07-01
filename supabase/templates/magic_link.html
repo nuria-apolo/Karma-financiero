@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tu enlace mágico</title>
+    <style>
+      @media only screen and (max-width: 620px) {
+        .email-container {
+          width: 100% !important;
+        }
+      }
+    </style>
+  </head>
+  <body style="margin:0;padding:0;background:#F5F5F0;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:#F5F5F0;margin:0;padding:0;">
+      <tr>
+        <td align="center" style="padding:40px 16px;">
+          <table role="presentation" class="email-container" width="600" cellspacing="0" cellpadding="0" border="0" style="width:600px;max-width:600px;margin:0 auto;">
+            <tr>
+              <td align="center" style="padding:0 0 32px;">
+                <img src="logo-karma.svg" alt="Karma Financiero" width="260" style="display:block;margin:0 auto;border:0;outline:none;text-decoration:none;">
+              </td>
+            </tr>
+            <tr>
+              <td align="center" style="font-family:Arial, Helvetica, sans-serif;font-size:16px;line-height:1.6;color:#222222;padding:0 24px 28px;">
+                <strong>Tu enlace mágico está listo.</strong> Haz clic abajo para entrar directamente a Karma Financiero sin necesidad de contraseña.
+              </td>
+            </tr>
+            <tr>
+              <td align="center" style="padding:0 24px;">
+                <a href="{{ .ConfirmationURL }}" style="display:inline-block;background:#E8E87A;color:#000000;font-family:Arial, Helvetica, sans-serif;font-size:16px;line-height:1;text-decoration:none;border-radius:50px;padding:14px 36px;">
+                  Entrar a Karma Financiero
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td align="center" style="font-family:Arial, Helvetica, sans-serif;font-size:12px;line-height:1.5;color:#888888;padding:28px 24px 0;">
+                Si no has sido tú, puedes ignorar este correo sin problema
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

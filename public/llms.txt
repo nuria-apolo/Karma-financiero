@@ -1,0 +1,20 @@
+# Karma Financiero
+
+> Karma Financiero es una app para gestionar el dinero compartido en pareja, familia o convivencia con claridad y calma: ingresos, gastos, objetivos y deudas en un mismo lugar.
+
+## Pages
+
+- [Inicio](/): Qué es Karma Financiero, funciones, planes y casos de uso.
+- [Blog](/blog): Diario de Karma — artículos sobre finanzas compartidas, presupuesto del hogar y objetivos en pareja.
+
+## Blog
+
+- [Cómo hablar de dinero en pareja sin que se convierta en discusión](/blog/hablar-de-dinero-en-pareja): Tres rituales para que la conversación financiera no tense la convivencia.
+- [Un presupuesto del hogar que no te robe el domingo](/blog/presupuesto-hogar-sin-estres): Sistema ligero de presupuesto que aguanta los meses raros.
+- [Objetivos compartidos: del "algún día" al primer paso real](/blog/objetivos-financieros-compartidos): Cómo convertir metas comunes en progreso visible mes a mes.
+
+## Optional
+
+- [Aviso legal](/legal/aviso-legal)
+- [Privacidad](/legal/privacidad)
+- [Cookies](/legal/cookies)

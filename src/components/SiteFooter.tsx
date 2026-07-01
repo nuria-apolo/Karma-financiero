@@ -1,0 +1,42 @@
+import { Link } from "@tanstack/react-router";
+import karmaLogo from "@/assets/karma-logo.svg";
+
+export function SiteFooter() {
+  return (
+    <footer className="site-footer g-footer">
+      <div className="g-footer-shell">
+        <div className="g-foot-grid">
+          <div className="g-foot-brand">
+            <img src={karmaLogo} alt="Karma Financiero" className="brand-logo" />
+            <p>Finanzas compartidas con calma.</p>
+          </div>
+          <form className="g-newsletter" onSubmit={(e) => e.preventDefault()}>
+            <label>Suscríbete a la newsletter</label>
+            <div className="g-news-row">
+              <input type="email" placeholder="tu@email.com" aria-label="Email" />
+              <button type="submit">Suscribir</button>
+            </div>
+          </form>
+          <nav className="g-foot-links" aria-label="Pies">
+            <strong>Páginas</strong>
+            <Link to="/" hash="features">Funciones</Link>
+            <Link to="/" hash="planes">Planes</Link>
+            <Link to="/" hash="planes">Precio</Link>
+            <Link to="/blog">Blog</Link>
+            <Link to="/lista-espera">Lista de espera</Link>
+          </nav>
+          <nav className="g-foot-links" aria-label="Legal">
+            <strong>Legal</strong>
+            <Link to="/legal/aviso-legal">Aviso legal</Link>
+            <Link to="/legal/privacidad">Privacidad</Link>
+            <Link to="/legal/cookies">Política de cookies</Link>
+          </nav>
+        </div>
+        <div className="g-foot-bottom">
+          <span>Un producto de Karma Financiero · 2026</span>
+          <Link to="/lista-espera">Acceso anticipado</Link>
+        </div>
+      </div>
+    </footer>
+  );
+}

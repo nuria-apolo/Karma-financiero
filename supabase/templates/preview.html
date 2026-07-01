@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preview emails Karma Financiero</title>
+    <style>
+      body {
+        margin: 0;
+        background: #f5f5f0;
+        color: #141414;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+      .page {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 48px 20px;
+      }
+      h1 {
+        margin: 0 0 12px;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(32px, 5vw, 54px);
+        font-weight: 400;
+        text-align: center;
+      }
+      p {
+        max-width: 620px;
+        margin: 0 auto 32px;
+        color: #555;
+        line-height: 1.6;
+        text-align: center;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 24px;
+      }
+      .card {
+        overflow: hidden;
+        border: 1px solid rgba(20, 20, 20, .08);
+        border-radius: 24px;
+        background: #fff;
+        box-shadow: 0 18px 40px rgba(20, 20, 20, .07);
+      }
+      .card h2 {
+        margin: 0;
+        padding: 16px 18px;
+        border-bottom: 1px solid rgba(20, 20, 20, .08);
+        font-size: 14px;
+        font-weight: 600;
+      }
+      iframe {
+        display: block;
+        width: 100%;
+        height: 620px;
+        border: 0;
+        background: #f5f5f0;
+      }
+      @media (max-width: 820px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="page">
+      <h1>Preview emails Karma</h1>
+      <p>
+        Vista previa local de las plantillas de autenticación. Los enlaces mantienen la variable
+        <code>{{ .ConfirmationURL }}</code> tal y como la necesita Supabase.
+      </p>
+      <div class="grid">
+        <section class="card">
+          <h2>confirmation.html</h2>
+          <iframe src="./confirmation.html" title="Preview confirmation"></iframe>
+        </section>
+        <section class="card">
+          <h2>recovery.html</h2>
+          <iframe src="./recovery.html" title="Preview recovery"></iframe>
+        </section>
+        <section class="card">
+          <h2>magic_link.html</h2>
+          <iframe src="./magic_link.html" title="Preview magic link"></iframe>
+        </section>
+        <section class="card">
+          <h2>email_change.html</h2>
+          <iframe src="./email_change.html" title="Preview email change"></iframe>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>
