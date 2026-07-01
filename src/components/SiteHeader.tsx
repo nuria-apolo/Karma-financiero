@@ -15,9 +15,9 @@ export function SiteHeader() {
           <Link to="/" hash="planes">Planes</Link>
           <Link to="/blog">Blog</Link>
         </nav>
-        <a className="nav-cta" href={APP_URL} target="_blank" rel="noopener noreferrer">
+        <Link className="nav-cta" to="/acceso">
           Probar gratis →
-        </a>
+        </Link>
       </div>
     </header>
   );
