@@ -17,6 +17,7 @@ import { Route as LegalPrivacidadRouteImport } from './routes/legal.privacidad'
 import { Route as LegalCookiesRouteImport } from './routes/legal.cookies'
 import { Route as LegalAvisoLegalRouteImport } from './routes/legal.aviso-legal'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
+import { Route as LovableEmailQueueProcessRouteImport } from './routes/lovable/email/queue/process'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -58,6 +59,12 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LovableEmailQueueProcessRoute =
+  LovableEmailQueueProcessRouteImport.update({
+    id: '/lovable/email/queue/process',
+    path: '/lovable/email/queue/process',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -68,6 +75,7 @@ export interface FileRoutesByFullPath {
   '/legal/cookies': typeof LegalCookiesRoute
   '/legal/privacidad': typeof LegalPrivacidadRoute
   '/blog/': typeof BlogIndexRoute
+  '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -78,6 +86,7 @@ export interface FileRoutesByTo {
   '/legal/cookies': typeof LegalCookiesRoute
   '/legal/privacidad': typeof LegalPrivacidadRoute
   '/blog': typeof BlogIndexRoute
+  '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -89,6 +98,7 @@ export interface FileRoutesById {
   '/legal/cookies': typeof LegalCookiesRoute
   '/legal/privacidad': typeof LegalPrivacidadRoute
   '/blog/': typeof BlogIndexRoute
+  '/lovable/email/queue/process': typeof LovableEmailQueueProcessRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -101,6 +111,7 @@ export interface FileRouteTypes {
     | '/legal/cookies'
     | '/legal/privacidad'
     | '/blog/'
+    | '/lovable/email/queue/process'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -111,6 +122,7 @@ export interface FileRouteTypes {
     | '/legal/cookies'
     | '/legal/privacidad'
     | '/blog'
+    | '/lovable/email/queue/process'
   id:
     | '__root__'
     | '/'
@@ -121,6 +133,7 @@ export interface FileRouteTypes {
     | '/legal/cookies'
     | '/legal/privacidad'
     | '/blog/'
+    | '/lovable/email/queue/process'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -132,6 +145,7 @@ export interface RootRouteChildren {
   LegalCookiesRoute: typeof LegalCookiesRoute
   LegalPrivacidadRoute: typeof LegalPrivacidadRoute
   BlogIndexRoute: typeof BlogIndexRoute
+  LovableEmailQueueProcessRoute: typeof LovableEmailQueueProcessRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -192,6 +206,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/lovable/email/queue/process': {
+      id: '/lovable/email/queue/process'
+      path: '/lovable/email/queue/process'
+      fullPath: '/lovable/email/queue/process'
+      preLoaderRoute: typeof LovableEmailQueueProcessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -204,6 +225,7 @@ const rootRouteChildren: RootRouteChildren = {
   LegalCookiesRoute: LegalCookiesRoute,
   LegalPrivacidadRoute: LegalPrivacidadRoute,
   BlogIndexRoute: BlogIndexRoute,
+  LovableEmailQueueProcessRoute: LovableEmailQueueProcessRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
