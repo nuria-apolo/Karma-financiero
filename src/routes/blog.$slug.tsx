@@ -3,8 +3,6 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { getPost, blogPosts } from "@/lib/blog-posts";
 
-const APP_URL = "https://app.karmafinanciero.com/";
-
 
 export const Route = createFileRoute("/blog/$slug")({
   loader: ({ params }) => {
@@ -20,6 +18,7 @@ export const Route = createFileRoute("/blog/$slug")({
       meta: [
         { title: `${post.title} — Karma Financiero` },
         { name: "description", content: post.excerpt },
+        { name: "keywords", content: post.keywords.join(", ") },
         { property: "og:title", content: post.title },
         { property: "og:description", content: post.excerpt },
         { property: "og:type", content: "article" },
@@ -36,6 +35,7 @@ export const Route = createFileRoute("/blog/$slug")({
             "@type": "Article",
             headline: post.title,
             description: post.excerpt,
+            keywords: post.keywords,
             datePublished: post.date,
             image: post.cover,
             author: { "@type": "Organization", name: "Karma Financiero" },
@@ -67,7 +67,7 @@ export const Route = createFileRoute("/blog/$slug")({
 
 function BlogPostPage() {
   const { post } = Route.useLoaderData();
-  const related = blogPosts.filter((p) => p.slug !== post.slug).slice(0, 2);
+  const related = blogPosts.filter((p) => p.slug !== post.slug).slice(0, 3);
 
   return (
     <>
@@ -96,27 +96,30 @@ function BlogPostPage() {
           ))}
         </article>
 
-        <section className="section">
-          <div className="container-x">
-            <div className="cta-box">
-              <h2 style={{ fontSize: "clamp(1.8rem, 3vw, 2.6rem)" }}>Pruébalo en tu hogar</h2>
-              <p>Abre Karma Financiero y empieza a llevar las cuentas compartidas con un poco más de calma.</p>
-              <a className="btn btn-primary" href={APP_URL} target="_blank" rel="noopener noreferrer">Abrir la app</a>
-            </div>
+        <section className={`post-waitlist tone-${post.tone}`} aria-label="Lista de espera">
+          <div>
+            <span>Acceso anticipado</span>
+            <h2>Ordena las cuentas compartidas con Karma</h2>
+            <p>
+              Únete a la lista de espera y recibe la primera versión para gestionar gastos,
+              objetivos y presupuesto del hogar en un solo lugar.
+            </p>
           </div>
+          <Link className="btn-pill btn-pill-dark" to="/lista-espera">Apuntarme</Link>
         </section>
 
         {related.length > 0 && (
-          <section className="container-x" style={{ paddingBottom: "5rem" }}>
-            <h2 style={{
-              fontFamily: "var(--font-display)", fontStyle: "italic",
-              fontSize: "clamp(1.8rem, 3vw, 2.6rem)", marginBottom: "1.5rem", textAlign: "center"
-            }}>
-              Sigue leyendo
-            </h2>
+          <section className="container-x post-related">
+            <h2>Sigue leyendo</h2>
             <div className="story-grid">
-              {related.map((p) => (
-                <Link key={p.slug} to="/blog/$slug" params={{ slug: p.slug }} className="story-card">
+              {related.map((p, index) => (
+                <Link
+                  key={p.slug}
+                  to="/blog/$slug"
+                  params={{ slug: p.slug }}
+                  className={`story-card tone-${p.tone}`}
+                  style={{ animationDelay: `${index * 70}ms` }}
+                >
                   <div className="story-cover">
                     <img src={p.cover} alt={p.title} loading="lazy" width={1024} height={1024} />
                     <span className="story-year">{p.year}</span>

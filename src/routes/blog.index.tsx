@@ -3,9 +3,6 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { blogPosts } from "@/lib/blog-posts";
 
-const APP_URL = "https://app.karmafinanciero.com/";
-
-
 export const Route = createFileRoute("/blog/")({
   head: () => ({
     meta: [
@@ -29,6 +26,8 @@ export const Route = createFileRoute("/blog/")({
 });
 
 function BlogIndex() {
+  const [featuredPost, ...morePosts] = blogPosts;
+
   return (
     <>
       <SiteHeader />
@@ -36,22 +35,44 @@ function BlogIndex() {
 
       <main className="blog-page">
         <section className="container-x blog-hero">
-          <span className="eyebrow"><span className="dot" /> Diario de Karma</span>
-          <h1>Historias de finanzas compartidas.</h1>
+          <div>
+            <span className="eyebrow"><span className="dot" /> Diario de Karma</span>
+            <h1>Historias de finanzas compartidas.</h1>
+          </div>
           <p>
-            Karma acompaña a hogares que quieren hablar de dinero sin discutir.
-            Aquí recogemos rituales, métodos y conversaciones reales que sostienen el hábito.
+            Ideas cortas para hablar de dinero con más calma: rituales, presupuesto,
+            objetivos y pequeñas decisiones que sostienen el hogar.
           </p>
         </section>
 
-        <section className="container-x" style={{ paddingBottom: "5rem" }}>
+        <section className="container-x blog-stories">
+          {featuredPost && (
+            <Link
+              to="/blog/$slug"
+              params={{ slug: featuredPost.slug }}
+              className={`story-featured tone-${featuredPost.tone}`}
+            >
+              <div className="story-featured-copy">
+                <span>{featuredPost.tag} · {featuredPost.readingTime}</span>
+                <h2>{featuredPost.title}</h2>
+                <p>{featuredPost.excerpt}</p>
+                <strong>Leer artículo</strong>
+              </div>
+              <div className="story-featured-cover">
+                <img src={featuredPost.cover} alt={featuredPost.title} width={1200} height={900} />
+                <span className="story-year">{featuredPost.year}</span>
+              </div>
+            </Link>
+          )}
+
           <div className="story-grid">
-            {blogPosts.map((post) => (
+            {morePosts.map((post, index) => (
               <Link
                 key={post.slug}
                 to="/blog/$slug"
                 params={{ slug: post.slug }}
-                className="story-card"
+                className={`story-card tone-${post.tone}`}
+                style={{ animationDelay: `${index * 70}ms` }}
               >
                 <div className="story-cover">
                   <img src={post.cover} alt={post.title} loading="lazy" width={1024} height={1024} />

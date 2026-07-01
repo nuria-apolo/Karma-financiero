@@ -1,10 +1,10 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import karmaLogo from "@/assets/karma-logo.svg.asset.json";
+import karmaLogo from "@/assets/karma-logo.svg";
+import lotusKarmaIcon from "@/assets/lotus-karma-icon.png";
 import { SiteFooter } from "@/components/SiteFooter";
 
-const APP_URL = "https://app.karmafinanciero.com/";
-const SIGNUP_PATH = "/acceso";
+const WAITLIST_URL = "/lista-espera";
 
 
 export const Route = createFileRoute("/")({
@@ -95,7 +95,7 @@ function Landing() {
       <header className="site-header">
         <div className="nav-pill">
           <a href="#top" aria-label="Karma Financiero">
-            <img src={karmaLogo.url} alt="Karma Financiero" className="brand-logo" />
+            <img src={karmaLogo} alt="Karma Financiero" className="brand-logo" />
           </a>
           <nav className="nav-links" aria-label="Principal">
             <a href="#features">Funciones</a>
@@ -103,9 +103,9 @@ function Landing() {
             <a href="#planes">Precio</a>
             <a href="/blog">Blog</a>
           </nav>
-          <Link className="nav-cta" to={SIGNUP_PATH}>
-            Probar gratis →
-          </Link>
+          <a className="nav-cta" href={WAITLIST_URL}>
+            Probar gratis
+          </a>
         </div>
       </header>
 
@@ -124,9 +124,9 @@ function Landing() {
                 cálculo ni discusiones.
               </p>
               <div className="g-hero-actions reveal d2">
-                <Link className="btn-pill btn-pill-dark" to={SIGNUP_PATH}>
-                  Prueba gratis <span className="pill-arrow">→</span>
-                </Link>
+                <a className="btn-pill btn-pill-dark" href={WAITLIST_URL}>
+                  Prueba gratis
+                </a>
                 <a className="btn-pill btn-pill-ghost" href="#features">
                   Ver funciones
                 </a>
@@ -148,7 +148,7 @@ function Landing() {
                       <span>Propietario</span>
                     </div>
                     <span className="g-actions" aria-hidden="true">
-                      <i>✎</i><i>☆</i><i>💬</i><i>⋯</i>
+                      <i>✎</i><i>☆</i><i>○</i><i>⋯</i>
                     </span>
                   </li>
                   <li>
@@ -166,7 +166,7 @@ function Landing() {
                     </div>
                   </li>
                 </ul>
-                <a className="g-card-foot" href={APP_URL}>Todos los usuarios ⊕</a>
+                <a className="g-card-foot" href={WAITLIST_URL}>Todos los usuarios ⊕</a>
               </div>
 
               {/* Card B: Total ahorrado */}
@@ -186,7 +186,7 @@ function Landing() {
                   ))}
                 </div>
                 <div className="g-bars-x">
-                  {["M", "T", "W", "T", "O", "I", "S"].map((d, i) => (
+                  {["L", "M", "X", "J", "V", "S", "D"].map((d, i) => (
                     <span key={i}>{d}</span>
                   ))}
                 </div>
@@ -269,10 +269,9 @@ function Landing() {
                     {current.id === "pro" &&
                       "Todas las funciones de Karma pensadas para parejas. Suma una persona extra por solo 1,99€/mes."}
                   </p>
-                  <Link className="pd-cta" to={SIGNUP_PATH}>
-                    {current.id === "gratis" ? "Probar gratis" : "Empezar ahora"}{" "}
-                    <span className="pill-arrow">→</span>
-                  </Link>
+                  <a className="pd-cta" href={WAITLIST_URL}>
+                    {current.id === "gratis" ? "Probar gratis" : "Empezar ahora"}
+                  </a>
                   <ul className="pd-features">
                     {current.id === "gratis" ? (
                       <>
@@ -315,10 +314,8 @@ function Landing() {
             <blockquote className="reveal">
               "Tu economía del hogar también <em>puede sentirse bien</em>."
             </blockquote>
-            <div className="quote-author reveal d1">
-              <div className="quote-avatar" />
-              <strong>Karma Financiero</strong>
-              <span>Finanzas compartidas con calma</span>
+            <div className="quote-lotus reveal d1" aria-hidden="true">
+              <img src={lotusKarmaIcon} alt="" width={601} height={580} />
             </div>
           </div>
         </section>
@@ -336,9 +333,9 @@ function Landing() {
               Una forma más tranquila y bonita de llevar las finanzas que compartes. Convierte el
               dinero en una conversación más fácil.
             </p>
-            <Link className="btn-pill btn-pill-dark" to={SIGNUP_PATH}>
-              Abrir la app <span className="pill-arrow">→</span>
-            </Link>
+            <a className="btn-pill btn-pill-dark" href={WAITLIST_URL}>
+              Unirme a la lista
+            </a>
           </div>
         </section>
       </main>
