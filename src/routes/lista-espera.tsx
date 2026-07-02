@@ -3,7 +3,12 @@ import { FormEvent, useState } from "react";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 
-type LeadStatus = "idle" | "sent";
+type LeadStatus = "idle" | "submitting" | "sent" | "error";
+
+// Public client credentials for the dedicated Karma waitlist project.
+// Keeping these separate prevents Lovable Cloud from routing leads to its legacy database.
+const WAITLIST_SUPABASE_URL = "https://vyjcfuhohzmzvuxmbqgv.supabase.co";
+const WAITLIST_SUPABASE_KEY = "sb_publishable_4DLru48DNJm89EL3_lDGjA_Prs3Luw-";
 
 export const Route = createFileRoute("/lista-espera")({
   head: () => ({
@@ -30,23 +35,40 @@ export const Route = createFileRoute("/lista-espera")({
 function LeadCapture() {
   const [status, setStatus] = useState<LeadStatus>("idle");
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
     const data = new FormData(form);
+    setStatus("submitting");
+
     const lead = {
       name: String(data.get("name") || ""),
       email: String(data.get("email") || ""),
       profile: String(data.get("profile") || ""),
       goal: String(data.get("goal") || ""),
-      createdAt: new Date().toISOString(),
+      website: String(data.get("website") || ""),
+      consent: data.get("consent") === "on",
       source: "lista-espera",
     };
 
-    const current = JSON.parse(localStorage.getItem("karma-leads") || "[]");
-    localStorage.setItem("karma-leads", JSON.stringify([lead, ...current]));
-    setStatus("sent");
-    form.reset();
+    try {
+      const response = await fetch(`${WAITLIST_SUPABASE_URL}/functions/v1/waitlist`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          apikey: WAITLIST_SUPABASE_KEY,
+          Authorization: `Bearer ${WAITLIST_SUPABASE_KEY}`,
+        },
+        body: JSON.stringify(lead),
+      });
+
+      if (!response.ok) throw new Error("No se pudo registrar el lead");
+
+      setStatus("sent");
+      form.reset();
+    } catch {
+      setStatus("error");
+    }
   }
 
   return (
@@ -87,6 +109,11 @@ function LeadCapture() {
               <input name="email" type="email" placeholder="tu@email.com" autoComplete="email" required />
             </label>
 
+            <label className="lead-honeypot" aria-hidden="true">
+              Tu web
+              <input name="website" type="text" tabIndex={-1} autoComplete="off" />
+            </label>
+
             <label>
               ¿Cómo usarías Karma?
               <select name="profile" defaultValue="" required>
@@ -112,15 +139,26 @@ function LeadCapture() {
               <span>Acepto recibir comunicaciones sobre Karma Financiero.</span>
             </label>
 
-            <button className="btn-pill btn-pill-dark lead-submit" type="submit">
-              Apuntarme
+            <button
+              className="btn-pill btn-pill-dark lead-submit"
+              type="submit"
+              disabled={status === "submitting"}
+            >
+              {status === "submitting" ? "Apuntándote..." : "Apuntarme"}
             </button>
 
-            {status === "sent" && (
-              <p className="lead-success" role="status">
-                Listo. Te hemos añadido a la lista de interesados.
-              </p>
-            )}
+            <div aria-live="polite">
+              {status === "sent" && (
+                <p className="lead-success" role="status">
+                  Listo. Ya formas parte de la lista de Karma Financiero.
+                </p>
+              )}
+              {status === "error" && (
+                <p className="lead-error" role="alert">
+                  No hemos podido completar el registro. Inténtalo de nuevo en un momento.
+                </p>
+              )}
+            </div>
           </form>
         </section>
       </main>
