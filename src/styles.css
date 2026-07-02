@@ -4,7 +4,7 @@
 
 @font-face {
   font-family: "AtKing Light";
-  src: url("/__l5e/assets-v1/ef573fab-8dee-4ba7-9100-9462baea54fc/AtKing-Light.otf") format("opentype");
+  src: url("/fonts/AtKing-Light.otf") format("opentype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -206,7 +206,7 @@ button { font-family: inherit; }
 .g-hero-text h1 {
   font-family: var(--font-display);
   font-weight: 400;
-  font-size: 5rem;
+  font-size: clamp(3.9rem, 5.4vw, 4.5rem);
   line-height: .98;
   letter-spacing: 0;
   color: var(--ink);
@@ -996,6 +996,19 @@ button { font-family: inherit; }
   margin-bottom: .25rem;
 }
 .lead-form-head p { color: var(--muted); font-size: .92rem; }
+.lead-honeypot {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.lead-submit:disabled { cursor: wait; opacity: .7; }
+.lead-error { color: #9b2c2c; font-size: .9rem; }
 .lead-form label {
   display: grid;
   gap: .4rem;
@@ -1096,7 +1109,7 @@ button { font-family: inherit; }
   .pricing-dark { padding: 1.6rem; }
 }
 @media (max-width: 760px) {
-  .g-hero-text h1 { font-size: 3.5rem; }
+  .g-hero-text h1 { font-size: 3.15rem; }
 }
 @media (max-width: 640px) {
   .site-header { top: .7rem; }
@@ -1112,7 +1125,7 @@ button { font-family: inherit; }
   .g-foot-bottom { flex-direction: column; gap: .5rem; }
 }
 @media (max-width: 420px) {
-  .g-hero-text h1 { font-size: 3rem; }
+  .g-hero-text h1 { font-size: 2.7rem; }
 }
 
 /* ============ BLOG ============ */
@@ -1133,7 +1146,7 @@ button { font-family: inherit; }
   font-family: var(--font-display);
   font-style: italic;
   font-weight: 500;
-  font-size: clamp(2.4rem, 5.5vw, 4.5rem);
+  font-size: clamp(2.25rem, 5vw, 4rem);
   line-height: 1.05;
   letter-spacing: -0.02em;
   color: var(--ink);

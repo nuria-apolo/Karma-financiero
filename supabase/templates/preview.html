@@ -67,10 +67,13 @@
     <main class="page">
       <h1>Preview emails Karma</h1>
       <p>
-        Vista previa local de las plantillas de autenticación. Los enlaces mantienen la variable
-        <code>{{ .ConfirmationURL }}</code> tal y como la necesita Supabase.
+        Vista previa local del correo de bienvenida y las plantillas de autenticación.
       </p>
       <div class="grid">
+        <section class="card">
+          <h2>waitlist_welcome.html</h2>
+          <iframe src="./waitlist_welcome.html" title="Preview lista de espera"></iframe>
+        </section>
         <section class="card">
           <h2>confirmation.html</h2>
           <iframe src="./confirmation.html" title="Preview confirmation"></iframe>

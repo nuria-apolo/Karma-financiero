@@ -16,6 +16,14 @@ dist-ssr
 .tanstack/**
 .nitro
 *.local
+.env
+.env.*
+!.env.example
+.supabase-access-token
+.supabase-db-password
+.supabase-api-keys.json
+.resend-api-key
+supabase/.temp/
 *.zip
 
 # Wrangler / Cloudflare
