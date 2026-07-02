@@ -82,6 +82,31 @@ type TabId = (typeof TABS)[number]["id"];
 function Landing() {
   useReveal();
   const [activeTab, setActiveTab] = useState<TabId>("resumen");
+  const [displayedSavings, setDisplayedSavings] = useState(0);
+
+  useEffect(() => {
+    const target = 325.67;
+    let frame = 0;
+    let startedAt = 0;
+    const duration = 1750;
+    const delay = window.setTimeout(() => {
+      const tick = (now: number) => {
+        if (!startedAt) startedAt = now;
+        const progress = Math.min((now - startedAt) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        setDisplayedSavings(target * eased);
+
+        if (progress < 1) frame = window.requestAnimationFrame(tick);
+      };
+
+      frame = window.requestAnimationFrame(tick);
+    }, 420);
+
+    return () => {
+      window.clearTimeout(delay);
+      window.cancelAnimationFrame(frame);
+    };
+  }, []);
 
   const plans = [
     { id: "gratis", name: "Gratis", sub: "Pruébalo sin compromiso", price: "0€", cycle: "para siempre" },
@@ -175,13 +200,27 @@ function Landing() {
                   <span className="g-mini-label">Total Ahorrado</span>
                   <span className="g-mini-label">esta semana</span>
                 </div>
-                <div className="g-bignum">325,67€</div>
+                <div className="g-bignum" aria-label="325 euros con 67 céntimos">
+                  {new Intl.NumberFormat("es-ES", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  }).format(displayedSavings)}€
+                </div>
                 <div className="g-bars" aria-hidden="true">
                   {[60, 75, 90, 80, 55, 65, 50].map((h, i) => (
                     <div key={i} className="g-bar-col">
-                      <i className="seg-sage" style={{ height: `${h * 0.45}%` }} />
-                      <i className="seg-yellow" style={{ height: `${h * 0.3}%` }} />
-                      <i className="seg-blue" style={{ height: `${h * 0.25}%` }} />
+                      <i
+                        className="seg-sage"
+                        style={{ height: `${h * 0.45}%`, animationDelay: `${0.34 + i * 0.1}s` }}
+                      />
+                      <i
+                        className="seg-yellow"
+                        style={{ height: `${h * 0.3}%`, animationDelay: `${0.46 + i * 0.1}s` }}
+                      />
+                      <i
+                        className="seg-blue"
+                        style={{ height: `${h * 0.25}%`, animationDelay: `${0.58 + i * 0.1}s` }}
+                      />
                     </div>
                   ))}
                 </div>

@@ -68,7 +68,7 @@ button { font-family: inherit; }
   50% { transform: translate3d(-1.2rem, 1rem, 0) scale(1.04); opacity: .9; }
 }
 @keyframes bar-rise {
-  from { transform: scaleY(.35); opacity: .45; }
+  from { transform: scaleY(0); opacity: 0; }
   to { transform: scaleY(1); opacity: 1; }
 }
 @keyframes lotus-breathe {
@@ -357,14 +357,8 @@ button { font-family: inherit; }
   width: 100%;
   border-radius: 4px;
   transform-origin: bottom;
-  animation: bar-rise .75s cubic-bezier(.2,.7,.2,1) both;
+  animation: bar-rise 1.05s cubic-bezier(.16,.8,.2,1) both;
 }
-.g-bar-col:nth-child(2) i { animation-delay: .05s; }
-.g-bar-col:nth-child(3) i { animation-delay: .1s; }
-.g-bar-col:nth-child(4) i { animation-delay: .15s; }
-.g-bar-col:nth-child(5) i { animation-delay: .2s; }
-.g-bar-col:nth-child(6) i { animation-delay: .25s; }
-.g-bar-col:nth-child(7) i { animation-delay: .3s; }
 .seg-yellow { background: var(--yellow); }
 .seg-sage   { background: var(--sage); }
 .seg-blue   { background: var(--blue); }
