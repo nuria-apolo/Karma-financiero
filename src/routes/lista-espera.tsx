@@ -25,6 +25,7 @@ export const Route = createFileRoute("/lista-espera")({
         content:
           "Apúntate para probar la app de finanzas compartidas con calma.",
       },
+      { property: "og:type", content: "website" },
       { property: "og:url", content: "https://karmafinanciero.com/lista-espera" },
     ],
     links: [{ rel: "canonical", href: "https://karmafinanciero.com/lista-espera" }],

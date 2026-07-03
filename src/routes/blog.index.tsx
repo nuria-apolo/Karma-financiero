@@ -36,6 +36,7 @@ export const Route = createFileRoute("/blog/")({
           content:
             "Ideas prácticas sobre finanzas compartidas, presupuesto del hogar y objetivos en pareja.",
         },
+        { property: "og:type", content: "website" },
         { property: "og:url", content: "https://karmafinanciero.com/blog" },
       ],
       links: [{ rel: "canonical", href: "https://karmafinanciero.com/blog" }],

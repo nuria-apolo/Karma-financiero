@@ -80,7 +80,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { property: "og:type", content: "website" },
       { property: "og:site_name", content: "Karma Financiero" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "google-site-verification", content: "8C6kEq8rh_zhbOv-p8zNrO9arQpp8wvoG-s6cbpftiY" },

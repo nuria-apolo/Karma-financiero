@@ -21,6 +21,7 @@ export const Route = createFileRoute("/")({
         property: "og:description",
         content: "Organiza el dinero que compartes con claridad y calma.",
       },
+      { property: "og:type", content: "website" },
       { property: "og:url", content: "https://karmafinanciero.com/" },
     ],
     links: [{ rel: "canonical", href: "https://karmafinanciero.com/" }],

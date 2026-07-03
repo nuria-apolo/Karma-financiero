@@ -9,6 +9,7 @@ export const Route = createFileRoute("/legal/privacidad")({
       { name: "description", content: "Cómo trata Karma Financiero los datos personales de quienes visitan su sitio web." },
       { property: "og:title", content: "Política de privacidad — Karma Financiero" },
       { property: "og:description", content: "Tratamiento de datos personales en Karma Financiero." },
+      { property: "og:type", content: "website" },
       { property: "og:url", content: "https://karmafinanciero.com/legal/privacidad" },
     ],
     links: [{ rel: "canonical", href: "https://karmafinanciero.com/legal/privacidad" }],
