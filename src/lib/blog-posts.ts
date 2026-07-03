@@ -10,6 +10,7 @@ export type BlogPost = {
   title: string;
   excerpt: string;
   date: string;
+  isoDate: string;
   year: string;
   readingTime: string;
   tag: string;
