@@ -16,7 +16,7 @@ export const Route = createFileRoute("/blog/$slug")({
     const url = `https://karmafinanciero.com/blog/${params.slug}`;
     return {
       meta: [
-        { title: `${post.title} — Karma Financiero` },
+        { title: post.title },
         { name: "description", content: post.excerpt },
         { name: "keywords", content: post.keywords.join(", ") },
         { property: "og:title", content: post.title },
