@@ -9,6 +9,7 @@ export const Route = createFileRoute("/legal/aviso-legal")({
       { name: "description", content: "Información legal del sitio web de Karma Financiero." },
       { property: "og:title", content: "Aviso legal — Karma Financiero" },
       { property: "og:description", content: "Información legal del sitio web de Karma Financiero." },
+      { property: "og:type", content: "website" },
       { property: "og:url", content: "https://karmafinanciero.com/legal/aviso-legal" },
     ],
     links: [{ rel: "canonical", href: "https://karmafinanciero.com/legal/aviso-legal" }],
