@@ -94,6 +94,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap",
       },
     ],
+    scripts: [
+      {
+        src: "https://www.googletagmanager.com/gtag/js?id=G-B04NPYW44V",
+        async: true,
+      },
+      {
+        children: `window.dataLayer = window.dataLayer || [];\n  function gtag(){dataLayer.push(arguments);}\n  gtag('js', new Date());\n\n  gtag('config', 'G-B04NPYW44V');`,
+      },
+    ],
   }),
   shellComponent: RootShell,
   component: RootComponent,
