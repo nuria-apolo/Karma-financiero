@@ -214,10 +214,6 @@ button { font-family: inherit; }
   margin-bottom: 1.7rem;
   text-wrap: balance;
 }
-.g-hero-text h1 em {
-  font-style: italic;
-  font-weight: 500;
-}
 .g-hero-text p strong { font-weight: 600; color: var(--ink); }
 .g-hero-text p {
   color: rgba(20,20,20,.66);
