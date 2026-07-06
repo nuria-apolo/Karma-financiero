@@ -367,7 +367,7 @@ function Landing() {
               <span className="dot" /> Karma Financiero
             </span>
             <h2>
-              Empieza hoy. <em>Respira mejor mañana.</em>
+              Empieza hoy. Respira mejor mañana.
             </h2>
             <p>
               Una forma más tranquila y bonita de llevar las finanzas que compartes. Convierte el
