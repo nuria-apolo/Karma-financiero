@@ -96,11 +96,31 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     scripts: [
       {
-        src: "https://www.googletagmanager.com/gtag/js?id=G-B04NPYW44V",
-        async: true,
+        children: `window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+window.gtag = gtag;
+(function(){
+  var saved = null;
+  try { saved = window.localStorage.getItem('karma-cookies-consent-v1'); } catch (e) {}
+  var granted = saved === 'accepted';
+  gtag('consent', 'default', {
+    ad_storage: granted ? 'granted' : 'denied',
+    ad_user_data: granted ? 'granted' : 'denied',
+    ad_personalization: granted ? 'granted' : 'denied',
+    analytics_storage: granted ? 'granted' : 'denied',
+    functionality_storage: 'granted',
+    security_storage: 'granted',
+    wait_for_update: 500
+  });
+  gtag('set', 'ads_data_redaction', !granted);
+  gtag('set', 'url_passthrough', !granted);
+})();
+gtag('js', new Date());
+gtag('config', 'G-B04NPYW44V');`,
       },
       {
-        children: `window.dataLayer = window.dataLayer || [];\n  function gtag(){dataLayer.push(arguments);}\n  gtag('js', new Date());\n\n  gtag('config', 'G-B04NPYW44V');`,
+        src: "https://www.googletagmanager.com/gtag/js?id=G-B04NPYW44V",
+        async: true,
       },
     ],
   }),
