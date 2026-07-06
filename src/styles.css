@@ -1265,8 +1265,8 @@ button { font-family: inherit; }
   min-width: 0;
 }
 .story-body h3 {
-  font-family: var(--font-sans);
-  font-weight: 600;
+  font-family: var(--font-display);
+  font-weight: 400;
   font-size: clamp(1.35rem, 1.6vw, 1.7rem);
   line-height: 1.15;
   letter-spacing: -0.015em;
