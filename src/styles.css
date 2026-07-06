@@ -1378,7 +1378,7 @@ button { font-family: inherit; }
 }
 .post-related h2 {
   font-family: var(--font-display);
-  font-style: italic;
+  font-weight: 400;
   font-size: clamp(1.8rem, 3vw, 2.6rem);
   line-height: 1.08;
   margin-bottom: 1.5rem;
