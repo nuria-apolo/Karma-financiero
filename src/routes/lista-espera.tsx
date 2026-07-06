@@ -81,7 +81,7 @@ function LeadCapture() {
           <div className="lead-copy">
             <span className="eyebrow"><span className="dot" /> Acceso anticipado</span>
             <h1>
-              Sé de los primeros en probar <em>Karma Financiero</em>.
+              Sé de los primeros en probar Karma Financiero.
             </h1>
             <p>
               Estamos preparando una forma más tranquila de ordenar gastos, objetivos y decisiones
