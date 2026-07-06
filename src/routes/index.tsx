@@ -243,7 +243,7 @@ function Landing() {
           <div className="container-x">
             <p className="section-eyebrow reveal">Funciones</p>
             <h2 className="section-title reveal d1">
-              Hecho para hogares, <em>impulsado por la calma</em>
+              Hecho para hogares, impulsado por la calma
             </h2>
             <p className="section-lede reveal d1">
               Karma te da todo lo necesario para alinear el dinero del hogar, hacer seguimiento real
