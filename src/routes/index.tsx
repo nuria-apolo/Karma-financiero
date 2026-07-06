@@ -142,7 +142,7 @@ function Landing() {
             <div className="g-hero-text">
               <h1 className="reveal">
                 Gestiona lo compartido, <br />
-                vive lo <em>extraordinario</em>
+                vive lo extraordinario
               </h1>
               <p className="reveal d1">
                 <strong>Karma Financiero</strong> acompaña a parejas, familias y hogares para
