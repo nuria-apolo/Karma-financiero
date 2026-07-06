@@ -677,7 +677,6 @@ button { font-family: inherit; }
   letter-spacing: -0.015em;
   color: var(--ink);
 }
-.pd-head h2 em { font-style: italic; font-weight: 500; color: #4a6b3e; }
 .pd-grid {
   display: grid;
   grid-template-columns: 1fr 1.2fr;
