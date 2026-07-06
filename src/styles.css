@@ -775,10 +775,6 @@ button { font-family: inherit; }
   margin: 0 auto 2.2rem;
   color: var(--ink);
 }
-.quote-section blockquote em {
-  font-style: italic;
-  font-weight: 500;
-}
 .quote-lotus {
   width: clamp(7rem, 12vw, 10rem);
   margin: .35rem auto 0;
