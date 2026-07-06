@@ -280,7 +280,7 @@ function Landing() {
             <div className="pricing-green reveal">
               <div className="pd-head">
                 <p className="pd-eyebrow">Planes flexibles</p>
-                <h2>Empieza simple, <em>crece tranquilo</em></h2>
+                <h2>Empieza simple, crece tranquilo</h2>
               </div>
               <div className="pd-grid">
                 <ul className="pd-list">
