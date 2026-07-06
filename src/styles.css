@@ -1122,8 +1122,7 @@ button { font-family: inherit; }
 }
 .blog-hero h1 {
   font-family: var(--font-display);
-  font-style: italic;
-  font-weight: 500;
+  font-weight: 400;
   font-size: clamp(2.25rem, 5vw, 4rem);
   line-height: 1.05;
   letter-spacing: -0.02em;
