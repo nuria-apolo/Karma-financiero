@@ -352,7 +352,7 @@ function Landing() {
         <section className="quote-section">
           <div className="container-x">
             <blockquote className="reveal">
-              "Tu economía del hogar también <em>puede sentirse bien</em>."
+              "Tu economía del hogar también puede sentirse bien."
             </blockquote>
             <div className="quote-lotus reveal d1" aria-hidden="true">
               <img src={lotusKarmaIcon} alt="" width={601} height={580} />
