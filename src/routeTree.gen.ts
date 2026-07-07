@@ -13,10 +13,12 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ListaEsperaRouteImport } from './routes/lista-espera'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as LegalPrivacidadRouteImport } from './routes/legal.privacidad'
 import { Route as LegalCookiesRouteImport } from './routes/legal.cookies'
 import { Route as LegalAvisoLegalRouteImport } from './routes/legal.aviso-legal'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
+import { Route as AdminBlogRouteImport } from './routes/admin.blog'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -36,6 +38,11 @@ const IndexRoute = IndexRouteImport.update({
 const BlogIndexRoute = BlogIndexRouteImport.update({
   id: '/blog/',
   path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LegalPrivacidadRoute = LegalPrivacidadRouteImport.update({
@@ -58,25 +65,34 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminBlogRoute = AdminBlogRouteImport.update({
+  id: '/admin/blog',
+  path: '/admin/blog',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/lista-espera': typeof ListaEsperaRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin/blog': typeof AdminBlogRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/legal/aviso-legal': typeof LegalAvisoLegalRoute
   '/legal/cookies': typeof LegalCookiesRoute
   '/legal/privacidad': typeof LegalPrivacidadRoute
+  '/admin/': typeof AdminIndexRoute
   '/blog/': typeof BlogIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/lista-espera': typeof ListaEsperaRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin/blog': typeof AdminBlogRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/legal/aviso-legal': typeof LegalAvisoLegalRoute
   '/legal/cookies': typeof LegalCookiesRoute
   '/legal/privacidad': typeof LegalPrivacidadRoute
+  '/admin': typeof AdminIndexRoute
   '/blog': typeof BlogIndexRoute
 }
 export interface FileRoutesById {
@@ -84,10 +100,12 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/lista-espera': typeof ListaEsperaRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin/blog': typeof AdminBlogRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/legal/aviso-legal': typeof LegalAvisoLegalRoute
   '/legal/cookies': typeof LegalCookiesRoute
   '/legal/privacidad': typeof LegalPrivacidadRoute
+  '/admin/': typeof AdminIndexRoute
   '/blog/': typeof BlogIndexRoute
 }
 export interface FileRouteTypes {
@@ -96,30 +114,36 @@ export interface FileRouteTypes {
     | '/'
     | '/lista-espera'
     | '/sitemap.xml'
+    | '/admin/blog'
     | '/blog/$slug'
     | '/legal/aviso-legal'
     | '/legal/cookies'
     | '/legal/privacidad'
+    | '/admin/'
     | '/blog/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/lista-espera'
     | '/sitemap.xml'
+    | '/admin/blog'
     | '/blog/$slug'
     | '/legal/aviso-legal'
     | '/legal/cookies'
     | '/legal/privacidad'
+    | '/admin'
     | '/blog'
   id:
     | '__root__'
     | '/'
     | '/lista-espera'
     | '/sitemap.xml'
+    | '/admin/blog'
     | '/blog/$slug'
     | '/legal/aviso-legal'
     | '/legal/cookies'
     | '/legal/privacidad'
+    | '/admin/'
     | '/blog/'
   fileRoutesById: FileRoutesById
 }
@@ -127,10 +151,12 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ListaEsperaRoute: typeof ListaEsperaRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  AdminBlogRoute: typeof AdminBlogRoute
   BlogSlugRoute: typeof BlogSlugRoute
   LegalAvisoLegalRoute: typeof LegalAvisoLegalRoute
   LegalCookiesRoute: typeof LegalCookiesRoute
   LegalPrivacidadRoute: typeof LegalPrivacidadRoute
+  AdminIndexRoute: typeof AdminIndexRoute
   BlogIndexRoute: typeof BlogIndexRoute
 }
 
@@ -164,6 +190,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/admin'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/legal/privacidad': {
       id: '/legal/privacidad'
       path: '/legal/privacidad'
@@ -192,6 +225,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/blog': {
+      id: '/admin/blog'
+      path: '/admin/blog'
+      fullPath: '/admin/blog'
+      preLoaderRoute: typeof AdminBlogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -199,10 +239,12 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ListaEsperaRoute: ListaEsperaRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  AdminBlogRoute: AdminBlogRoute,
   BlogSlugRoute: BlogSlugRoute,
   LegalAvisoLegalRoute: LegalAvisoLegalRoute,
   LegalCookiesRoute: LegalCookiesRoute,
   LegalPrivacidadRoute: LegalPrivacidadRoute,
+  AdminIndexRoute: AdminIndexRoute,
   BlogIndexRoute: BlogIndexRoute,
 }
 export const routeTree = rootRouteImport

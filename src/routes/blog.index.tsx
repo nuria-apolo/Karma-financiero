@@ -1,23 +1,34 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
-import { blogPosts } from "@/lib/blog-posts";
+import {
+  FALLBACK_BLOG_IMAGE,
+  fetchPublishedPosts,
+  getCategoryName,
+  getPostTone,
+  getPostYear,
+  readingTime,
+} from "@/lib/blog-cms";
 
 export const Route = createFileRoute("/blog/")({
-  head: () => {
+  loader: () => fetchPublishedPosts(),
+  head: ({ loaderData }) => {
+    const posts = loaderData?.posts ?? [];
+    const categories = loaderData?.categories ?? [];
     const blogListJsonLd = {
       "@context": "https://schema.org",
       "@type": "Blog",
       name: "Diario de Karma — Blog de finanzas compartidas",
       description: "Lecturas cortas sobre hablar de dinero en pareja, presupuesto del hogar y objetivos compartidos.",
       url: "https://karmafinanciero.com/blog",
-      blogPosts: blogPosts.map((post) => ({
+      blogPosts: posts.map((post) => ({
         "@type": "BlogPosting",
-        headline: post.title,
-        description: post.excerpt,
+        headline: post.seo_title || post.title,
+        description: post.seo_description || post.excerpt,
         url: `https://karmafinanciero.com/blog/${post.slug}`,
-        datePublished: post.isoDate,
-        image: post.cover,
+        datePublished: post.published_at,
+        image: post.featured_image || FALLBACK_BLOG_IMAGE,
+        articleSection: getCategoryName(categories, post.category),
         author: { "@type": "Organization", name: "Karma Financiero" },
       })),
     };
@@ -52,7 +63,8 @@ export const Route = createFileRoute("/blog/")({
 });
 
 function BlogIndex() {
-  const [featuredPost, ...morePosts] = blogPosts;
+  const { posts, categories } = Route.useLoaderData();
+  const [featuredPost, ...morePosts] = posts;
 
   return (
     <>
@@ -76,19 +88,33 @@ function BlogIndex() {
             <Link
               to="/blog/$slug"
               params={{ slug: featuredPost.slug }}
-              className={`story-featured tone-${featuredPost.tone}`}
+              className={`story-featured tone-${getPostTone(featuredPost.category)}`}
             >
               <div className="story-featured-copy">
-                <span>{featuredPost.tag} · {featuredPost.readingTime}</span>
+                <span>
+                  {getCategoryName(categories, featuredPost.category)} · {readingTime(featuredPost.content)}
+                </span>
                 <h2>{featuredPost.title}</h2>
                 <p>{featuredPost.excerpt}</p>
                 <strong>Leer artículo</strong>
               </div>
               <div className="story-featured-cover">
-                <img src={featuredPost.cover} alt={featuredPost.title} width={1200} height={900} />
-                <span className="story-year">{featuredPost.year}</span>
+                <img
+                  src={featuredPost.featured_image || FALLBACK_BLOG_IMAGE}
+                  alt={featuredPost.title}
+                  width={1200}
+                  height={900}
+                />
+                <span className="story-year">{getPostYear(featuredPost.published_at)}</span>
               </div>
             </Link>
+          )}
+
+          {posts.length === 0 && (
+            <div className="blog-empty">
+              <h2>Estamos preparando nuevas lecturas.</h2>
+              <p>Vuelve pronto para leer ideas sobre finanzas compartidas, hogar y calma.</p>
+            </div>
           )}
 
           <div className="story-grid">
@@ -97,18 +123,26 @@ function BlogIndex() {
                 key={post.slug}
                 to="/blog/$slug"
                 params={{ slug: post.slug }}
-                className={`story-card tone-${post.tone}`}
+                className={`story-card tone-${getPostTone(post.category, index + 1)}`}
                 style={{ animationDelay: `${index * 70}ms` }}
               >
                 <div className="story-cover">
-                  <img src={post.cover} alt={post.title} loading="lazy" width={1024} height={1024} />
-                  <span className="story-year">{post.year}</span>
+                  <img
+                    src={post.featured_image || FALLBACK_BLOG_IMAGE}
+                    alt={post.title}
+                    loading="lazy"
+                    width={1024}
+                    height={1024}
+                  />
+                  <span className="story-year">{getPostYear(post.published_at)}</span>
                 </div>
                 <div className="story-body">
                   <h3>{post.title}</h3>
                   <p>{post.excerpt}</p>
                   <div className="story-meta">
-                    <span>{post.tag} · {post.readingTime}</span>
+                    <span>
+                      {getCategoryName(categories, post.category)} · {readingTime(post.content)}
+                    </span>
                     <span className="arrow">Leer →</span>
                   </div>
                 </div>

@@ -1,30 +1,43 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
-import { getPost, blogPosts } from "@/lib/blog-posts";
+import { BlogContent } from "@/components/blog/BlogContent";
+import {
+  FALLBACK_BLOG_IMAGE,
+  fetchPublishedPost,
+  fetchPublishedPosts,
+  formatPostDate,
+  getCategoryName,
+  getPostTone,
+  getPostYear,
+  readingTime,
+} from "@/lib/blog-cms";
 
 
 export const Route = createFileRoute("/blog/$slug")({
-  loader: ({ params }) => {
-    const post = getPost(params.slug);
+  loader: async ({ params }) => {
+    const [{ post, categories }, { posts }] = await Promise.all([
+      fetchPublishedPost(params.slug),
+      fetchPublishedPosts(),
+    ]);
     if (!post) throw notFound();
-    return { post };
+    return { post, categories, related: posts.filter((item) => item.slug !== post.slug).slice(0, 3) };
   },
   head: ({ params, loaderData }) => {
     const post = loaderData?.post;
     if (!post) return { meta: [{ title: "Artículo no encontrado — Karma Financiero" }] };
     const url = `https://karmafinanciero.com/blog/${params.slug}`;
+    const image = post.featured_image || FALLBACK_BLOG_IMAGE;
     return {
       meta: [
-        { title: post.title },
-        { name: "description", content: post.excerpt },
-        { name: "keywords", content: post.keywords.join(", ") },
-        { property: "og:title", content: post.title },
-        { property: "og:description", content: post.excerpt },
+        { title: post.seo_title || post.title },
+        { name: "description", content: post.seo_description || post.excerpt },
+        { property: "og:title", content: post.seo_title || post.title },
+        { property: "og:description", content: post.seo_description || post.excerpt },
         { property: "og:type", content: "article" },
         { property: "og:url", content: url },
-        { property: "og:image", content: post.cover },
-        { property: "twitter:image", content: post.cover },
+        { property: "og:image", content: image },
+        { property: "twitter:image", content: image },
       ],
       links: [{ rel: "canonical", href: url }],
       scripts: [
@@ -35,10 +48,10 @@ export const Route = createFileRoute("/blog/$slug")({
             "@type": "Article",
             headline: post.title,
             description: post.excerpt,
-            keywords: post.keywords,
-            datePublished: post.isoDate,
-            image: post.cover,
-            author: { "@type": "Organization", name: "Karma Financiero" },
+            datePublished: post.published_at,
+            dateModified: post.updated_at,
+            image,
+            author: { "@type": "Organization", name: post.author },
             publisher: {
               "@type": "Organization",
               name: "Karma Financiero",
@@ -66,8 +79,9 @@ export const Route = createFileRoute("/blog/$slug")({
 });
 
 function BlogPostPage() {
-  const { post } = Route.useLoaderData();
-  const related = blogPosts.filter((p) => p.slug !== post.slug).slice(0, 3);
+  const { post, categories, related } = Route.useLoaderData();
+  const categoryName = getCategoryName(categories, post.category);
+  const tone = getPostTone(post.category);
 
   return (
     <>
@@ -80,23 +94,21 @@ function BlogPostPage() {
         </div>
 
         <div className="post-cover">
-          <img src={post.cover} alt={post.title} width={1600} height={900} />
-          <span className="story-year">{post.year}</span>
+          <img src={post.featured_image || FALLBACK_BLOG_IMAGE} alt={post.title} width={1600} height={900} />
+          <span className="story-year">{getPostYear(post.published_at)}</span>
         </div>
 
         <header className="post-head">
-          <span className="eyebrow"><span className="dot" /> {post.tag}</span>
+          <span className="eyebrow"><span className="dot" /> {categoryName}</span>
           <h1>{post.title}</h1>
-          <p className="post-meta">{post.date} · {post.readingTime} de lectura</p>
+          <p className="post-meta">{formatPostDate(post.published_at)} · {readingTime(post.content)} de lectura</p>
         </header>
 
         <article className="post-content">
-          {post.content.map((para: string, i: number) => (
-            <p key={i}>{para}</p>
-          ))}
+          <BlogContent content={post.content} />
         </article>
 
-        <section className={`post-waitlist tone-${post.tone}`} aria-label="Lista de espera">
+        <section className={`post-waitlist tone-${tone}`} aria-label="Lista de espera">
           <div>
             <span>Acceso anticipado</span>
             <h2>Ordena las cuentas compartidas con Karma</h2>
@@ -117,18 +129,24 @@ function BlogPostPage() {
                   key={p.slug}
                   to="/blog/$slug"
                   params={{ slug: p.slug }}
-                  className={`story-card tone-${p.tone}`}
+                  className={`story-card tone-${getPostTone(p.category, index)}`}
                   style={{ animationDelay: `${index * 70}ms` }}
                 >
                   <div className="story-cover">
-                    <img src={p.cover} alt={p.title} loading="lazy" width={1024} height={1024} />
-                    <span className="story-year">{p.year}</span>
+                    <img
+                      src={p.featured_image || FALLBACK_BLOG_IMAGE}
+                      alt={p.title}
+                      loading="lazy"
+                      width={1024}
+                      height={1024}
+                    />
+                    <span className="story-year">{getPostYear(p.published_at)}</span>
                   </div>
                   <div className="story-body">
                     <h3>{p.title}</h3>
                     <p>{p.excerpt}</p>
                     <div className="story-meta">
-                      <span>{p.tag} · {p.readingTime}</span>
+                      <span>{getCategoryName(categories, p.category)} · {readingTime(p.content)}</span>
                       <span className="arrow">Leer →</span>
                     </div>
                   </div>

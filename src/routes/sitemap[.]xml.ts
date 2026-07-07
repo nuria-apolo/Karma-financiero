@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
-import { blogPosts } from "@/lib/blog-posts";
+import { fetchPublishedPosts } from "@/lib/blog-cms";
 
 const BASE_URL = "https://karmafinanciero.com";
 
@@ -14,15 +14,23 @@ export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
       GET: async () => {
+        let blogPaths: SitemapEntry[] = [];
+        try {
+          const { posts } = await fetchPublishedPosts();
+          blogPaths = posts.map((p) => ({
+            path: `/blog/${p.slug}`,
+            changefreq: "monthly" as const,
+            priority: "0.6",
+          }));
+        } catch (error) {
+          console.error("[sitemap] Could not load published blog posts", error);
+        }
+
         const entries: SitemapEntry[] = [
           { path: "/", changefreq: "weekly", priority: "1.0" },
           { path: "/lista-espera", changefreq: "weekly", priority: "0.9" },
           { path: "/blog", changefreq: "weekly", priority: "0.8" },
-          ...blogPosts.map((p) => ({
-            path: `/blog/${p.slug}`,
-            changefreq: "monthly" as const,
-            priority: "0.6",
-          })),
+          ...blogPaths,
           { path: "/legal/aviso-legal", changefreq: "yearly", priority: "0.3" },
           { path: "/legal/privacidad", changefreq: "yearly", priority: "0.3" },
           { path: "/legal/cookies", changefreq: "yearly", priority: "0.3" },
