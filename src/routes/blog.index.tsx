@@ -4,24 +4,50 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { blogPosts } from "@/lib/blog-posts";
 
 export const Route = createFileRoute("/blog/")({
-  head: () => ({
-    meta: [
-      { title: "Diario de Karma — Blog de finanzas compartidas" },
-      {
-        name: "description",
-        content:
-          "Lecturas cortas sobre hablar de dinero en pareja, presupuesto del hogar y objetivos compartidos.",
-      },
-      { property: "og:title", content: "Diario de Karma — Blog" },
-      {
-        property: "og:description",
-        content:
-          "Ideas prácticas sobre finanzas compartidas, presupuesto del hogar y objetivos en pareja.",
-      },
-      { property: "og:url", content: "https://karmafinanciero.com/blog" },
-    ],
-    links: [{ rel: "canonical", href: "https://karmafinanciero.com/blog" }],
-  }),
+  head: () => {
+    const blogListJsonLd = {
+      "@context": "https://schema.org",
+      "@type": "Blog",
+      name: "Diario de Karma — Blog de finanzas compartidas",
+      description: "Lecturas cortas sobre hablar de dinero en pareja, presupuesto del hogar y objetivos compartidos.",
+      url: "https://karmafinanciero.com/blog",
+      blogPosts: blogPosts.map((post) => ({
+        "@type": "BlogPosting",
+        headline: post.title,
+        description: post.excerpt,
+        url: `https://karmafinanciero.com/blog/${post.slug}`,
+        datePublished: post.isoDate,
+        image: post.cover,
+        author: { "@type": "Organization", name: "Karma Financiero" },
+      })),
+    };
+
+    return {
+      meta: [
+        { title: "Diario de Karma — Blog de finanzas compartidas" },
+        {
+          name: "description",
+          content:
+            "Lecturas cortas sobre hablar de dinero en pareja, presupuesto del hogar y objetivos compartidos.",
+        },
+        { property: "og:title", content: "Diario de Karma — Blog" },
+        {
+          property: "og:description",
+          content:
+            "Ideas prácticas sobre finanzas compartidas, presupuesto del hogar y objetivos en pareja.",
+        },
+        { property: "og:type", content: "website" },
+        { property: "og:url", content: "https://karmafinanciero.com/blog" },
+      ],
+      links: [{ rel: "canonical", href: "https://karmafinanciero.com/blog" }],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify(blogListJsonLd),
+        },
+      ],
+    };
+  },
   component: BlogIndex,
 });
 

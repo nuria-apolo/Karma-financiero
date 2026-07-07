@@ -80,7 +80,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { property: "og:type", content: "website" },
       { property: "og:site_name", content: "Karma Financiero" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "google-site-verification", content: "8C6kEq8rh_zhbOv-p8zNrO9arQpp8wvoG-s6cbpftiY" },
@@ -93,6 +92,35 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap",
+      },
+    ],
+    scripts: [
+      {
+        children: `window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+window.gtag = gtag;
+(function(){
+  var saved = null;
+  try { saved = window.localStorage.getItem('karma-cookies-consent-v1'); } catch (e) {}
+  var granted = saved === 'accepted';
+  gtag('consent', 'default', {
+    ad_storage: granted ? 'granted' : 'denied',
+    ad_user_data: granted ? 'granted' : 'denied',
+    ad_personalization: granted ? 'granted' : 'denied',
+    analytics_storage: granted ? 'granted' : 'denied',
+    functionality_storage: 'granted',
+    security_storage: 'granted',
+    wait_for_update: 500
+  });
+  gtag('set', 'ads_data_redaction', !granted);
+  gtag('set', 'url_passthrough', !granted);
+})();
+gtag('js', new Date());
+gtag('config', 'G-B04NPYW44V');`,
+      },
+      {
+        src: "https://www.googletagmanager.com/gtag/js?id=G-B04NPYW44V",
+        async: true,
       },
     ],
   }),

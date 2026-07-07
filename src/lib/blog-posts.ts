@@ -10,6 +10,7 @@ export type BlogPost = {
   title: string;
   excerpt: string;
   date: string;
+  isoDate: string;
   year: string;
   readingTime: string;
   tag: string;
@@ -26,6 +27,7 @@ export const blogPosts: BlogPost[] = [
     excerpt:
       "Tres rituales sencillos para que la conversación financiera deje de tensar la convivencia y empiece a sumar.",
     date: "12 de junio, 2026",
+    isoDate: "2026-06-12",
     year: "2026",
     readingTime: "7 min",
     tag: "Convivencia",
@@ -47,6 +49,7 @@ export const blogPosts: BlogPost[] = [
     excerpt:
       "Olvida las hojas de cálculo infinitas. Así montas un sistema ligero que aguanta los meses raros y los gastos imprevistos.",
     date: "5 de junio, 2026",
+    isoDate: "2026-06-05",
     year: "2026",
     readingTime: "8 min",
     tag: "Método",
@@ -69,6 +72,7 @@ export const blogPosts: BlogPost[] = [
     excerpt:
       "Viajar, mudarse, formar familia, dejar un trabajo. Convierte los grandes deseos en hitos medibles que de verdad ocurren.",
     date: "28 de mayo, 2026",
+    isoDate: "2026-05-28",
     year: "2026",
     readingTime: "6 min",
     tag: "Objetivos",
@@ -90,6 +94,7 @@ export const blogPosts: BlogPost[] = [
     excerpt:
       "Cómo decidir qué va a la cuenta compartida, qué se queda en lo personal y qué reglas evitan malentendidos.",
     date: "19 de junio, 2026",
+    isoDate: "2026-06-19",
     year: "2026",
     readingTime: "7 min",
     tag: "Pareja",
@@ -111,6 +116,7 @@ export const blogPosts: BlogPost[] = [
     excerpt:
       "Suscripciones, recambios, pequeños pagos y compras repetidas: el mapa para encontrarlos antes de que pesen.",
     date: "26 de junio, 2026",
+    isoDate: "2026-06-26",
     year: "2026",
     readingTime: "6 min",
     tag: "Ahorro",
@@ -132,6 +138,7 @@ export const blogPosts: BlogPost[] = [
     excerpt:
       "Un guion simple para revisar cuentas compartidas sin convertirlo en una tarde de tensión.",
     date: "1 de julio, 2026",
+    isoDate: "2026-07-01",
     year: "2026",
     readingTime: "5 min",
     tag: "Rituales",

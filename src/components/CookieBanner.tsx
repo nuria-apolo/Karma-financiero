@@ -22,6 +22,16 @@ export function CookieBanner() {
     } catch {
       /* no-op */
     }
+    const granted = value === "accepted" ? "granted" : "denied";
+    const w = window as unknown as { gtag?: (...args: unknown[]) => void };
+    if (typeof w.gtag === "function") {
+      w.gtag("consent", "update", {
+        ad_storage: granted,
+        ad_user_data: granted,
+        ad_personalization: granted,
+        analytics_storage: granted,
+      });
+    }
     setVisible(false);
   };
 

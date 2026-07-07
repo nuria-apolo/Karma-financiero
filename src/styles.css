@@ -214,10 +214,6 @@ button { font-family: inherit; }
   margin-bottom: 1.7rem;
   text-wrap: balance;
 }
-.g-hero-text h1 em {
-  font-style: italic;
-  font-weight: 500;
-}
 .g-hero-text p strong { font-weight: 600; color: var(--ink); }
 .g-hero-text p {
   color: rgba(20,20,20,.66);
@@ -380,10 +376,9 @@ button { font-family: inherit; }
 }
 .g-logos em {
   font-family: var(--font-display);
-  font-style: italic;
   font-size: 1.5rem;
   color: var(--ink);
-  font-weight: 500;
+  font-weight: 400;
 }
 
 /* ============ SECTION TITLES ============ */
@@ -406,10 +401,6 @@ button { font-family: inherit; }
   max-width: 20ch;
   margin: 0 auto 1rem;
   color: var(--ink);
-}
-.section-title em {
-  font-style: italic;
-  font-weight: 500;
 }
 .section-lede {
   text-align: center;
@@ -686,7 +677,6 @@ button { font-family: inherit; }
   letter-spacing: -0.015em;
   color: var(--ink);
 }
-.pd-head h2 em { font-style: italic; font-weight: 500; color: #4a6b3e; }
 .pd-grid {
   display: grid;
   grid-template-columns: 1fr 1.2fr;
@@ -785,10 +775,6 @@ button { font-family: inherit; }
   margin: 0 auto 2.2rem;
   color: var(--ink);
 }
-.quote-section blockquote em {
-  font-style: italic;
-  font-weight: 500;
-}
 .quote-lotus {
   width: clamp(7rem, 12vw, 10rem);
   margin: .35rem auto 0;
@@ -862,7 +848,6 @@ button { font-family: inherit; }
   margin-bottom: 1rem;
   color: var(--ink);
 }
-.cta-final h2 em { font-style: italic; font-weight: 500; }
 .cta-final p { color: #3a3d39; max-width: 46ch; margin: 0 auto 2rem; }
 
 /* ============ FOOTER ============ */
@@ -954,7 +939,6 @@ button { font-family: inherit; }
   color: var(--ink);
   margin: 1.2rem 0 1.4rem;
 }
-.lead-copy h1 em { font-style: italic; font-weight: 500; }
 .lead-copy p {
   max-width: 48ch;
   color: #3a3d39;
@@ -1138,8 +1122,7 @@ button { font-family: inherit; }
 }
 .blog-hero h1 {
   font-family: var(--font-display);
-  font-style: italic;
-  font-weight: 500;
+  font-weight: 400;
   font-size: clamp(2.25rem, 5vw, 4rem);
   line-height: 1.05;
   letter-spacing: -0.02em;
@@ -1282,8 +1265,8 @@ button { font-family: inherit; }
   min-width: 0;
 }
 .story-body h3 {
-  font-family: var(--font-sans);
-  font-weight: 600;
+  font-family: var(--font-display);
+  font-weight: 400;
   font-size: clamp(1.35rem, 1.6vw, 1.7rem);
   line-height: 1.15;
   letter-spacing: -0.015em;
@@ -1326,8 +1309,7 @@ button { font-family: inherit; }
 .post-head { text-align: center; max-width: 760px; margin: 3rem auto 0; padding: 0 1rem; }
 .post-head h1 {
   font-family: var(--font-display);
-  font-style: italic;
-  font-weight: 500;
+  font-weight: 400;
   font-size: clamp(2rem, 4vw, 3.2rem);
   line-height: 1.08;
   letter-spacing: -0.02em;
@@ -1396,7 +1378,7 @@ button { font-family: inherit; }
 }
 .post-related h2 {
   font-family: var(--font-display);
-  font-style: italic;
+  font-weight: 400;
   font-size: clamp(1.8rem, 3vw, 2.6rem);
   line-height: 1.08;
   margin-bottom: 1.5rem;

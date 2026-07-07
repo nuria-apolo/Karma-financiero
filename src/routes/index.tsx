@@ -21,6 +21,7 @@ export const Route = createFileRoute("/")({
         property: "og:description",
         content: "Organiza el dinero que compartes con claridad y calma.",
       },
+      { property: "og:type", content: "website" },
       { property: "og:url", content: "https://karmafinanciero.com/" },
     ],
     links: [{ rel: "canonical", href: "https://karmafinanciero.com/" }],
@@ -141,7 +142,7 @@ function Landing() {
             <div className="g-hero-text">
               <h1 className="reveal">
                 Gestiona lo compartido, <br />
-                vive lo <em>extraordinario</em>
+                vive lo extraordinario
               </h1>
               <p className="reveal d1">
                 <strong>Karma Financiero</strong> acompaña a parejas, familias y hogares para
@@ -242,7 +243,7 @@ function Landing() {
           <div className="container-x">
             <p className="section-eyebrow reveal">Funciones</p>
             <h2 className="section-title reveal d1">
-              Hecho para hogares, <em>impulsado por la calma</em>
+              Hecho para hogares, impulsado por la calma
             </h2>
             <p className="section-lede reveal d1">
               Karma te da todo lo necesario para alinear el dinero del hogar, hacer seguimiento real
@@ -279,7 +280,7 @@ function Landing() {
             <div className="pricing-green reveal">
               <div className="pd-head">
                 <p className="pd-eyebrow">Planes flexibles</p>
-                <h2>Empieza simple, <em>crece tranquilo</em></h2>
+                <h2>Empieza simple, crece tranquilo</h2>
               </div>
               <div className="pd-grid">
                 <ul className="pd-list">
@@ -351,7 +352,7 @@ function Landing() {
         <section className="quote-section">
           <div className="container-x">
             <blockquote className="reveal">
-              "Tu economía del hogar también <em>puede sentirse bien</em>."
+              "Tu economía del hogar también puede sentirse bien."
             </blockquote>
             <div className="quote-lotus reveal d1" aria-hidden="true">
               <img src={lotusKarmaIcon} alt="" width={601} height={580} />
@@ -366,7 +367,7 @@ function Landing() {
               <span className="dot" /> Karma Financiero
             </span>
             <h2>
-              Empieza hoy. <em>Respira mejor mañana.</em>
+              Empieza hoy. Respira mejor mañana.
             </h2>
             <p>
               Una forma más tranquila y bonita de llevar las finanzas que compartes. Convierte el
