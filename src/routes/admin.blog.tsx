@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import type { FormEvent } from "react";
+import type { ChangeEvent, FormEvent } from "react";
 import type { Session } from "@supabase/supabase-js";
 import {
   BadgeCheck,
@@ -9,7 +9,9 @@ import {
   Eye,
   FileText,
   Folder,
+  ImagePlus,
   LayoutList,
+  LoaderCircle,
   LogOut,
   Plus,
   Save,
@@ -36,6 +38,16 @@ type AuthState = "loading" | "signed-out" | "unauthorized" | "ready";
 type StatusFilter = "all" | BlogStatus;
 type AuthFormMode = "signin" | "signup";
 type AccessRequestRow = Tables<"blog_access_requests">;
+
+const BLOG_IMAGE_BUCKET = "blog-images";
+const MAX_BLOG_IMAGE_SIZE = 5 * 1024 * 1024;
+const BLOG_IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp", "image/avif"]);
+const BLOG_IMAGE_EXTENSIONS: Record<string, string> = {
+  "image/jpeg": "jpg",
+  "image/png": "png",
+  "image/webp": "webp",
+  "image/avif": "avif",
+};
 
 export const Route = createFileRoute("/admin/blog")({
   component: AdminBlogPage,
@@ -104,6 +116,7 @@ function AdminBlogPage() {
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [saving, setSaving] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -359,6 +372,67 @@ function AdminBlogPage() {
       const separator = current.content.trim() ? "\n\n" : "";
       return { ...current, content: `${current.content}${separator}${snippet}` };
     });
+  }
+
+  async function uploadFeaturedImage(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file || !postDraft) return;
+
+    if (!BLOG_IMAGE_TYPES.has(file.type)) {
+      setMessage("Usa una imagen JPG, PNG, WebP o AVIF.");
+      return;
+    }
+
+    if (file.size > MAX_BLOG_IMAGE_SIZE) {
+      setMessage("La imagen no puede superar los 5 MB.");
+      return;
+    }
+
+    setUploadingImage(true);
+    setMessage("");
+
+    const extension = BLOG_IMAGE_EXTENSIONS[file.type];
+    const folder = slugify(postDraft.slug || postDraft.title) || "articulo";
+    const filePath = `${folder}/${crypto.randomUUID()}.${extension}`;
+    const { error: uploadError } = await supabase.storage
+      .from(BLOG_IMAGE_BUCKET)
+      .upload(filePath, file, {
+        cacheControl: "3600",
+        contentType: file.type,
+        upsert: false,
+      });
+
+    if (uploadError) {
+      setUploadingImage(false);
+      setMessage(`No se pudo subir la imagen: ${uploadError.message}`);
+      return;
+    }
+
+    const { data: publicUrlData } = supabase.storage
+      .from(BLOG_IMAGE_BUCKET)
+      .getPublicUrl(filePath);
+    const publicUrl = publicUrlData.publicUrl;
+
+    const { data: updatedPost, error: updateError } = await supabase
+      .from("blog_posts")
+      .update({ featured_image: publicUrl })
+      .eq("id", postDraft.id)
+      .select("*")
+      .single();
+
+    setUploadingImage(false);
+    if (updateError) {
+      updatePost("featured_image", publicUrl);
+      setMessage("La imagen se subió. Guarda el artículo para conservar el cambio.");
+      return;
+    }
+
+    setPostDraft(updatedPost);
+    setPosts((current) =>
+      current.map((post) => (post.id === updatedPost.id ? updatedPost : post)),
+    );
+    setMessage("Imagen subida y guardada.");
   }
 
   async function createPost() {
@@ -814,14 +888,40 @@ function AdminBlogPage() {
                       />
                     </span>
                   </label>
-                  <label className="span-2">
-                    Imagen destacada
-                    <input
-                      value={postDraft.featured_image ?? ""}
-                      onChange={(event) => updatePost("featured_image", event.target.value)}
-                      placeholder="/blog/imagen.jpg o https://..."
-                    />
-                  </label>
+                  <div className="span-2 admin-image-field">
+                    <span className="admin-field-label">Imagen destacada</span>
+                    <div className="admin-image-upload">
+                      <div className="admin-image-thumb">
+                        <img
+                          src={postDraft.featured_image || FALLBACK_BLOG_IMAGE}
+                          alt=""
+                        />
+                      </div>
+                      <div className="admin-image-controls">
+                        <label className={`admin-upload-button ${uploadingImage ? "is-loading" : ""}`}>
+                          {uploadingImage ? (
+                            <LoaderCircle aria-hidden="true" size={17} />
+                          ) : (
+                            <ImagePlus aria-hidden="true" size={17} />
+                          )}
+                          {uploadingImage ? "Subiendo..." : "Subir desde el ordenador"}
+                          <input
+                            type="file"
+                            accept="image/jpeg,image/png,image/webp,image/avif"
+                            onChange={uploadFeaturedImage}
+                            disabled={uploadingImage}
+                          />
+                        </label>
+                        <small>JPG, PNG, WebP o AVIF · máximo 5 MB</small>
+                        <input
+                          aria-label="URL de la imagen destacada"
+                          value={postDraft.featured_image ?? ""}
+                          onChange={(event) => updatePost("featured_image", event.target.value)}
+                          placeholder="/blog/imagen.jpg o https://..."
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 <section className="admin-content-editor">
