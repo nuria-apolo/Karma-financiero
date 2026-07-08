@@ -2321,3 +2321,26 @@ button { font-family: inherit; }
     min-height: 0;
   }
 }
+
+/* Keep keyboard focus visible even when individual controls reset their outline. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[tabindex]:not([tabindex="-1"]):focus-visible {
+  outline: 3px solid #111 !important;
+  outline-offset: 3px !important;
+}
+
+@supports not selector(:focus-visible) {
+  a:focus,
+  button:focus,
+  input:focus,
+  select:focus,
+  textarea:focus,
+  [tabindex]:not([tabindex="-1"]):focus {
+    outline: 3px solid #111 !important;
+    outline-offset: 3px !important;
+  }
+}
