@@ -2,8 +2,15 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
+const FALLBACK_SUPABASE_URL = 'https://vyjcfuhohzmzvuxmbqgv.supabase.co';
+const FALLBACK_SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_4DLru48DNJm89EL3_lDGjA_Prs3Luw-';
+
 function isNewSupabaseApiKey(value: string): boolean {
   return value.startsWith('sb_publishable_') || value.startsWith('sb_secret_');
+}
+
+function readProcessEnv(key: string): string | undefined {
+  return typeof process !== 'undefined' ? process.env?.[key] : undefined;
 }
 
 function createSupabaseFetch(supabaseKey: string): typeof fetch {
@@ -30,8 +37,14 @@ function createSupabaseFetch(supabaseKey: string): typeof fetch {
 function createSupabaseClient() {
   // Use import.meta.env for client-side (Vite build-time replacement)
   // Fall back to process.env for SSR (server-side rendering)
-  const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;
-  const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || process.env.SUPABASE_PUBLISHABLE_KEY;
+  const SUPABASE_URL =
+    import.meta.env.VITE_SUPABASE_URL ||
+    readProcessEnv('SUPABASE_URL') ||
+    FALLBACK_SUPABASE_URL;
+  const SUPABASE_PUBLISHABLE_KEY =
+    import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
+    readProcessEnv('SUPABASE_PUBLISHABLE_KEY') ||
+    FALLBACK_SUPABASE_PUBLISHABLE_KEY;
 
   if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
     const missing = [
@@ -65,4 +78,3 @@ export const supabase = new Proxy({} as ReturnType<typeof createSupabaseClient>,
     return Reflect.get(_supabase, prop, receiver);
   },
 });
-
