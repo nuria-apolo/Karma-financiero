@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { FormEvent } from "react";
 import type { Session } from "@supabase/supabase-js";
 import {
+  BadgeCheck,
   Calendar,
   Check,
   Eye,
@@ -15,10 +16,12 @@ import {
   Search,
   Sparkles,
   Trash2,
+  UserPlus,
 } from "lucide-react";
 
 import { BlogContent } from "@/components/blog/BlogContent";
 import { supabase } from "@/integrations/supabase/client";
+import type { Tables } from "@/integrations/supabase/types";
 import type { BlogCategoryRow, BlogPostRow, BlogStatus } from "@/lib/blog-cms";
 import {
   FALLBACK_BLOG_IMAGE,
@@ -28,9 +31,11 @@ import {
   slugify,
 } from "@/lib/blog-cms";
 
-type Collection = "blog" | "categories" | "legal";
+type Collection = "blog" | "categories" | "access" | "legal";
 type AuthState = "loading" | "signed-out" | "unauthorized" | "ready";
 type StatusFilter = "all" | BlogStatus;
+type AuthFormMode = "signin" | "signup";
+type AccessRequestRow = Tables<"blog_access_requests">;
 
 export const Route = createFileRoute("/admin/blog")({
   component: AdminBlogPage,
@@ -59,17 +64,39 @@ function createEmptyCategory(): BlogCategoryRow {
   };
 }
 
+function toFriendlyAuthMessage(input: string) {
+  if (!input) return "";
+
+  if (/invalid login credentials/i.test(input)) {
+    return "Email o contrasena incorrectos.";
+  }
+
+  if (/email not confirmed/i.test(input)) {
+    return "Primero confirma tu email desde el correo de acceso.";
+  }
+
+  if (/infinite recursion|policy|blog_admins/i.test(input)) {
+    return "Todavia no hemos podido validar tu acceso. Prueba a recargar o volver a entrar en unos segundos.";
+  }
+
+  return input;
+}
+
 function AdminBlogPage() {
   const [authState, setAuthState] = useState<AuthState>("loading");
   const [session, setSession] = useState<Session | null>(null);
+  const [authFormMode, setAuthFormMode] = useState<AuthFormMode>("signin");
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
-  const [loginMode, setLoginMode] = useState<"password" | "magic">("password");
+  const [loginPasswordConfirm, setLoginPasswordConfirm] = useState("");
   const [message, setMessage] = useState("");
 
   const [collection, setCollection] = useState<Collection>("blog");
   const [posts, setPosts] = useState<BlogPostRow[]>([]);
   const [categories, setCategories] = useState<BlogCategoryRow[]>([]);
+  const [accessRequests, setAccessRequests] = useState<AccessRequestRow[]>([]);
+  const [currentAccessRequest, setCurrentAccessRequest] = useState<AccessRequestRow | null>(null);
+  const [selectedAccessRequestId, setSelectedAccessRequestId] = useState<string>("");
   const [selectedPostId, setSelectedPostId] = useState<string>("");
   const [postDraft, setPostDraft] = useState<BlogPostRow | null>(null);
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>("");
@@ -116,11 +143,12 @@ function AdminBlogPage() {
 
     if (error) {
       setAuthState("unauthorized");
-      setMessage(error.message);
+      setMessage(toFriendlyAuthMessage(error.message));
       return;
     }
 
     if (!data) {
+      await loadOwnAccessRequest(nextSession.user.id);
       setAuthState("unauthorized");
       return;
     }
@@ -130,21 +158,28 @@ function AdminBlogPage() {
   }
 
   async function loadCms() {
-    const [{ data: postRows, error: postsError }, { data: categoryRows, error: categoriesError }] =
+    const [
+      { data: postRows, error: postsError },
+      { data: categoryRows, error: categoriesError },
+      { data: requestRows, error: requestsError },
+    ] =
       await Promise.all([
         supabase.from("blog_posts").select("*").order("updated_at", { ascending: false }),
         supabase.from("blog_categories").select("*").order("name", { ascending: true }),
+        supabase.from("blog_access_requests").select("*").order("requested_at", { ascending: false }),
       ]);
 
-    if (postsError || categoriesError) {
-      setMessage(postsError?.message || categoriesError?.message || "No se pudo cargar el CMS.");
+    if (postsError || categoriesError || requestsError) {
+      setMessage(postsError?.message || categoriesError?.message || requestsError?.message || "No se pudo cargar el CMS.");
       return;
     }
 
     const nextPosts = postRows ?? [];
     const nextCategories = categoryRows ?? [];
+    const nextRequests = requestRows ?? [];
     setPosts(nextPosts);
     setCategories(nextCategories);
+    setAccessRequests(nextRequests);
 
     const nextSelected = selectedPostId
       ? nextPosts.find((post) => post.id === selectedPostId)
@@ -163,29 +198,129 @@ function AdminBlogPage() {
       setSelectedCategoryId(nextCategory.id);
       setCategoryDraft(nextCategory);
     }
+
+    const nextRequest = selectedAccessRequestId
+      ? nextRequests.find((request) => request.id === selectedAccessRequestId)
+      : nextRequests[0];
+
+    if (nextRequest) {
+      setSelectedAccessRequestId(nextRequest.id);
+    }
+  }
+
+  async function loadOwnAccessRequest(userId: string) {
+    const { data, error } = await supabase
+      .from("blog_access_requests")
+      .select("*")
+      .eq("user_id", userId)
+      .maybeSingle();
+
+    if (error) {
+      setMessage(toFriendlyAuthMessage(error.message));
+      return;
+    }
+
+    setCurrentAccessRequest(data);
   }
 
   async function handleLogin(event: FormEvent) {
     event.preventDefault();
     setMessage("");
 
-    if (loginMode === "magic") {
-      const { error } = await supabase.auth.signInWithOtp({
-        email: loginEmail,
-        options: {
-          emailRedirectTo: `${window.location.origin}/admin/blog`,
-        },
-      });
-      setMessage(error ? error.message : "Te hemos enviado un enlace de acceso.");
-      return;
-    }
-
     const { error } = await supabase.auth.signInWithPassword({
       email: loginEmail,
       password: loginPassword,
     });
 
-    if (error) setMessage(error.message);
+    if (error) setMessage(toFriendlyAuthMessage(error.message));
+  }
+
+  async function handleCreateAccount(event: FormEvent) {
+    event.preventDefault();
+    setMessage("");
+
+    if (loginPassword.length < 12) {
+      setMessage("Usa una contrasena de al menos 12 caracteres.");
+      return;
+    }
+
+    if (loginPassword !== loginPasswordConfirm) {
+      setMessage("Las contrasenas no coinciden.");
+      return;
+    }
+
+    const { data, error } = await supabase.auth.signUp({
+      email: loginEmail.trim(),
+      password: loginPassword,
+      options: {
+        emailRedirectTo: `${window.location.origin}/admin/blog`,
+      },
+    });
+
+    if (error) {
+      setMessage(toFriendlyAuthMessage(error.message));
+      return;
+    }
+
+    if (data.session) {
+      await supabase.auth.signOut();
+    }
+
+    setAuthState("signed-out");
+    setAuthFormMode("signin");
+    setLoginPassword("");
+    setLoginPasswordConfirm("");
+    setMessage(
+      "Cuenta creada. Revisa tu email para confirmarla. Despues un administrador debe aprobar tu acceso al CMS.",
+    );
+  }
+
+  async function handleRequestAccess() {
+    setMessage("");
+    if (!session?.user?.id || !session.user.email) {
+      setMessage("Necesitas iniciar sesion con tu cuenta verificada para solicitar acceso.");
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from("blog_access_requests")
+      .upsert(
+        {
+          user_id: session.user.id,
+          email: session.user.email,
+          status: "pending",
+          reviewed_at: null,
+        },
+        { onConflict: "user_id" },
+      )
+      .select("*")
+      .single();
+
+    if (error) {
+      setMessage(toFriendlyAuthMessage(error.message));
+      return;
+    }
+
+    setCurrentAccessRequest(data);
+    setMessage("Solicitud enviada. Cuando se apruebe, ya podras entrar al CMS.");
+  }
+
+  async function handlePasswordReset() {
+    setMessage("");
+    if (!loginEmail.trim()) {
+      setMessage("Escribe primero tu email para enviarte el enlace de creacion o cambio de contrasena.");
+      return;
+    }
+
+    const { error } = await supabase.auth.resetPasswordForEmail(loginEmail.trim(), {
+      redirectTo: `${window.location.origin}/admin/blog`,
+    });
+
+    setMessage(
+      error
+        ? toFriendlyAuthMessage(error.message)
+        : "Te hemos enviado un correo para crear o cambiar tu contrasena del CMS.",
+    );
   }
 
   async function handleSignOut() {
@@ -390,6 +525,49 @@ function AdminBlogPage() {
     setMessage("Categoria eliminada.");
   }
 
+  async function reviewAccessRequest(request: AccessRequestRow, decision: "approved" | "rejected") {
+    setSaving(true);
+    setMessage("");
+
+    if (decision === "approved") {
+      const { error: adminError } = await supabase
+        .from("blog_admins")
+        .upsert(
+          {
+            user_id: request.user_id,
+            email: request.email,
+          },
+          { onConflict: "user_id" },
+        );
+
+      if (adminError) {
+        setSaving(false);
+        setMessage(adminError.message);
+        return;
+      }
+    }
+
+    const { data, error } = await supabase
+      .from("blog_access_requests")
+      .update({
+        status: decision,
+        reviewed_at: new Date().toISOString(),
+      })
+      .eq("id", request.id)
+      .select("*")
+      .single();
+
+    setSaving(false);
+    if (error) {
+      setMessage(error.message);
+      return;
+    }
+
+    setAccessRequests((current) => current.map((item) => (item.id === data.id ? data : item)));
+    setSelectedAccessRequestId(data.id);
+    setMessage(decision === "approved" ? "Usuario aprobado para el CMS." : "Solicitud rechazada.");
+  }
+
   if (authState === "loading") {
     return (
       <main className="admin-auth">
@@ -404,36 +582,58 @@ function AdminBlogPage() {
   if (authState === "signed-out") {
     return (
       <main className="admin-auth">
-        <form className="admin-auth-card" onSubmit={handleLogin}>
+        <form className="admin-auth-card" onSubmit={authFormMode === "signin" ? handleLogin : handleCreateAccount}>
           <img src="/logo-karma.svg" alt="Karma Financiero" />
           <div>
             <span>CMS privado</span>
-            <h1>Entrar al panel</h1>
+            <h1>{authFormMode === "signin" ? "Entrar al panel" : "Crear cuenta"}</h1>
           </div>
+          <p className="admin-message">
+            {authFormMode === "signin"
+              ? "Acceso solo con usuario autorizado y contrasena segura."
+              : "Primero creas la cuenta, confirmas tu email y despues un administrador aprueba el acceso."}
+          </p>
           <label>
             Email
             <input value={loginEmail} onChange={(event) => setLoginEmail(event.target.value)} type="email" required />
           </label>
-          {loginMode === "password" && (
+          <label>
+            Contrasena
+            <input
+              value={loginPassword}
+              onChange={(event) => setLoginPassword(event.target.value)}
+              type="password"
+              autoComplete="current-password"
+              required
+            />
+          </label>
+          {authFormMode === "signup" && (
             <label>
-              Contrasena
+              Repite la contrasena
               <input
-                value={loginPassword}
-                onChange={(event) => setLoginPassword(event.target.value)}
+                value={loginPasswordConfirm}
+                onChange={(event) => setLoginPasswordConfirm(event.target.value)}
                 type="password"
+                autoComplete="new-password"
                 required
               />
             </label>
           )}
           <button className="admin-primary" type="submit">
-            {loginMode === "password" ? "Entrar" : "Enviar enlace"}
+            {authFormMode === "signin" ? "Entrar" : "Crear cuenta"}
           </button>
           <button
             className="admin-link-button"
             type="button"
-            onClick={() => setLoginMode(loginMode === "password" ? "magic" : "password")}
+            onClick={() => {
+              setMessage("");
+              setAuthFormMode(authFormMode === "signin" ? "signup" : "signin");
+            }}
           >
-            {loginMode === "password" ? "Prefiero enlace magico" : "Usar contrasena"}
+            {authFormMode === "signin" ? "Crear cuenta nueva" : "Ya tengo cuenta"}
+          </button>
+          <button className="admin-link-button" type="button" onClick={handlePasswordReset}>
+            Crear o restablecer contrasena
           </button>
           {message && <p className="admin-message">{message}</p>}
         </form>
@@ -451,12 +651,27 @@ function AdminBlogPage() {
             <h1>Tu usuario aun no esta autorizado</h1>
           </div>
           <p>
-            Has iniciado sesion correctamente, pero este usuario no figura en `blog_admins`.
+            Tu cuenta existe, pero todavia esta pendiente de aprobacion para entrar al CMS.
           </p>
-          {session?.user.id && (
-            <code className="admin-code">
-              insert into public.blog_admins (user_id, email) values ('{session.user.id}', '{session.user.email}');
-            </code>
+          <p className="admin-message">
+            Cuando un administrador revise tu solicitud, podras entrar aqui con normalidad.
+          </p>
+          {currentAccessRequest ? (
+            <div className="admin-request-state">
+              <strong>Estado de la solicitud: {currentAccessRequest.status}</strong>
+              <span>
+                {currentAccessRequest.status === "pending"
+                  ? "Tu solicitud ya esta enviada. Cuando te aprueben, recarga esta pantalla."
+                  : currentAccessRequest.status === "approved"
+                    ? "Tu acceso ya esta aprobado. Cierra sesion y vuelve a entrar si aun no te deja pasar."
+                    : "Tu solicitud fue rechazada. Puedes hablar con la persona administradora del CMS."}
+              </span>
+            </div>
+          ) : null}
+          {!currentAccessRequest && (
+            <button className="admin-primary" type="button" onClick={handleRequestAccess}>
+              <UserPlus size={15} /> Solicitar acceso
+            </button>
           )}
           {message && <p className="admin-message">{message}</p>}
           <button className="admin-secondary" type="button" onClick={handleSignOut}>
@@ -479,6 +694,9 @@ function AdminBlogPage() {
           </button>
           <button className={collection === "categories" ? "active" : ""} onClick={() => setCollection("categories")}>
             <Folder size={16} /> Categorias
+          </button>
+          <button className={collection === "access" ? "active" : ""} onClick={() => setCollection("access")}>
+            <BadgeCheck size={16} /> Accesos
           </button>
           <button className={collection === "legal" ? "active" : ""} onClick={() => setCollection("legal")}>
             <LayoutList size={16} /> Legal Pages
@@ -727,6 +945,84 @@ function AdminBlogPage() {
                 <Trash2 size={15} /> Eliminar categoria
               </button>
             </footer>
+          </section>
+        </>
+      )}
+
+      {collection === "access" && (
+        <>
+          <section className="admin-list">
+            <header className="admin-list-head">
+              <div>
+                <span>Collection</span>
+                <h1>Accesos</h1>
+              </div>
+            </header>
+            <div className="admin-post-list">
+              {accessRequests.map((request) => (
+                <button
+                  key={request.id}
+                  className={request.id === selectedAccessRequestId ? "admin-row active" : "admin-row"}
+                  type="button"
+                  onClick={() => setSelectedAccessRequestId(request.id)}
+                >
+                  <span className={`admin-status ${request.status === "approved" ? "live" : "draft"}`}>
+                    {request.status}
+                  </span>
+                  <strong>{request.email}</strong>
+                  <small>{new Date(request.requested_at).toLocaleString("es-ES")}</small>
+                </button>
+              ))}
+            </div>
+          </section>
+          <section className="admin-editor">
+            {accessRequests.find((request) => request.id === selectedAccessRequestId) ? (
+              (() => {
+                const selectedRequest = accessRequests.find((request) => request.id === selectedAccessRequestId)!;
+                return (
+                  <>
+                    <header className="admin-editor-head">
+                      <div>
+                        <span>Solicitud</span>
+                        <h2>{selectedRequest.email}</h2>
+                      </div>
+                    </header>
+                    <div className="admin-access-card">
+                      <p><strong>Email:</strong> {selectedRequest.email}</p>
+                      <p><strong>User ID:</strong> {selectedRequest.user_id}</p>
+                      <p><strong>Estado:</strong> {selectedRequest.status}</p>
+                      <p><strong>Solicitado:</strong> {new Date(selectedRequest.requested_at).toLocaleString("es-ES")}</p>
+                      {selectedRequest.reviewed_at && (
+                        <p><strong>Revisado:</strong> {new Date(selectedRequest.reviewed_at).toLocaleString("es-ES")}</p>
+                      )}
+                    </div>
+                    <div className="admin-actions">
+                      <button
+                        className="admin-primary"
+                        type="button"
+                        disabled={saving || selectedRequest.status === "approved"}
+                        onClick={() => reviewAccessRequest(selectedRequest, "approved")}
+                      >
+                        <Check size={15} /> Aprobar acceso
+                      </button>
+                      <button
+                        className="admin-secondary"
+                        type="button"
+                        disabled={saving || selectedRequest.status === "rejected"}
+                        onClick={() => reviewAccessRequest(selectedRequest, "rejected")}
+                      >
+                        <Trash2 size={15} /> Rechazar
+                      </button>
+                    </div>
+                  </>
+                );
+              })()
+            ) : (
+              <div className="admin-empty-state">
+                <h2>No hay solicitudes seleccionadas</h2>
+                <p>Cuando alguien cree cuenta y pida acceso, aparecerá aquí para aprobarlo.</p>
+              </div>
+            )}
           </section>
         </>
       )}

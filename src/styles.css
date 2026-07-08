@@ -1746,6 +1746,24 @@ button { font-family: inherit; }
   color: #665f16;
   background: rgba(232,232,122,.5);
 }
+.admin-request-state,
+.admin-access-card {
+  display: grid;
+  gap: .55rem;
+  padding: 1rem;
+  border: 1px solid rgba(20,20,20,.08);
+  border-radius: 16px;
+  background: #fbfaf7;
+}
+.admin-request-state strong,
+.admin-access-card strong {
+  color: #151515;
+}
+.admin-access-card p {
+  color: #55564f;
+  font-size: .92rem;
+  line-height: 1.5;
+}
 .admin-editor {
   padding: 1rem;
   background: #fff;

@@ -35,6 +35,39 @@ export type Database = {
         }
         Relationships: []
       }
+      blog_access_requests: {
+        Row: {
+          email: string
+          id: string
+          note: string | null
+          requested_at: string
+          reviewed_at: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          email: string
+          id?: string
+          note?: string | null
+          requested_at?: string
+          reviewed_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          email?: string
+          id?: string
+          note?: string | null
+          requested_at?: string
+          reviewed_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       blog_categories: {
         Row: {
           created_at: string
