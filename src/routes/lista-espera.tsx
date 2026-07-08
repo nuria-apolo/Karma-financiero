@@ -76,7 +76,7 @@ function LeadCapture() {
     <>
       <SiteHeader />
 
-      <main className="lead-page">
+      <main id="main-content" tabIndex={-1} className="lead-page">
         <section className="container-x lead-hero">
           <div className="lead-copy">
             <span className="eyebrow"><span className="dot" /> Acceso anticipado</span>

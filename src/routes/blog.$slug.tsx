@@ -88,7 +88,7 @@ function BlogPostPage() {
       <SiteHeader />
 
 
-      <main className="post-page">
+      <main id="main-content" tabIndex={-1} className="post-page">
         <div className="container-x" style={{ marginBottom: "1.5rem" }}>
           <Link to="/blog" className="back-link">← Volver al diario</Link>
         </div>

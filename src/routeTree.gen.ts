@@ -17,6 +17,7 @@ import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as LegalPrivacidadRouteImport } from './routes/legal.privacidad'
 import { Route as LegalCookiesRouteImport } from './routes/legal.cookies'
 import { Route as LegalAvisoLegalRouteImport } from './routes/legal.aviso-legal'
+import { Route as LegalAccesibilidadRouteImport } from './routes/legal.accesibilidad'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AdminBlogRouteImport } from './routes/admin.blog'
 
@@ -60,6 +61,11 @@ const LegalAvisoLegalRoute = LegalAvisoLegalRouteImport.update({
   path: '/legal/aviso-legal',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LegalAccesibilidadRoute = LegalAccesibilidadRouteImport.update({
+  id: '/legal/accesibilidad',
+  path: '/legal/accesibilidad',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BlogSlugRoute = BlogSlugRouteImport.update({
   id: '/blog/$slug',
   path: '/blog/$slug',
@@ -77,6 +83,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/blog': typeof AdminBlogRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/legal/accesibilidad': typeof LegalAccesibilidadRoute
   '/legal/aviso-legal': typeof LegalAvisoLegalRoute
   '/legal/cookies': typeof LegalCookiesRoute
   '/legal/privacidad': typeof LegalPrivacidadRoute
@@ -89,6 +96,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/blog': typeof AdminBlogRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/legal/accesibilidad': typeof LegalAccesibilidadRoute
   '/legal/aviso-legal': typeof LegalAvisoLegalRoute
   '/legal/cookies': typeof LegalCookiesRoute
   '/legal/privacidad': typeof LegalPrivacidadRoute
@@ -102,6 +110,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin/blog': typeof AdminBlogRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/legal/accesibilidad': typeof LegalAccesibilidadRoute
   '/legal/aviso-legal': typeof LegalAvisoLegalRoute
   '/legal/cookies': typeof LegalCookiesRoute
   '/legal/privacidad': typeof LegalPrivacidadRoute
@@ -116,6 +125,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/admin/blog'
     | '/blog/$slug'
+    | '/legal/accesibilidad'
     | '/legal/aviso-legal'
     | '/legal/cookies'
     | '/legal/privacidad'
@@ -128,6 +138,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/admin/blog'
     | '/blog/$slug'
+    | '/legal/accesibilidad'
     | '/legal/aviso-legal'
     | '/legal/cookies'
     | '/legal/privacidad'
@@ -140,6 +151,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/admin/blog'
     | '/blog/$slug'
+    | '/legal/accesibilidad'
     | '/legal/aviso-legal'
     | '/legal/cookies'
     | '/legal/privacidad'
@@ -153,6 +165,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   AdminBlogRoute: typeof AdminBlogRoute
   BlogSlugRoute: typeof BlogSlugRoute
+  LegalAccesibilidadRoute: typeof LegalAccesibilidadRoute
   LegalAvisoLegalRoute: typeof LegalAvisoLegalRoute
   LegalCookiesRoute: typeof LegalCookiesRoute
   LegalPrivacidadRoute: typeof LegalPrivacidadRoute
@@ -218,6 +231,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LegalAvisoLegalRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/legal/accesibilidad': {
+      id: '/legal/accesibilidad'
+      path: '/legal/accesibilidad'
+      fullPath: '/legal/accesibilidad'
+      preLoaderRoute: typeof LegalAccesibilidadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/blog/$slug': {
       id: '/blog/$slug'
       path: '/blog/$slug'
@@ -241,6 +261,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   AdminBlogRoute: AdminBlogRoute,
   BlogSlugRoute: BlogSlugRoute,
+  LegalAccesibilidadRoute: LegalAccesibilidadRoute,
   LegalAvisoLegalRoute: LegalAvisoLegalRoute,
   LegalCookiesRoute: LegalCookiesRoute,
   LegalPrivacidadRoute: LegalPrivacidadRoute,

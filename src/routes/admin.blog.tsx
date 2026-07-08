@@ -570,7 +570,7 @@ function AdminBlogPage() {
 
   if (authState === "loading") {
     return (
-      <main className="admin-auth">
+      <main id="main-content" tabIndex={-1} className="admin-auth">
         <div className="admin-auth-card">
           <Sparkles size={20} />
           <p>Cargando panel editorial...</p>
@@ -581,7 +581,7 @@ function AdminBlogPage() {
 
   if (authState === "signed-out") {
     return (
-      <main className="admin-auth">
+      <main id="main-content" tabIndex={-1} className="admin-auth">
         <form className="admin-auth-card" onSubmit={authFormMode === "signin" ? handleLogin : handleCreateAccount}>
           <img src="/logo-karma.svg" alt="Karma Financiero" />
           <div>
@@ -643,7 +643,7 @@ function AdminBlogPage() {
 
   if (authState === "unauthorized") {
     return (
-      <main className="admin-auth">
+      <main id="main-content" tabIndex={-1} className="admin-auth">
         <section className="admin-auth-card">
           <img src="/logo-karma.svg" alt="Karma Financiero" />
           <div>
@@ -683,7 +683,7 @@ function AdminBlogPage() {
   }
 
   return (
-    <main className="admin-shell">
+    <main id="main-content" tabIndex={-1} className="admin-shell">
       <aside className="admin-sidebar">
         <Link to="/" className="admin-brand">
           <img src="/logo-karma.svg" alt="Karma Financiero" />

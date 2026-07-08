@@ -71,7 +71,7 @@ function BlogIndex() {
       <SiteHeader />
 
 
-      <main className="blog-page">
+      <main id="main-content" tabIndex={-1} className="blog-page">
         <section className="container-x blog-hero">
           <div>
             <span className="eyebrow"><span className="dot" /> Diario de Karma</span>

@@ -120,7 +120,7 @@ function Landing() {
     <>
       <header className="site-header">
         <div className="nav-pill">
-          <a href="#top" aria-label="Karma Financiero">
+          <a href="#main-content" aria-label="Karma Financiero">
             <img src={karmaLogo} alt="Karma Financiero" className="brand-logo" />
           </a>
           <nav className="nav-links" aria-label="Principal">
@@ -135,7 +135,7 @@ function Landing() {
         </div>
       </header>
 
-      <main id="top">
+      <main id="main-content" tabIndex={-1}>
         {/* HERO - Grovia style: left text + floating cards right */}
         <section className="g-hero">
           <div className="container-x g-hero-grid">

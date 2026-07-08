@@ -21,7 +21,7 @@ function PrivacyPage() {
   return (
     <>
       <SiteHeader />
-      <main className="legal-page">
+      <main id="main-content" tabIndex={-1} className="legal-page">
         <div className="container-x legal-content">
           <span className="eyebrow"><span className="dot" /> Legal</span>
           <h1>Política de privacidad</h1>

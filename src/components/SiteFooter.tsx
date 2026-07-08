@@ -11,13 +11,19 @@ export function SiteFooter() {
             <p>Finanzas compartidas con calma.</p>
           </div>
           <form className="g-newsletter" onSubmit={(e) => e.preventDefault()}>
-            <label>Suscríbete a la newsletter</label>
+            <label htmlFor="footer-newsletter-email">Suscríbete a la newsletter</label>
             <div className="g-news-row">
-              <input type="email" placeholder="tu@email.com" aria-label="Email" />
+              <input
+                id="footer-newsletter-email"
+                type="email"
+                inputMode="email"
+                autoComplete="email"
+                placeholder="tu@email.com"
+              />
               <button type="submit">Suscribir</button>
             </div>
           </form>
-          <nav className="g-foot-links" aria-label="Pies">
+          <nav className="g-foot-links" aria-label="Páginas">
             <strong>Páginas</strong>
             <Link to="/" hash="features">Funciones</Link>
             <Link to="/" hash="planes">Planes</Link>
@@ -30,6 +36,7 @@ export function SiteFooter() {
             <Link to="/legal/aviso-legal">Aviso legal</Link>
             <Link to="/legal/privacidad">Privacidad</Link>
             <Link to="/legal/cookies">Política de cookies</Link>
+            <Link to="/legal/accesibilidad">Accesibilidad</Link>
           </nav>
         </div>
         <div className="g-foot-bottom">
