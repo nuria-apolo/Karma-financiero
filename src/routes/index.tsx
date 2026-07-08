@@ -257,6 +257,7 @@ function Landing() {
                   type="button"
                   className={`tab ${activeTab === t.id ? "on" : ""}`}
                   onClick={() => setActiveTab(t.id)}
+                  aria-pressed={activeTab === t.id}
                 >
                   <span className="tab-ico" aria-hidden="true">{t.icon}</span>
                   {t.label}
@@ -285,16 +286,19 @@ function Landing() {
               <div className="pd-grid">
                 <ul className="pd-list">
                   {plans.map((p) => (
-                    <li
-                      key={p.id}
-                      className={`pd-row ${activePlan === p.id ? "on" : ""}`}
-                      onClick={() => setActivePlan(p.id)}
-                    >
-                      <div>
-                        <strong>{p.name}</strong>
-                        <span>{p.sub}</span>
-                      </div>
-                      <span className="pd-arrow">→</span>
+                    <li key={p.id}>
+                      <button
+                        type="button"
+                        className={`pd-row ${activePlan === p.id ? "on" : ""}`}
+                        onClick={() => setActivePlan(p.id)}
+                        aria-pressed={activePlan === p.id}
+                      >
+                        <span className="pd-row-copy">
+                          <strong>{p.name}</strong>
+                          <span>{p.sub}</span>
+                        </span>
+                        <span className="pd-arrow" aria-hidden="true">→</span>
+                      </button>
                     </li>
                   ))}
                 </ul>
