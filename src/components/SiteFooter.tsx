@@ -29,13 +29,15 @@ export function SiteFooter() {
               >
                 <Linkedin aria-hidden="true" />
               </a>
-              <span
-                className="is-disabled"
-                aria-label="Karma Financiero en Facebook, próximamente"
-                title="Facebook, próximamente"
+              <a
+                href="https://www.facebook.com/people/Karma-Financiero/61591767630840/"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Karma Financiero en Facebook"
+                title="Facebook"
               >
                 <Facebook aria-hidden="true" />
-              </span>
+              </a>
             </div>
           </div>
           <form className="g-newsletter" onSubmit={(e) => e.preventDefault()}>

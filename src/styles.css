@@ -947,11 +947,6 @@ button { font-family: inherit; }
   background: var(--ink);
   color: #fff;
 }
-.g-foot-socials .is-disabled {
-  color: #777871;
-  opacity: .58;
-  cursor: not-allowed;
-}
 .g-newsletter {
   max-width: 32rem;
   grid-column: 1;
