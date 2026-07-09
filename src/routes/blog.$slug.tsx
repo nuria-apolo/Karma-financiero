@@ -90,9 +90,10 @@ export const Route = createFileRoute("/blog/$slug")({
 function BlogPostPage() {
   const loaderData = Route.useLoaderData();
   const { slug } = Route.useParams();
-  const [post, setPost] = useState(loaderData.post);
-  const [categories, setCategories] = useState(loaderData.categories);
-  const [related, setRelated] = useState(loaderData.related);
+  const [post, setPost] = useState<BlogPostRow | null>(loaderData.post);
+  const [categories, setCategories] = useState<BlogCategoryRow[]>(loaderData.categories);
+  const [related, setRelated] = useState<BlogPostRow[]>(loaderData.related);
+
   const [clientChecked, setClientChecked] = useState(Boolean(loaderData.post));
 
   // Sync state when the route param (slug) changes — TanStack re-runs the loader
