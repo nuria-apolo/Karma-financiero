@@ -72,8 +72,9 @@ export const Route = createFileRoute("/blog/")({
 
 function BlogIndex() {
   const loaderData = Route.useLoaderData();
-  const [posts, setPosts] = useState(loaderData.posts);
-  const [categories, setCategories] = useState(loaderData.categories);
+  const [posts, setPosts] = useState<BlogPostRow[]>(loaderData.posts);
+  const [categories, setCategories] = useState<BlogCategoryRow[]>(loaderData.categories);
+
 
   useEffect(() => {
     if (loaderData.posts.length > 0) return;
