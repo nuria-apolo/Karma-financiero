@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
-import { BlogContent } from "@/components/blog/BlogContent";
+import { BlogContent, getBlogHeadings } from "@/components/blog/BlogContent";
 import {
   FALLBACK_BLOG_IMAGE,
   fetchPublishedPost,
@@ -36,17 +36,24 @@ export const Route = createFileRoute("/blog/$slug")({
     const post = loaderData?.post;
     if (!post) return { meta: [{ title: "Artículo no encontrado — Karma Financiero" }] };
     const url = `https://karmafinanciero.com/blog/${params.slug}`;
-    const image = post.featured_image || FALLBACK_BLOG_IMAGE;
+    const rawImage = post.featured_image || FALLBACK_BLOG_IMAGE;
+    const image = new URL(rawImage, "https://karmafinanciero.com").href;
+    const description = post.seo_description || post.excerpt;
     return {
       meta: [
         { title: post.seo_title || post.title },
-        { name: "description", content: post.seo_description || post.excerpt },
-        { property: "og:title", content: post.seo_title || post.title },
-        { property: "og:description", content: post.seo_description || post.excerpt },
+        { name: "description", content: description },
+        { property: "og:title", content: post.title },
+        { property: "og:description", content: description },
         { property: "og:type", content: "article" },
         { property: "og:url", content: url },
         { property: "og:image", content: image },
-        { property: "twitter:image", content: image },
+        { property: "og:image:secure_url", content: image },
+        { property: "og:image:alt", content: `Imagen de cabecera de ${post.title}` },
+        { name: "twitter:title", content: post.title },
+        { name: "twitter:description", content: description },
+        { name: "twitter:image", content: image },
+        { name: "twitter:image:alt", content: `Imagen de cabecera de ${post.title}` },
       ],
       links: [{ rel: "canonical", href: url }],
       scripts: [
@@ -111,6 +118,7 @@ function BlogPostPage() {
 
   const categoryName = getCategoryName(categories, post.category);
   const tone = getPostTone(post.category);
+  const headings = getBlogHeadings(post.content);
 
   return (
     <>
@@ -132,6 +140,19 @@ function BlogPostPage() {
           <h1>{post.title}</h1>
           <p className="post-meta">{formatPostDate(post.published_at)} · {readingTime(post.content)} de lectura</p>
         </header>
+
+        {headings.length > 0 && (
+          <nav className="post-toc" aria-labelledby="post-toc-title">
+            <h2 id="post-toc-title">Tabla de contenidos</h2>
+            <ol>
+              {headings.map((heading) => (
+                <li className={heading.level === 3 ? "is-nested" : undefined} key={heading.id}>
+                  <a href={`#${heading.id}`}>{heading.text}</a>
+                </li>
+              ))}
+            </ol>
+          </nav>
+        )}
 
         <article className="post-content">
           <BlogContent content={post.content} />
