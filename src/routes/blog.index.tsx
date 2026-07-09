@@ -88,7 +88,7 @@ function BlogIndex() {
     };
   }, [loaderData]);
 
-  const [featuredPost, ...morePosts] = posts;
+  const [featuredPost, ...morePosts]: typeof posts = posts;
 
   return (
     <>
