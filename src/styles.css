@@ -1373,12 +1373,7 @@ button { font-family: inherit; }
 .story-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1rem;
-  padding: 1rem;
-  background: var(--surface);
-  border: 1px solid var(--border-c);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow);
+  gap: 1.25rem;
 }
 .story-card {
   display: flex;
@@ -1386,21 +1381,19 @@ button { font-family: inherit; }
   gap: 1.2rem;
   min-width: 0;
   background: #fff;
-  border-radius: var(--radius);
+  border-radius: var(--radius-lg);
   padding: 0.55rem 0.55rem 1.6rem;
   transition: transform .3s ease, box-shadow .3s ease, background .3s ease;
   border: 1px solid var(--border-c);
+  box-shadow: var(--shadow);
   animation: blog-rise .72s cubic-bezier(.2,.7,.2,1) both;
   will-change: transform;
 }
 .story-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
-.story-card.tone-green { background: linear-gradient(180deg, #fff 0%, rgba(195,214,182,.28) 100%); }
-.story-card.tone-yellow { background: linear-gradient(180deg, #fff 0%, rgba(254,247,175,.36) 100%); }
-.story-card.tone-blue { background: linear-gradient(180deg, #fff 0%, rgba(203,214,223,.36) 100%); }
 .story-cover {
   position: relative;
   aspect-ratio: 16 / 10;
-  border-radius: calc(var(--radius) - 0.4rem);
+  border-radius: calc(var(--radius-lg) - 0.4rem);
   overflow: hidden;
   background: var(--bg);
 }
@@ -2244,7 +2237,7 @@ button { font-family: inherit; }
 @media (max-width: 760px) {
   .blog-hero, .story-featured, .story-grid { grid-template-columns: 1fr; }
   .story-featured-copy, .story-featured-cover { min-height: 0; }
-  .story-grid { padding: 1rem; gap: 1.2rem; }
+  .story-grid { gap: 1.2rem; }
   .post-waitlist { grid-template-columns: 1fr; }
   .post-waitlist .btn-pill { width: 100%; }
   .post-cover { aspect-ratio: 4 / 3; border-radius: var(--radius); }
@@ -2252,8 +2245,7 @@ button { font-family: inherit; }
 @media (max-width: 520px) {
   .blog-page { padding-top: 7rem; }
   .blog-hero { gap: 1.2rem; padding-bottom: 2rem; }
-  .story-featured,
-  .story-grid {
+  .story-featured {
     border-radius: 1.4rem;
     padding: .75rem;
   }
