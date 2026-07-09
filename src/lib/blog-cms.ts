@@ -75,11 +75,12 @@ export async function fetchPublishedPosts() {
   } catch (error) {
     console.error("[blog] Could not load published posts from Supabase", error);
     return {
-      posts: [],
-      categories: [],
+      posts: [] as BlogPostRow[],
+      categories: [] as BlogCategoryRow[],
     };
   }
 }
+
 
 export async function fetchPublishedPost(slug: string) {
   try {
@@ -104,8 +105,9 @@ export async function fetchPublishedPost(slug: string) {
   } catch (error) {
     console.error("[blog] Could not load published post from Supabase", error);
     return {
-      post: null,
-      categories: [],
+      post: null as BlogPostRow | null,
+      categories: [] as BlogCategoryRow[],
     };
   }
 }
+

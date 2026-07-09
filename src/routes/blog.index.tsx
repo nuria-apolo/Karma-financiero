@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import type { BlogCategoryRow, BlogPostRow } from "@/lib/blog-cms";
 import {
   FALLBACK_BLOG_IMAGE,
   fetchPublishedPosts,
@@ -10,6 +11,7 @@ import {
   getPostYear,
   readingTime,
 } from "@/lib/blog-cms";
+
 
 export const Route = createFileRoute("/blog/")({
   loader: () => fetchPublishedPosts(),
@@ -70,8 +72,9 @@ export const Route = createFileRoute("/blog/")({
 
 function BlogIndex() {
   const loaderData = Route.useLoaderData();
-  const [posts, setPosts] = useState(loaderData.posts);
-  const [categories, setCategories] = useState(loaderData.categories);
+  const [posts, setPosts] = useState<BlogPostRow[]>(loaderData.posts);
+  const [categories, setCategories] = useState<BlogCategoryRow[]>(loaderData.categories);
+
 
   useEffect(() => {
     if (loaderData.posts.length > 0) return;
@@ -88,7 +91,7 @@ function BlogIndex() {
     };
   }, [loaderData]);
 
-  const [featuredPost, ...morePosts] = posts;
+  const [featuredPost, ...morePosts]: typeof posts = posts;
 
   return (
     <>

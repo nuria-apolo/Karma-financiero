@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { BlogContent, getBlogHeadings } from "@/components/blog/BlogContent";
+import type { BlogCategoryRow, BlogPostRow } from "@/lib/blog-cms";
 import {
   FALLBACK_BLOG_IMAGE,
   fetchPublishedPost,
@@ -13,6 +14,7 @@ import {
   getPostYear,
   readingTime,
 } from "@/lib/blog-cms";
+
 
 
 export const Route = createFileRoute("/blog/$slug")({
@@ -88,10 +90,20 @@ export const Route = createFileRoute("/blog/$slug")({
 function BlogPostPage() {
   const loaderData = Route.useLoaderData();
   const { slug } = Route.useParams();
-  const [post, setPost] = useState(loaderData.post);
-  const [categories, setCategories] = useState(loaderData.categories);
-  const [related, setRelated] = useState(loaderData.related);
+  const [post, setPost] = useState<BlogPostRow | null>(loaderData.post);
+  const [categories, setCategories] = useState<BlogCategoryRow[]>(loaderData.categories);
+  const [related, setRelated] = useState<BlogPostRow[]>(loaderData.related);
+
   const [clientChecked, setClientChecked] = useState(Boolean(loaderData.post));
+
+  // Sync state when the route param (slug) changes — TanStack re-runs the loader
+  // on navigation, but useState initializers only run once.
+  useEffect(() => {
+    setPost(loaderData.post);
+    setCategories(loaderData.categories);
+    setRelated(loaderData.related);
+    setClientChecked(Boolean(loaderData.post));
+  }, [loaderData, slug]);
 
   useEffect(() => {
     if (loaderData.post) return;
@@ -115,6 +127,7 @@ function BlogPostPage() {
   if (!post) {
     return clientChecked ? <BlogPostNotFound /> : <BlogPostLoading />;
   }
+
 
   const categoryName = getCategoryName(categories, post.category);
   const tone = getPostTone(post.category);
