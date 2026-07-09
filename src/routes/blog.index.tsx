@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import {
@@ -68,7 +69,25 @@ export const Route = createFileRoute("/blog/")({
 });
 
 function BlogIndex() {
-  const { posts, categories } = Route.useLoaderData();
+  const loaderData = Route.useLoaderData();
+  const [posts, setPosts] = useState(loaderData.posts);
+  const [categories, setCategories] = useState(loaderData.categories);
+
+  useEffect(() => {
+    if (loaderData.posts.length > 0) return;
+
+    let active = true;
+    void fetchPublishedPosts().then((data) => {
+      if (!active) return;
+      setPosts(data.posts);
+      setCategories(data.categories);
+    });
+
+    return () => {
+      active = false;
+    };
+  }, [loaderData]);
+
   const [featuredPost, ...morePosts] = posts;
 
   return (

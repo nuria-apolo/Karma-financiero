@@ -1,4 +1,5 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
 import { BlogContent } from "@/components/blog/BlogContent";
@@ -20,8 +21,11 @@ export const Route = createFileRoute("/blog/$slug")({
       fetchPublishedPost(params.slug),
       fetchPublishedPosts(),
     ]);
-    if (!post) throw notFound();
-    return { post, categories, related: posts.filter((item) => item.slug !== post.slug).slice(0, 3) };
+    return {
+      post,
+      categories,
+      related: posts.filter((item) => item.slug !== params.slug).slice(0, 3),
+    };
   },
   headers: () => ({
     "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
@@ -71,20 +75,40 @@ export const Route = createFileRoute("/blog/$slug")({
       ],
     };
   },
-  notFoundComponent: () => (
-    <div className="container-x section">
-      <h1>Artículo no encontrado</h1>
-      <p style={{ marginTop: "1rem", color: "var(--muted)" }}>
-        Puede que el enlace esté roto o el post haya cambiado de sitio.
-      </p>
-      <Link to="/blog" className="btn btn-soft" style={{ marginTop: "1.5rem" }}>Volver al blog</Link>
-    </div>
-  ),
   component: BlogPostPage,
 });
 
 function BlogPostPage() {
-  const { post, categories, related } = Route.useLoaderData();
+  const loaderData = Route.useLoaderData();
+  const { slug } = Route.useParams();
+  const [post, setPost] = useState(loaderData.post);
+  const [categories, setCategories] = useState(loaderData.categories);
+  const [related, setRelated] = useState(loaderData.related);
+  const [clientChecked, setClientChecked] = useState(Boolean(loaderData.post));
+
+  useEffect(() => {
+    if (loaderData.post) return;
+
+    let active = true;
+    void Promise.all([fetchPublishedPost(slug), fetchPublishedPosts()]).then(
+      ([postData, postsData]) => {
+        if (!active) return;
+        setPost(postData.post);
+        setCategories(postData.categories);
+        setRelated(postsData.posts.filter((item) => item.slug !== slug).slice(0, 3));
+        setClientChecked(true);
+      },
+    );
+
+    return () => {
+      active = false;
+    };
+  }, [loaderData, slug]);
+
+  if (!post) {
+    return clientChecked ? <BlogPostNotFound /> : <BlogPostLoading />;
+  }
+
   const categoryName = getCategoryName(categories, post.category);
   const tone = getPostTone(post.category);
 
@@ -164,6 +188,38 @@ function BlogPostPage() {
 
       <SiteFooter />
 
+    </>
+  );
+}
+
+function BlogPostLoading() {
+  return (
+    <>
+      <SiteHeader />
+      <main id="main-content" tabIndex={-1} className="post-page">
+        <div className="container-x section" aria-live="polite">
+          <p>Cargando artículo…</p>
+        </div>
+      </main>
+      <SiteFooter />
+    </>
+  );
+}
+
+function BlogPostNotFound() {
+  return (
+    <>
+      <SiteHeader />
+      <main id="main-content" tabIndex={-1} className="container-x section">
+        <h1>Artículo no encontrado</h1>
+        <p style={{ marginTop: "1rem", color: "var(--muted)" }}>
+          Puede que el enlace esté roto o el post haya cambiado de sitio.
+        </p>
+        <Link to="/blog" className="btn btn-soft" style={{ marginTop: "1.5rem" }}>
+          Volver al blog
+        </Link>
+      </main>
+      <SiteFooter />
     </>
   );
 }
