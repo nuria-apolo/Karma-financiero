@@ -105,8 +105,9 @@ export async function fetchPublishedPost(slug: string) {
   } catch (error) {
     console.error("[blog] Could not load published post from Supabase", error);
     return {
-      post: null,
-      categories: [],
+      post: null as BlogPostRow | null,
+      categories: [] as BlogCategoryRow[],
     };
   }
 }
+
