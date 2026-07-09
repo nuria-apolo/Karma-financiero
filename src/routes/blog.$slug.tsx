@@ -23,6 +23,11 @@ export const Route = createFileRoute("/blog/$slug")({
     if (!post) throw notFound();
     return { post, categories, related: posts.filter((item) => item.slug !== post.slug).slice(0, 3) };
   },
+  headers: () => ({
+    "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+    "CDN-Cache-Control": "no-store",
+    "Cloudflare-CDN-Cache-Control": "no-store",
+  }),
   head: ({ params, loaderData }) => {
     const post = loaderData?.post;
     if (!post) return { meta: [{ title: "Artículo no encontrado — Karma Financiero" }] };

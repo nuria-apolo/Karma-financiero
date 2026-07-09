@@ -12,6 +12,11 @@ import {
 
 export const Route = createFileRoute("/blog/")({
   loader: () => fetchPublishedPosts(),
+  headers: () => ({
+    "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+    "CDN-Cache-Control": "no-store",
+    "Cloudflare-CDN-Cache-Control": "no-store",
+  }),
   head: ({ loaderData }) => {
     const posts = loaderData?.posts ?? [];
     const categories = loaderData?.categories ?? [];
