@@ -93,6 +93,15 @@ function BlogPostPage() {
   const [related, setRelated] = useState(loaderData.related);
   const [clientChecked, setClientChecked] = useState(Boolean(loaderData.post));
 
+  // Sync state when the route param (slug) changes — TanStack re-runs the loader
+  // on navigation, but useState initializers only run once.
+  useEffect(() => {
+    setPost(loaderData.post);
+    setCategories(loaderData.categories);
+    setRelated(loaderData.related);
+    setClientChecked(Boolean(loaderData.post));
+  }, [loaderData, slug]);
+
   useEffect(() => {
     if (loaderData.post) return;
 
@@ -115,6 +124,7 @@ function BlogPostPage() {
   if (!post) {
     return clientChecked ? <BlogPostNotFound /> : <BlogPostLoading />;
   }
+
 
   const categoryName = getCategoryName(categories, post.category);
   const tone = getPostTone(post.category);
