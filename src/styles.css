@@ -2442,6 +2442,79 @@ button { font-family: inherit; }
   padding-top: 1.25rem;
   border-top: 1px dashed rgba(20, 63, 52, .18);
 }
+.legal-cms-sections {
+  display: grid;
+  gap: 1rem;
+}
+.legal-cms-sections .accessibility-section {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr);
+  gap: 1rem;
+  margin-top: 0;
+  padding: 1.5rem;
+  border: 1px solid rgba(20, 63, 52, .1);
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: 0 18px 45px -38px rgba(20, 63, 52, .5);
+}
+.legal-section-icon {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: var(--yellow);
+  color: #29453d;
+}
+.legal-section-icon svg {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+.legal-section-copy {
+  min-width: 0;
+}
+.legal-section-copy h2 {
+  margin-bottom: .8rem;
+}
+.legal-section-copy p,
+.legal-section-copy li {
+  color: #4f5c57;
+  font-size: .98rem;
+  line-height: 1.75;
+}
+.legal-section-copy p + p,
+.legal-section-copy ul + p {
+  margin-top: .9rem;
+}
+.legal-section-copy ul {
+  margin: .85rem 0 0;
+  padding-left: 1.25rem;
+}
+.legal-section-copy a {
+  color: #173f35;
+  font-weight: 650;
+  text-decoration: underline;
+  text-underline-offset: .18rem;
+}
+.legal-cookie-preferences {
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: .9rem;
+}
+.legal-cookie-preferences > svg {
+  color: #28705c;
+}
+.legal-cookie-preferences div {
+  display: grid;
+  gap: .1rem;
+}
+.legal-admin-preview {
+  margin-bottom: 2rem;
+}
+.legal-admin-preview .admin-preview-content a {
+  color: #173f35;
+  text-decoration: underline;
+}
 @media (max-width: 700px) {
   .accessibility-page {
     padding-top: 5.75rem;
@@ -2470,6 +2543,17 @@ button { font-family: inherit; }
   }
   .accessibility-feature-grid article {
     min-height: 0;
+  }
+  .legal-cms-sections .accessibility-section {
+    grid-template-columns: 1fr;
+    padding: 1.25rem;
+  }
+  .legal-cookie-preferences {
+    grid-template-columns: auto 1fr;
+  }
+  .legal-cookie-preferences .btn-pill {
+    grid-column: 1 / -1;
+    width: 100%;
   }
 }
 

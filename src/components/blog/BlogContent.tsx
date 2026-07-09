@@ -1,10 +1,22 @@
 import type { ReactNode } from "react";
 
 function renderInline(text: string) {
-  const parts = text.split(/(\*\*[^*]+\*\*)/g);
+  const parts = text.split(
+    /(\*\*[^*]+\*\*|\[[^\]]+\]\((?:https?:\/\/|mailto:)[^)]+\)|(?:https?:\/\/[^\s]+)|(?:[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}))/g,
+  );
   return parts.map((part, index) => {
     if (part.startsWith("**") && part.endsWith("**")) {
       return <strong key={index}>{part.slice(2, -2)}</strong>;
+    }
+    const markdownLink = part.match(/^\[([^\]]+)\]\(((?:https?:\/\/|mailto:)[^)]+)\)$/);
+    if (markdownLink) {
+      return <a key={index} href={markdownLink[2]}>{markdownLink[1]}</a>;
+    }
+    if (/^https?:\/\//.test(part)) {
+      return <a key={index} href={part}>{part}</a>;
+    }
+    if (/^[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}$/.test(part)) {
+      return <a key={index} href={`mailto:${part}`}>{part}</a>;
     }
     return <span key={index}>{part}</span>;
   });

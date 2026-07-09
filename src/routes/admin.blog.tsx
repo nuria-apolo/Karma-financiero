@@ -32,6 +32,7 @@ import {
   readingTime,
   slugify,
 } from "@/lib/blog-cms";
+import type { LegalPageRow } from "@/lib/legal-cms";
 
 type Collection = "blog" | "categories" | "access" | "legal";
 type AuthState = "loading" | "signed-out" | "unauthorized" | "ready";
@@ -113,6 +114,9 @@ function AdminBlogPage() {
   const [postDraft, setPostDraft] = useState<BlogPostRow | null>(null);
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>("");
   const [categoryDraft, setCategoryDraft] = useState<BlogCategoryRow>(createEmptyCategory());
+  const [legalPages, setLegalPages] = useState<LegalPageRow[]>([]);
+  const [selectedLegalPageId, setSelectedLegalPageId] = useState("");
+  const [legalDraft, setLegalDraft] = useState<LegalPageRow | null>(null);
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [saving, setSaving] = useState(false);
@@ -175,24 +179,34 @@ function AdminBlogPage() {
       { data: postRows, error: postsError },
       { data: categoryRows, error: categoriesError },
       { data: requestRows, error: requestsError },
+      { data: legalRows, error: legalError },
     ] =
       await Promise.all([
         supabase.from("blog_posts").select("*").order("updated_at", { ascending: false }),
         supabase.from("blog_categories").select("*").order("name", { ascending: true }),
         supabase.from("blog_access_requests").select("*").order("requested_at", { ascending: false }),
+        supabase.from("legal_pages").select("*").order("title", { ascending: true }),
       ]);
 
-    if (postsError || categoriesError || requestsError) {
-      setMessage(postsError?.message || categoriesError?.message || requestsError?.message || "No se pudo cargar el CMS.");
+    if (postsError || categoriesError || requestsError || legalError) {
+      setMessage(
+        postsError?.message ||
+          categoriesError?.message ||
+          requestsError?.message ||
+          legalError?.message ||
+          "No se pudo cargar el CMS.",
+      );
       return;
     }
 
     const nextPosts = postRows ?? [];
     const nextCategories = categoryRows ?? [];
     const nextRequests = requestRows ?? [];
+    const nextLegalPages = legalRows ?? [];
     setPosts(nextPosts);
     setCategories(nextCategories);
     setAccessRequests(nextRequests);
+    setLegalPages(nextLegalPages);
 
     const nextSelected = selectedPostId
       ? nextPosts.find((post) => post.id === selectedPostId)
@@ -218,6 +232,15 @@ function AdminBlogPage() {
 
     if (nextRequest) {
       setSelectedAccessRequestId(nextRequest.id);
+    }
+
+    const nextLegalPage = selectedLegalPageId
+      ? nextLegalPages.find((page) => page.id === selectedLegalPageId)
+      : nextLegalPages[0];
+
+    if (nextLegalPage) {
+      setSelectedLegalPageId(nextLegalPage.id);
+      setLegalDraft(nextLegalPage);
     }
   }
 
@@ -341,6 +364,8 @@ function AdminBlogPage() {
     setAuthState("signed-out");
     setPosts([]);
     setPostDraft(null);
+    setLegalPages([]);
+    setLegalDraft(null);
   }
 
   const filteredPosts = useMemo(() => {
@@ -597,6 +622,49 @@ function AdminBlogPage() {
     setCategoryDraft(nextCategories[0] ?? createEmptyCategory());
     setSelectedCategoryId(nextCategories[0]?.id ?? "");
     setMessage("Categoria eliminada.");
+  }
+
+  function selectLegalPage(page: LegalPageRow) {
+    setSelectedLegalPageId(page.id);
+    setLegalDraft(page);
+  }
+
+  function updateLegalPage<K extends keyof LegalPageRow>(key: K, value: LegalPageRow[K]) {
+    setLegalDraft((current) => (current ? { ...current, [key]: value } : current));
+  }
+
+  async function saveLegalPage() {
+    if (!legalDraft) return;
+    setSaving(true);
+    setMessage("");
+
+    const { data, error } = await supabase
+      .from("legal_pages")
+      .update({
+        title: legalDraft.title,
+        eyebrow: legalDraft.eyebrow,
+        intro: legalDraft.intro,
+        content: legalDraft.content,
+        seo_title: legalDraft.seo_title || null,
+        seo_description: legalDraft.seo_description || null,
+      })
+      .eq("id", legalDraft.id)
+      .select("*")
+      .single();
+
+    setSaving(false);
+    if (error) {
+      setMessage(error.message);
+      return;
+    }
+
+    setLegalPages((current) =>
+      current
+        .map((page) => (page.id === data.id ? data : page))
+        .sort((a, b) => a.title.localeCompare(b.title)),
+    );
+    setLegalDraft(data);
+    setMessage("Pagina legal guardada y publicada.");
   }
 
   async function reviewAccessRequest(request: AccessRequestRow, decision: "approved" | "rejected") {
@@ -1137,19 +1205,117 @@ function AdminBlogPage() {
               </div>
             </header>
             <div className="admin-post-list">
-              {["Aviso legal", "Privacidad", "Cookies"].map((page) => (
-                <div className="admin-row" key={page}>
-                  <strong>{page}</strong>
-                  <small>Pagina estatica actual</small>
-                </div>
+              {legalPages.map((page) => (
+                <button
+                  className={page.id === selectedLegalPageId ? "admin-row active" : "admin-row"}
+                  key={page.id}
+                  type="button"
+                  onClick={() => selectLegalPage(page)}
+                >
+                  <strong>{page.title}</strong>
+                  <small>/legal/{page.slug}</small>
+                </button>
               ))}
             </div>
           </section>
           <section className="admin-editor">
-            <div className="admin-empty-state">
-              <h2>Legal Pages queda preparado en la sidebar</h2>
-              <p>El CMS de blog y categorias ya es editable. Las paginas legales siguen siendo estaticas por ahora.</p>
-            </div>
+            {legalDraft ? (
+              <>
+                <header className="admin-editor-head">
+                  <div>
+                    <span>Legal page</span>
+                    <h2>{legalDraft.title}</h2>
+                  </div>
+                  <div className="admin-actions">
+                    <a
+                      className="admin-secondary"
+                      href={`/legal/${legalDraft.slug}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <Eye size={15} /> Ver pagina
+                    </a>
+                    <button
+                      className="admin-primary"
+                      type="button"
+                      disabled={saving}
+                      onClick={saveLegalPage}
+                    >
+                      <Save size={15} /> Guardar
+                    </button>
+                  </div>
+                </header>
+
+                <div className="admin-form-grid">
+                  <label>
+                    Titulo
+                    <input
+                      value={legalDraft.title}
+                      onChange={(event) => updateLegalPage("title", event.target.value)}
+                    />
+                  </label>
+                  <label>
+                    Etiqueta superior
+                    <input
+                      value={legalDraft.eyebrow}
+                      onChange={(event) => updateLegalPage("eyebrow", event.target.value)}
+                    />
+                  </label>
+                  <label className="span-2">
+                    Introduccion
+                    <textarea
+                      value={legalDraft.intro}
+                      onChange={(event) => updateLegalPage("intro", event.target.value)}
+                    />
+                  </label>
+                </div>
+
+                <section className="admin-content-editor">
+                  <div className="admin-editor-toolbar">
+                    <span>Contenido</span>
+                    <small>Usa ## para cada apartado, - para listas y **texto** para negrita.</small>
+                  </div>
+                  <textarea
+                    value={legalDraft.content}
+                    onChange={(event) => updateLegalPage("content", event.target.value)}
+                  />
+                </section>
+
+                <div className="admin-form-grid">
+                  <label>
+                    SEO title
+                    <input
+                      value={legalDraft.seo_title ?? ""}
+                      onChange={(event) => updateLegalPage("seo_title", event.target.value)}
+                    />
+                  </label>
+                  <label>
+                    SEO description
+                    <textarea
+                      value={legalDraft.seo_description ?? ""}
+                      onChange={(event) => updateLegalPage("seo_description", event.target.value)}
+                    />
+                  </label>
+                </div>
+
+                <section className="admin-preview legal-admin-preview">
+                  <div className="admin-preview-head">
+                    <span><Eye size={14} /> Vista previa del contenido</span>
+                    <small>{legalDraft.eyebrow}</small>
+                  </div>
+                  <h1>{legalDraft.title}</h1>
+                  <p>{legalDraft.intro}</p>
+                  <div className="post-content admin-preview-content">
+                    <BlogContent content={legalDraft.content} />
+                  </div>
+                </section>
+              </>
+            ) : (
+              <div className="admin-empty-state">
+                <h2>No hay paginas legales</h2>
+                <p>Aplica la migracion de Supabase para cargar la coleccion.</p>
+              </div>
+            )}
           </section>
         </>
       )}

@@ -151,6 +151,45 @@ export type Database = {
           },
         ]
       }
+      legal_pages: {
+        Row: {
+          content: string
+          created_at: string
+          eyebrow: string
+          id: string
+          intro: string
+          seo_description: string | null
+          seo_title: string | null
+          slug: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          content?: string
+          created_at?: string
+          eyebrow?: string
+          id?: string
+          intro?: string
+          seo_description?: string | null
+          seo_title?: string | null
+          slug: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          eyebrow?: string
+          id?: string
+          intro?: string
+          seo_description?: string | null
+          seo_title?: string | null
+          slug?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       email_send_log: {
         Row: {
           created_at: string
