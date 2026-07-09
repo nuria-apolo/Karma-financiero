@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import karmaLogo from "@/assets/karma-logo.svg";
 import lotusKarmaIcon from "@/assets/lotus-karma-icon.png";
 import { SiteFooter } from "@/components/SiteFooter";
+import { SiteHeader } from "@/components/SiteHeader";
 
 const WAITLIST_URL = "/lista-espera";
 
@@ -118,22 +118,7 @@ function Landing() {
 
   return (
     <>
-      <header className="site-header">
-        <div className="nav-pill">
-          <a href="#main-content" aria-label="Karma Financiero">
-            <img src={karmaLogo} alt="Karma Financiero" className="brand-logo" />
-          </a>
-          <nav className="nav-links" aria-label="Principal">
-            <a href="#features">Funciones</a>
-            <a href="#planes">Planes</a>
-            <a href="#planes">Precio</a>
-            <a href="/blog">Blog</a>
-          </nav>
-          <a className="nav-cta" href={WAITLIST_URL}>
-            Probar gratis
-          </a>
-        </div>
-      </header>
+      <SiteHeader />
 
       <main id="main-content" tabIndex={-1}>
         {/* HERO - Grovia style: left text + floating cards right */}
