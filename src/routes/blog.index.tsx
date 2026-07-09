@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import type { BlogCategoryRow, BlogPostRow } from "@/lib/blog-cms";
 import {
   FALLBACK_BLOG_IMAGE,
   fetchPublishedPosts,
@@ -10,6 +11,7 @@ import {
   getPostYear,
   readingTime,
 } from "@/lib/blog-cms";
+
 
 export const Route = createFileRoute("/blog/")({
   loader: () => fetchPublishedPosts(),
