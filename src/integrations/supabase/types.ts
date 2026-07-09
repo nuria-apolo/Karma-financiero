@@ -14,56 +14,50 @@ export type Database = {
   }
   public: {
     Tables: {
-      blog_admins: {
-        Row: {
-          created_at: string
-          email: string | null
-          id: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          email?: string | null
-          id?: string
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          email?: string | null
-          id?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
       blog_access_requests: {
         Row: {
           email: string
           id: string
-          note: string | null
           requested_at: string
           reviewed_at: string | null
           status: string
-          updated_at: string
           user_id: string
         }
         Insert: {
           email: string
           id?: string
-          note?: string | null
           requested_at?: string
           reviewed_at?: string | null
           status?: string
-          updated_at?: string
           user_id: string
         }
         Update: {
           email?: string
           id?: string
-          note?: string | null
           requested_at?: string
           reviewed_at?: string | null
           status?: string
-          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      blog_admins: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
           user_id?: string
         }
         Relationships: []
@@ -111,7 +105,7 @@ export type Database = {
         }
         Insert: {
           author?: string
-          category?: string
+          category: string
           content?: string
           created_at?: string
           excerpt?: string
@@ -138,53 +132,6 @@ export type Database = {
           seo_title?: string | null
           slug?: string
           status?: string
-          title?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "blog_posts_category_fkey"
-            columns: ["category"]
-            isOneToOne: false
-            referencedRelation: "blog_categories"
-            referencedColumns: ["slug"]
-          },
-        ]
-      }
-      legal_pages: {
-        Row: {
-          content: string
-          created_at: string
-          eyebrow: string
-          id: string
-          intro: string
-          seo_description: string | null
-          seo_title: string | null
-          slug: string
-          title: string
-          updated_at: string
-        }
-        Insert: {
-          content?: string
-          created_at?: string
-          eyebrow?: string
-          id?: string
-          intro?: string
-          seo_description?: string | null
-          seo_title?: string | null
-          slug: string
-          title: string
-          updated_at?: string
-        }
-        Update: {
-          content?: string
-          created_at?: string
-          eyebrow?: string
-          id?: string
-          intro?: string
-          seo_description?: string | null
-          seo_title?: string | null
-          slug?: string
           title?: string
           updated_at?: string
         }
@@ -310,6 +257,45 @@ export type Database = {
         }
         Relationships: []
       }
+      legal_pages: {
+        Row: {
+          content: string
+          created_at: string
+          eyebrow: string
+          id: string
+          intro: string
+          seo_description: string | null
+          seo_title: string | null
+          slug: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          content?: string
+          created_at?: string
+          eyebrow?: string
+          id?: string
+          intro?: string
+          seo_description?: string | null
+          seo_title?: string | null
+          slug: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          eyebrow?: string
+          id?: string
+          intro?: string
+          seo_description?: string | null
+          seo_title?: string | null
+          slug?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       suppressed_emails: {
         Row: {
           created_at: string
@@ -348,6 +334,7 @@ export type Database = {
         Args: { payload: Json; queue_name: string }
         Returns: number
       }
+      is_blog_admin: { Args: { _user_id: string }; Returns: boolean }
       move_to_dlq: {
         Args: {
           dlq_name: string
