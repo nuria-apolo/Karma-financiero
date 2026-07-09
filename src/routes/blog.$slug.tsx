@@ -123,7 +123,7 @@ function BlogPostPage() {
         </div>
 
         <div className="post-cover">
-          <img src={post.featured_image || FALLBACK_BLOG_IMAGE} alt={post.title} width={1600} height={900} />
+          <img src={post.featured_image || FALLBACK_BLOG_IMAGE} alt="" width={1600} height={900} />
           <span className="story-year">{getPostYear(post.published_at)}</span>
         </div>
 
@@ -164,7 +164,7 @@ function BlogPostPage() {
                   <div className="story-cover">
                     <img
                       src={p.featured_image || FALLBACK_BLOG_IMAGE}
-                      alt={p.title}
+                      alt=""
                       loading="lazy"
                       width={1024}
                       height={1024}

@@ -4,6 +4,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 
 type LeadStatus = "idle" | "submitting" | "sent" | "error";
+type LeadSearch = { email?: string };
 
 // Public client credentials for the dedicated Karma waitlist project.
 // Keeping these separate prevents Lovable Cloud from routing leads to its legacy database.
@@ -11,6 +12,9 @@ const WAITLIST_SUPABASE_URL = "https://vyjcfuhohzmzvuxmbqgv.supabase.co";
 const WAITLIST_SUPABASE_KEY = "sb_publishable_4DLru48DNJm89EL3_lDGjA_Prs3Luw-";
 
 export const Route = createFileRoute("/lista-espera")({
+  validateSearch: (search: Record<string, unknown>): LeadSearch => ({
+    email: typeof search.email === "string" ? search.email : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Únete a Karma Financiero — Lista de espera" },
@@ -34,6 +38,7 @@ export const Route = createFileRoute("/lista-espera")({
 });
 
 function LeadCapture() {
+  const { email } = Route.useSearch();
   const [status, setStatus] = useState<LeadStatus>("idle");
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -87,16 +92,16 @@ function LeadCapture() {
               Estamos preparando una forma más tranquila de ordenar gastos, objetivos y decisiones
               de dinero compartido. Déjanos tu correo y te avisaremos cuando abramos nuevos accesos.
             </p>
-            <div className="lead-points" aria-label="Ventajas">
-              <span>Sin tarjeta</span>
-              <span>Acceso gradual</span>
-              <span>Feedback directo</span>
-            </div>
+            <ul className="lead-points">
+              <li>Sin tarjeta</li>
+              <li>Acceso gradual</li>
+              <li>Feedback directo</li>
+            </ul>
           </div>
 
           <form className="lead-form" name="karma-leads" onSubmit={handleSubmit}>
             <div className="lead-form-head">
-              <strong>Únete a la lista</strong>
+              <h2>Únete a la lista</h2>
               <p>Te escribiremos solo cuando haya novedades útiles.</p>
             </div>
 
@@ -107,7 +112,14 @@ function LeadCapture() {
 
             <label>
               Email
-              <input name="email" type="email" placeholder="tu@email.com" autoComplete="email" required />
+              <input
+                name="email"
+                type="email"
+                placeholder="tu@email.com"
+                autoComplete="email"
+                defaultValue={email ?? ""}
+                required
+              />
             </label>
 
             <label className="lead-honeypot" aria-hidden="true">
@@ -148,7 +160,7 @@ function LeadCapture() {
               {status === "submitting" ? "Apuntándote..." : "Apuntarme"}
             </button>
 
-            <div aria-live="polite">
+            <div>
               {status === "sent" && (
                 <p className="lead-success" role="status">
                   Listo. Ya formas parte de la lista de Karma Financiero.

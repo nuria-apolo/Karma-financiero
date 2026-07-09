@@ -10,11 +10,11 @@ export function SiteFooter() {
           <div className="g-foot-brand">
             <img src={karmaLogo} alt="Karma Financiero" className="brand-logo" />
             <p>Finanzas compartidas con calma.</p>
-            <div className="g-foot-socials" aria-label="Redes sociales">
+            <nav className="g-foot-socials" aria-label="Redes sociales">
               <a
                 href="https://www.instagram.com/karmafinanciero/"
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 aria-label="Karma Financiero en Instagram"
                 title="Instagram"
               >
@@ -23,7 +23,7 @@ export function SiteFooter() {
               <a
                 href="https://www.linkedin.com/company/karma-financiero/"
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 aria-label="Karma Financiero en LinkedIn"
                 title="LinkedIn"
               >
@@ -32,23 +32,25 @@ export function SiteFooter() {
               <a
                 href="https://www.facebook.com/people/Karma-Financiero/61591767630840/"
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 aria-label="Karma Financiero en Facebook"
                 title="Facebook"
               >
                 <Facebook aria-hidden="true" />
               </a>
-            </div>
+            </nav>
           </div>
-          <form className="g-newsletter" onSubmit={(e) => e.preventDefault()}>
+          <form className="g-newsletter" action="/lista-espera" method="get">
             <label htmlFor="footer-newsletter-email">Suscríbete a la newsletter</label>
             <div className="g-news-row">
               <input
                 id="footer-newsletter-email"
+                name="email"
                 type="email"
                 inputMode="email"
                 autoComplete="email"
                 placeholder="tu@email.com"
+                required
               />
               <button type="submit">Suscribir</button>
             </div>

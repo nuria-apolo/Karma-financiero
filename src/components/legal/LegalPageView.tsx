@@ -61,7 +61,7 @@ export function LegalPageView({
               {page.eyebrow}
             </span>
             <h1>{page.title}</h1>
-            <div className="accessibility-meta" aria-label="Información de la página">
+            <div className="accessibility-meta">
               <span>
                 <CalendarDays aria-hidden="true" size={17} />
                 Actualizada el {formatLegalDate(page.updated_at)}

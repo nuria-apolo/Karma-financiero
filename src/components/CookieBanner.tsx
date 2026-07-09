@@ -38,8 +38,9 @@ export function CookieBanner() {
   if (!visible) return null;
 
   return (
-    <div className="cookie-banner" role="dialog" aria-live="polite" aria-label="Aviso de cookies">
+    <aside className="cookie-banner" aria-labelledby="cookie-banner-title">
       <div className="cookie-banner-inner">
+        <h2 id="cookie-banner-title" className="sr-only">Preferencias de cookies</h2>
         <p>
           Usamos cookies propias y de terceros para mejorar tu experiencia y analizar el uso del
           sitio. Puedes aceptarlas, rechazarlas o leer más en nuestra{" "}
@@ -54,6 +55,6 @@ export function CookieBanner() {
           </button>
         </div>
       </div>
-    </div>
+    </aside>
   );
 }

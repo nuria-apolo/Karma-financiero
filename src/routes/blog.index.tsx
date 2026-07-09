@@ -125,7 +125,7 @@ function BlogIndex() {
               <div className="story-featured-cover">
                 <img
                   src={featuredPost.featured_image || FALLBACK_BLOG_IMAGE}
-                  alt={featuredPost.title}
+                  alt=""
                   width={1200}
                   height={900}
                 />
@@ -153,7 +153,7 @@ function BlogIndex() {
                 <div className="story-cover">
                   <img
                     src={post.featured_image || FALLBACK_BLOG_IMAGE}
-                    alt={post.title}
+                    alt=""
                     loading="lazy"
                     width={1024}
                     height={1024}

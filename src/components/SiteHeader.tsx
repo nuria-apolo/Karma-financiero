@@ -1,17 +1,21 @@
 import { Link } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import karmaLogo from "@/assets/karma-logo.svg";
 
 export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
   const mobileMenuId = useId();
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (!menuOpen) return;
 
     const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setMenuOpen(false);
+      if (event.key === "Escape") {
+        setMenuOpen(false);
+        menuButtonRef.current?.focus();
+      }
     };
 
     window.addEventListener("keydown", closeOnEscape);
@@ -23,7 +27,7 @@ export function SiteHeader() {
   return (
     <header className="site-header">
       <div className="nav-pill">
-        <Link to="/" aria-label="Karma Financiero">
+        <Link to="/">
           <img src={karmaLogo} alt="Karma Financiero" className="brand-logo" />
         </Link>
         <nav className="nav-links" aria-label="Principal">
@@ -36,6 +40,7 @@ export function SiteHeader() {
           Probar gratis
         </Link>
         <button
+          ref={menuButtonRef}
           type="button"
           className="nav-menu-toggle"
           aria-expanded={menuOpen}
@@ -49,7 +54,7 @@ export function SiteHeader() {
           id={mobileMenuId}
           className={`nav-mobile ${menuOpen ? "is-open" : ""}`}
           aria-label="Principal móvil"
-          aria-hidden={!menuOpen}
+          inert={!menuOpen}
         >
           <Link to="/" hash="features" onClick={closeMenu}>Funciones</Link>
           <Link to="/" hash="planes" onClick={closeMenu}>Planes</Link>

@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import lotusKarmaIcon from "@/assets/lotus-karma-icon.png";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -84,9 +84,15 @@ function Landing() {
   useReveal();
   const [activeTab, setActiveTab] = useState<TabId>("resumen");
   const [displayedSavings, setDisplayedSavings] = useState(0);
+  const tabRefs = useRef<Array<HTMLButtonElement | null>>([]);
 
   useEffect(() => {
     const target = 325.67;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setDisplayedSavings(target);
+      return;
+    }
+
     let frame = 0;
     let startedAt = 0;
     const duration = 1750;
@@ -115,6 +121,20 @@ function Landing() {
   ];
   const [activePlan, setActivePlan] = useState<string>("pro");
   const current = plans.find((p) => p.id === activePlan)!;
+
+  const handleTabKeyDown = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
+    let nextIndex = index;
+
+    if (event.key === "ArrowRight") nextIndex = (index + 1) % TABS.length;
+    else if (event.key === "ArrowLeft") nextIndex = (index - 1 + TABS.length) % TABS.length;
+    else if (event.key === "Home") nextIndex = 0;
+    else if (event.key === "End") nextIndex = TABS.length - 1;
+    else return;
+
+    event.preventDefault();
+    setActiveTab(TABS[nextIndex].id);
+    tabRefs.current[nextIndex]?.focus();
+  };
 
   return (
     <>
@@ -174,7 +194,7 @@ function Landing() {
                     </div>
                   </li>
                 </ul>
-                <a className="g-card-foot" href={WAITLIST_URL}>Todos los usuarios ⊕</a>
+                <span className="g-card-foot">Todos los usuarios</span>
               </div>
 
               {/* Card B: Total ahorrado */}
@@ -183,11 +203,14 @@ function Landing() {
                   <span className="g-mini-label">Total Ahorrado</span>
                   <span className="g-mini-label">esta semana</span>
                 </div>
-                <div className="g-bignum" aria-label="325 euros con 67 céntimos">
-                  {new Intl.NumberFormat("es-ES", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                  }).format(displayedSavings)}€
+                <div className="g-bignum">
+                  <span className="sr-only">325 euros con 67 céntimos</span>
+                  <span aria-hidden="true">
+                    {new Intl.NumberFormat("es-ES", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    }).format(displayedSavings)}€
+                  </span>
                 </div>
                 <div className="g-bars" aria-hidden="true">
                   {[60, 75, 90, 80, 55, 65, 50].map((h, i) => (
@@ -207,7 +230,7 @@ function Landing() {
                     </div>
                   ))}
                 </div>
-                <div className="g-bars-x">
+                <div className="g-bars-x" aria-hidden="true">
                   {["L", "M", "X", "J", "V", "S", "D"].map((d, i) => (
                     <span key={i}>{d}</span>
                   ))}
@@ -232,14 +255,22 @@ function Landing() {
               y crecer con confianza — todo en un mismo lugar.
             </p>
 
-            <div className="tabs-pill reveal d2">
-              {TABS.map((t) => (
+            <div className="tabs-pill reveal d2" role="tablist" aria-label="Funciones de Karma">
+              {TABS.map((t, index) => (
                 <button
+                  ref={(element) => {
+                    tabRefs.current[index] = element;
+                  }}
                   key={t.id}
                   type="button"
                   className={`tab ${activeTab === t.id ? "on" : ""}`}
                   onClick={() => setActiveTab(t.id)}
-                  aria-pressed={activeTab === t.id}
+                  onKeyDown={(event) => handleTabKeyDown(event, index)}
+                  id={`feature-tab-${t.id}`}
+                  role="tab"
+                  aria-selected={activeTab === t.id}
+                  aria-controls="feature-tab-panel"
+                  tabIndex={activeTab === t.id ? 0 : -1}
                 >
                   <span className="tab-ico" aria-hidden="true">{t.icon}</span>
                   {t.label}
@@ -247,7 +278,13 @@ function Landing() {
               ))}
             </div>
 
-            <div className="tab-panel reveal d3">
+            <div
+              className="tab-panel reveal d3"
+              id="feature-tab-panel"
+              role="tabpanel"
+              aria-labelledby={`feature-tab-${activeTab}`}
+              tabIndex={0}
+            >
               {activeTab === "resumen" && <PanelResumen />}
               {activeTab === "objetivos" && <PanelObjetivos />}
               {activeTab === "deudas" && <PanelDeudas />}
@@ -319,7 +356,7 @@ function Landing() {
                 </div>
               </div>
               <div className="pd-rating">
-                <div className="pd-avs">
+                <div className="pd-avs" aria-hidden="true">
                   <span className="ava ava-sage" />
                   <span className="ava ava-yellow" />
                   <span className="ava ava-blue" />
@@ -375,7 +412,7 @@ function Landing() {
 function PanelResumen() {
   return (
     <div className="panel-grid">
-      <div className="panel-visual">
+      <div className="panel-visual" aria-hidden="true">
         <div className="pv-head">
           <strong>Resumen Junio</strong>
           <span className="pv-pill">Mes ▾</span>
@@ -407,7 +444,7 @@ function PanelResumen() {
 function PanelObjetivos() {
   return (
     <div className="panel-grid">
-      <div className="panel-visual">
+      <div className="panel-visual" aria-hidden="true">
         <div className="pv-head"><strong>Objetivos del hogar</strong><span className="pv-pill">+ Nuevo</span></div>
         <div className="mock-goals">
           <div className="g"><div className="h"><span>Viaje verano</span><strong>€1.200 / €1.800</strong></div><div className="bar"><i style={{ width: "66%" }} /></div></div>
@@ -428,7 +465,7 @@ function PanelObjetivos() {
 function PanelDeudas() {
   return (
     <div className="panel-grid">
-      <div className="panel-visual">
+      <div className="panel-visual" aria-hidden="true">
         <div className="pv-head"><strong>Deudas activas</strong><span className="pv-pill">Mes</span></div>
         <div className="mock-list">
           <div className="row"><span>Hipoteca</span><span className="tag green">Fijo</span><strong>€820</strong></div>
@@ -449,7 +486,7 @@ function PanelDeudas() {
 function PanelVision() {
   return (
     <div className="panel-grid">
-      <div className="panel-visual">
+      <div className="panel-visual" aria-hidden="true">
         <div className="pv-head"><strong>Visión a 12 meses</strong><span className="pv-pill">Año</span></div>
         <svg viewBox="0 0 320 160" preserveAspectRatio="none" className="pv-chart">
           <defs>
