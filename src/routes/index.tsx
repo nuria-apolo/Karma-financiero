@@ -158,9 +158,6 @@ function Landing() {
                       <strong>María</strong>
                       <span>Propietario</span>
                     </div>
-                    <span className="g-actions" aria-hidden="true">
-                      <i>✎</i><i>☆</i><i>○</i><i>⋯</i>
-                    </span>
                   </li>
                   <li>
                     <img className="ava ava-img" src="https://i.pravatar.cc/80?img=12" alt="" />

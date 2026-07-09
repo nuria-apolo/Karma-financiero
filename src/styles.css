@@ -331,8 +331,6 @@ button { font-family: inherit; }
 .g-people li:hover { transform: translateX(4px); }
 .g-people li strong { font-weight: 600; color: var(--ink); }
 .g-people li span { color: var(--muted); font-size: .78rem; }
-.g-actions { display: inline-flex; align-items: center; gap: .55rem; font-size: .85rem; color: var(--ink); }
-.g-actions i { font-style: normal; opacity: .58; }
 .ava {
   width: 34px; height: 34px; border-radius: 50%;
   display: inline-block; flex-shrink: 0;
