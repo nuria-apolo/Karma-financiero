@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { Facebook, Instagram, Linkedin } from "lucide-react";
 import karmaLogo from "@/assets/karma-logo.svg";
 
 export function SiteFooter() {
@@ -9,6 +10,33 @@ export function SiteFooter() {
           <div className="g-foot-brand">
             <img src={karmaLogo} alt="Karma Financiero" className="brand-logo" />
             <p>Finanzas compartidas con calma.</p>
+            <div className="g-foot-socials" aria-label="Redes sociales">
+              <a
+                href="https://www.instagram.com/karmafinanciero/"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Karma Financiero en Instagram"
+                title="Instagram"
+              >
+                <Instagram aria-hidden="true" />
+              </a>
+              <a
+                href="https://www.linkedin.com/company/karma-financiero/"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Karma Financiero en LinkedIn"
+                title="LinkedIn"
+              >
+                <Linkedin aria-hidden="true" />
+              </a>
+              <span
+                className="is-disabled"
+                aria-label="Karma Financiero en Facebook, próximamente"
+                title="Facebook, próximamente"
+              >
+                <Facebook aria-hidden="true" />
+              </span>
+            </div>
           </div>
           <form className="g-newsletter" onSubmit={(e) => e.preventDefault()}>
             <label htmlFor="footer-newsletter-email">Suscríbete a la newsletter</label>
