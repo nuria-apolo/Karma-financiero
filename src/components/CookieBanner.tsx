@@ -23,7 +23,10 @@ export function CookieBanner() {
       /* no-op */
     }
     const granted = value === "accepted" ? "granted" : "denied";
-    const w = window as unknown as { gtag?: (...args: unknown[]) => void };
+    const w = window as unknown as {
+      gtag?: (...args: unknown[]) => void;
+      loadKarmaMetricool?: () => void;
+    };
     if (typeof w.gtag === "function") {
       w.gtag("consent", "update", {
         ad_storage: granted,
@@ -31,6 +34,9 @@ export function CookieBanner() {
         ad_personalization: granted,
         analytics_storage: granted,
       });
+    }
+    if (value === "accepted" && typeof w.loadKarmaMetricool === "function") {
+      w.loadKarmaMetricool();
     }
     setVisible(false);
   };

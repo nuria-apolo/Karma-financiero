@@ -114,6 +114,21 @@ window.gtag = gtag;
   });
   gtag('set', 'ads_data_redaction', !granted);
   gtag('set', 'url_passthrough', !granted);
+  window.loadKarmaMetricool = function(){
+    if (window.__karmaMetricoolLoaded) return;
+    window.__karmaMetricoolLoaded = true;
+    var head = document.getElementsByTagName('head')[0];
+    var script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = 'https://tracker.metricool.com/resources/be.js';
+    script.onload = script.onreadystatechange = function(){
+      if (window.beTracker && typeof window.beTracker.t === 'function') {
+        window.beTracker.t({ hash: '2c69c6b44bc43befeff10b472a9bf8d1' });
+      }
+    };
+    head.appendChild(script);
+  };
+  if (granted) window.loadKarmaMetricool();
 })();
 gtag('js', new Date());
 gtag('config', 'G-B04NPYW44V');`,
