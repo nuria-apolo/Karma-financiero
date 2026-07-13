@@ -286,6 +286,52 @@ button {
   background: rgba(255, 255, 255, 0.5);
 }
 
+/* ============ NOT FOUND ============ */
+.not-found-page {
+  min-height: 72vh;
+  display: grid;
+  place-items: center;
+  padding: clamp(7rem, 12vw, 10rem) 1rem clamp(3rem, 7vw, 6rem);
+}
+.not-found-card {
+  width: min(100%, 760px);
+  border: 1px solid rgba(20, 20, 20, 0.08);
+  border-radius: clamp(1.4rem, 4vw, 2.4rem);
+  background:
+    linear-gradient(135deg, rgba(232, 232, 122, 0.22), rgba(255, 255, 255, 0.78) 42%),
+    rgba(255, 255, 255, 0.78);
+  box-shadow: var(--shadow-soft);
+  padding: clamp(2rem, 5vw, 4.25rem);
+  text-align: center;
+}
+.not-found-card .eyebrow {
+  margin-inline: auto;
+}
+.not-found-card h1 {
+  max-width: 11ch;
+  margin: 1.1rem auto 0;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 8vw, 6rem);
+  font-weight: 400;
+  line-height: 0.96;
+  letter-spacing: 0;
+}
+.not-found-card p {
+  max-width: 48rem;
+  margin: 1.35rem auto 0;
+  color: var(--muted);
+  font-size: clamp(1.05rem, 2vw, 1.25rem);
+  line-height: 1.55;
+}
+.not-found-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: clamp(1.6rem, 3vw, 2rem);
+}
+
 /* ============ HERO (Grovia split) ============ */
 .g-hero {
   padding-top: clamp(8.8rem, 11vw, 11.5rem);

@@ -174,6 +174,10 @@ export async function fetchPublishedPost(slug: string) {
     if (postError) throw postError;
     if (categoriesError) throw categoriesError;
 
+    if (!post) {
+      return await fetchPublishedPostRest(slug);
+    }
+
     return {
       post,
       categories: categories ?? [],

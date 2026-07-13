@@ -13,27 +13,38 @@ import appCss from "../styles.css?url";
 import karmaIcon from "@/assets/karma-icon.png.asset.json";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { CookieBanner } from "@/components/CookieBanner";
-
+import { SiteFooter } from "@/components/SiteFooter";
+import { SiteHeader } from "@/components/SiteHeader";
 
 function NotFoundComponent() {
   return (
-    <main id="main-content" tabIndex={-1} className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
-        </p>
-        <div className="mt-6">
-          <Link
-            to="/"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-          >
-            Go home
-          </Link>
-        </div>
-      </div>
-    </main>
+    <>
+      <SiteHeader />
+      <main id="main-content" tabIndex={-1} className="not-found-page">
+        <section className="not-found-card" aria-labelledby="not-found-title">
+          <span className="eyebrow">
+            <span className="dot" /> Error 404
+          </span>
+          <h1 id="not-found-title">Esta página se ha ido de presupuesto.</h1>
+          <p>
+            La URL no existe o ha cambiado de lugar. Puedes volver al inicio, leer el blog o unirte
+            a la lista de espera de Karma Financiero.
+          </p>
+          <div className="not-found-actions" aria-label="Opciones principales">
+            <Link to="/" className="btn-pill btn-pill-dark">
+              Volver al inicio
+            </Link>
+            <Link to="/blog" className="btn-pill btn-pill-ghost">
+              Leer el blog
+            </Link>
+            <Link to="/lista-espera" className="btn-pill btn-pill-ghost">
+              Lista de espera
+            </Link>
+          </div>
+        </section>
+      </main>
+      <SiteFooter />
+    </>
   );
 }
 
@@ -45,7 +56,11 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   }, [error]);
 
   return (
-    <main id="main-content" tabIndex={-1} className="flex min-h-screen items-center justify-center bg-background px-4">
+    <main
+      id="main-content"
+      tabIndex={-1}
+      className="flex min-h-screen items-center justify-center bg-background px-4"
+    >
       <div className="max-w-md text-center">
         <h1 className="text-xl font-semibold tracking-tight text-foreground">
           This page didn't load
