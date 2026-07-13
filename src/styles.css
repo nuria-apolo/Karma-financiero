@@ -1239,6 +1239,64 @@ button {
   margin: 0 auto 2rem;
 }
 
+.home-faq {
+  padding-top: 0;
+}
+.home-faq-head {
+  max-width: 48rem;
+  margin-bottom: clamp(1.4rem, 3vw, 2rem);
+}
+.home-faq-head h2 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  line-height: 1.08;
+  color: var(--ink);
+  letter-spacing: 0;
+  margin-top: 0.9rem;
+}
+.home-faq-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+.home-faq-card {
+  border: 1px solid rgba(20, 20, 20, 0.08);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.62);
+  padding: clamp(1.15rem, 2vw, 1.55rem);
+  box-shadow: var(--shadow-soft);
+}
+.home-faq-card h3 {
+  color: var(--ink);
+  font-size: 1.04rem;
+  line-height: 1.25;
+  margin-bottom: 0.75rem;
+}
+.home-faq-card p {
+  color: var(--muted);
+  line-height: 1.6;
+  font-size: 0.98rem;
+}
+.home-faq-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 1.2rem;
+}
+.home-faq-links a {
+  border: 1px solid rgba(20, 20, 20, 0.1);
+  border-radius: 999px;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.7);
+  padding: 0.7rem 1rem;
+  font-weight: 700;
+}
+.home-faq-links a:hover {
+  background: #fff;
+  transform: translateY(-1px);
+}
+
 /* ============ FOOTER ============ */
 .site-footer {
   padding: 3rem 1rem 2.5rem;
@@ -2042,6 +2100,27 @@ button {
 }
 .post-toc a:hover {
   text-decoration-color: currentColor;
+}
+.post-breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.4;
+}
+.post-breadcrumb a {
+  color: var(--muted);
+  text-decoration: none;
+}
+.post-breadcrumb a:hover {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+.post-breadcrumb span:last-child {
+  color: var(--ink);
 }
 .post-content {
   max-width: 680px;
@@ -3027,6 +3106,15 @@ button {
   .post-cover {
     aspect-ratio: 4 / 3;
     border-radius: var(--radius);
+  }
+  .home-faq-grid {
+    grid-template-columns: 1fr;
+  }
+  .home-faq-links {
+    flex-direction: column;
+  }
+  .home-faq-links a {
+    text-align: center;
   }
 }
 @media (max-width: 520px) {

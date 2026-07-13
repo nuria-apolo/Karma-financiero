@@ -16,6 +16,51 @@ import {
 } from "@/lib/blog-cms";
 import { buildSeoHead, fetchSeoPage } from "@/lib/seo-cms";
 
+const RELATED_BY_SLUG: Record<string, string[]> = {
+  "hablar-de-dinero-en-pareja": [
+    "cuentas-comunes-sin-perder-independencia",
+    "reunion-financiera-de-quince-minutos",
+    "presupuesto-hogar-sin-estres",
+  ],
+  "cuentas-comunes-sin-perder-independencia": [
+    "hablar-de-dinero-en-pareja",
+    "gastos-invisibles-del-hogar",
+    "objetivos-financieros-compartidos",
+  ],
+  "gastos-invisibles-del-hogar": [
+    "presupuesto-hogar-sin-estres",
+    "reunion-financiera-de-quince-minutos",
+    "cuentas-comunes-sin-perder-independencia",
+  ],
+  "presupuesto-hogar-sin-estres": [
+    "gastos-invisibles-del-hogar",
+    "reunion-financiera-de-quince-minutos",
+    "objetivos-financieros-compartidos",
+  ],
+  "objetivos-financieros-compartidos": [
+    "presupuesto-hogar-sin-estres",
+    "cuentas-comunes-sin-perder-independencia",
+    "hablar-de-dinero-en-pareja",
+  ],
+  "reunion-financiera-de-quince-minutos": [
+    "hablar-de-dinero-en-pareja",
+    "presupuesto-hogar-sin-estres",
+    "gastos-invisibles-del-hogar",
+  ],
+};
+
+function selectRelatedPosts(posts: BlogPostRow[], slug: string) {
+  const preferred = RELATED_BY_SLUG[slug] ?? [];
+  const preferredPosts = preferred
+    .map((itemSlug) => posts.find((post) => post.slug === itemSlug))
+    .filter(Boolean) as BlogPostRow[];
+  const fallbackPosts = posts.filter(
+    (post) => post.slug !== slug && !preferred.includes(post.slug),
+  );
+
+  return [...preferredPosts, ...fallbackPosts].slice(0, 3);
+}
+
 export const Route = createFileRoute("/blog/$slug")({
   loader: async ({ params }) => {
     const [{ post, categories }, { posts }, seo] = await Promise.all([
@@ -27,7 +72,7 @@ export const Route = createFileRoute("/blog/$slug")({
       post,
       categories,
       seo,
-      related: posts.filter((item) => item.slug !== params.slug).slice(0, 3),
+      related: selectRelatedPosts(posts, params.slug),
     };
   },
   headers: () => ({
@@ -56,22 +101,54 @@ export const Route = createFileRoute("/blog/$slug")({
           type: "application/ld+json",
           children: JSON.stringify({
             "@context": "https://schema.org",
-            "@type": "Article",
+            "@type": "BlogPosting",
             headline: post.title,
             description: post.excerpt,
             datePublished: post.published_at,
             dateModified: post.updated_at,
             image,
-            author: { "@type": "Organization", name: post.author },
+            author: { "@type": "Organization", name: post.author || "Karma Financiero" },
             publisher: {
               "@type": "Organization",
               name: "Karma Financiero",
               logo: {
                 "@type": "ImageObject",
-                url: "https://karmafinanciero.com/favicon.png",
+                url: "https://karmafinanciero.com/head-icon.png",
               },
             },
-            mainEntityOfPage: url,
+            articleSection: getCategoryName(loaderData.categories, post.category),
+            inLanguage: "es",
+            mainEntityOfPage: {
+              "@type": "WebPage",
+              "@id": url,
+            },
+          }),
+        },
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              {
+                "@type": "ListItem",
+                position: 1,
+                name: "Inicio",
+                item: "https://karmafinanciero.com/",
+              },
+              {
+                "@type": "ListItem",
+                position: 2,
+                name: "Blog",
+                item: "https://karmafinanciero.com/blog",
+              },
+              {
+                "@type": "ListItem",
+                position: 3,
+                name: post.title,
+                item: url,
+              },
+            ],
           }),
         },
       ],
@@ -107,7 +184,7 @@ function BlogPostPage() {
         if (!active) return;
         setPost(postData.post);
         setCategories(postData.categories);
-        setRelated(postsData.posts.filter((item) => item.slug !== slug).slice(0, 3));
+        setRelated(selectRelatedPosts(postsData.posts, slug));
         setClientChecked(true);
       },
     );
@@ -131,13 +208,22 @@ function BlogPostPage() {
 
       <main id="main-content" tabIndex={-1} className="post-page">
         <div className="container-x" style={{ marginBottom: "1.5rem" }}>
-          <Link to="/blog" className="back-link">
-            ← Volver al diario
-          </Link>
+          <nav className="post-breadcrumb" aria-label="Migas de pan">
+            <Link to="/">Inicio</Link>
+            <span aria-hidden="true">/</span>
+            <Link to="/blog">Blog</Link>
+            <span aria-hidden="true">/</span>
+            <span>{post.title}</span>
+          </nav>
         </div>
 
         <div className="post-cover">
-          <img src={post.featured_image || FALLBACK_BLOG_IMAGE} alt="" width={1600} height={900} />
+          <img
+            src={post.featured_image || FALLBACK_BLOG_IMAGE}
+            alt={`Ilustración del artículo: ${post.title}`}
+            width={1600}
+            height={900}
+          />
           <span className="story-year">{getPostYear(post.published_at)}</span>
         </div>
 
@@ -197,7 +283,7 @@ function BlogPostPage() {
                   <div className="story-cover">
                     <img
                       src={p.featured_image || FALLBACK_BLOG_IMAGE}
-                      alt=""
+                      alt={`Ilustración del artículo: ${p.title}`}
                       loading="lazy"
                       width={1024}
                       height={1024}

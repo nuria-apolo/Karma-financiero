@@ -6,6 +6,23 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { buildSeoHead, fetchSeoPage } from "@/lib/seo-cms";
 
 const WAITLIST_URL = "/lista-espera";
+const FAQS = [
+  {
+    question: "¿Qué es Karma Financiero?",
+    answer:
+      "Karma Financiero es una app para organizar las finanzas compartidas de parejas, familias y hogares: gastos, ingresos, deudas, presupuesto y objetivos en un mismo lugar.",
+  },
+  {
+    question: "¿Sirve para gestionar gastos en pareja?",
+    answer:
+      "Sí. Está pensada para que dos o más personas puedan entender qué gastos son comunes, qué parte es personal y qué objetivos quieren construir juntos sin depender de hojas de cálculo.",
+  },
+  {
+    question: "¿Puedo usarla para crear un presupuesto familiar?",
+    answer:
+      "Sí. Karma Financiero ayuda a ordenar el presupuesto del hogar por categorías, revisar el mes con calma y mantener una visión compartida de ingresos, gastos y ahorro.",
+  },
+];
 
 export const Route = createFileRoute("/")({
   loader: () => fetchSeoPage("/"),
@@ -27,9 +44,14 @@ export const Route = createFileRoute("/")({
             "@type": "Organization",
             name: "Karma Financiero",
             url: "https://karmafinanciero.com/",
-            logo: "https://karmafinanciero.com/favicon.png",
+            logo: "https://karmafinanciero.com/head-icon.png",
             description:
-              "App para gestionar las finanzas compartidas del hogar con claridad y calma.",
+              "App para gestionar finanzas compartidas, gastos del hogar, presupuesto familiar y objetivos en pareja con claridad y calma.",
+            sameAs: [
+              "https://www.instagram.com/karmafinanciero/",
+              "https://www.linkedin.com/company/karma-financiero/",
+              "https://www.facebook.com/people/Karma-Financiero/61591767630840/",
+            ],
           }),
         },
         {
@@ -39,6 +61,40 @@ export const Route = createFileRoute("/")({
             "@type": "WebSite",
             name: "Karma Financiero",
             url: "https://karmafinanciero.com/",
+            inLanguage: "es",
+          }),
+        },
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            name: "Karma Financiero",
+            applicationCategory: "FinanceApplication",
+            operatingSystem: "Web",
+            url: "https://karmafinanciero.com/",
+            offers: {
+              "@type": "Offer",
+              price: "0",
+              priceCurrency: "EUR",
+            },
+            description:
+              "App para organizar gastos compartidos, presupuesto familiar, deudas y objetivos financieros del hogar.",
+          }),
+        },
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: FAQS.map((faq) => ({
+              "@type": "Question",
+              name: faq.question,
+              acceptedAnswer: {
+                "@type": "Answer",
+                text: faq.answer,
+              },
+            })),
           }),
         },
       ],
@@ -145,21 +201,18 @@ function Landing() {
         <section className="g-hero">
           <div className="container-x g-hero-grid">
             <div className="g-hero-text">
-              <h1 className="reveal">
-                Gestiona lo compartido, <br />
-                vive lo extraordinario
-              </h1>
+              <h1 className="reveal">Gestiona las finanzas compartidas de tu hogar</h1>
               <p className="reveal d1">
-                <strong>Karma Financiero</strong> acompaña a parejas, familias y hogares para
-                ordenar ingresos, gastos, deudas y objetivos en un solo lugar — sin hojas de cálculo
-                ni discusiones.
+                <strong>Karma Financiero</strong> ayuda a parejas, familias y hogares a organizar
+                gastos del hogar, presupuesto familiar, deudas y objetivos en un solo lugar — sin
+                hojas de cálculo ni conversaciones incómodas.
               </p>
               <div className="g-hero-actions reveal d2">
                 <a className="btn-pill btn-pill-dark" href={WAITLIST_URL}>
                   Prueba gratis
                 </a>
-                <a className="btn-pill btn-pill-ghost" href="#features">
-                  Ver funciones
+                <a className="btn-pill btn-pill-ghost" href="/blog">
+                  Leer consejos
                 </a>
               </div>
             </div>
@@ -378,6 +431,31 @@ function Landing() {
             </blockquote>
             <div className="quote-lotus reveal d1" aria-hidden="true">
               <img src={lotusKarmaIcon} alt="" width={601} height={580} />
+            </div>
+          </div>
+        </section>
+
+        <section className="section home-faq" aria-labelledby="home-faq-title">
+          <div className="container-x">
+            <div className="home-faq-head reveal">
+              <p className="section-eyebrow">Preguntas frecuentes</p>
+              <h2 id="home-faq-title">Finanzas compartidas, sin hacerlo enorme</h2>
+            </div>
+            <div className="home-faq-grid">
+              {FAQS.map((faq, index) => (
+                <article
+                  className="home-faq-card reveal"
+                  style={{ animationDelay: `${index * 70}ms` }}
+                  key={faq.question}
+                >
+                  <h3>{faq.question}</h3>
+                  <p>{faq.answer}</p>
+                </article>
+              ))}
+            </div>
+            <div className="home-faq-links reveal d1">
+              <a href="/blog">Leer guías sobre finanzas en pareja</a>
+              <a href={WAITLIST_URL}>Unirme a la lista de espera</a>
             </div>
           </div>
         </section>

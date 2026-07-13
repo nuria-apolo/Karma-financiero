@@ -39,10 +39,30 @@ export const Route = createFileRoute("/blog/")({
         description: post.seo_description || post.excerpt,
         url: `https://karmafinanciero.com/blog/${post.slug}`,
         datePublished: post.published_at,
-        image: post.featured_image || FALLBACK_BLOG_IMAGE,
+        dateModified: post.updated_at,
+        image: new URL(post.featured_image || FALLBACK_BLOG_IMAGE, "https://karmafinanciero.com")
+          .href,
         articleSection: getCategoryName(categories, post.category),
         author: { "@type": "Organization", name: "Karma Financiero" },
       })),
+    };
+    const breadcrumbJsonLd = {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Inicio",
+          item: "https://karmafinanciero.com/",
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Blog",
+          item: "https://karmafinanciero.com/blog",
+        },
+      ],
     };
 
     return buildSeoHead({
@@ -58,6 +78,10 @@ export const Route = createFileRoute("/blog/")({
         {
           type: "application/ld+json",
           children: JSON.stringify(blogListJsonLd),
+        },
+        {
+          type: "application/ld+json",
+          children: JSON.stringify(breadcrumbJsonLd),
         },
       ],
     });
@@ -94,14 +118,19 @@ function BlogIndex() {
       <main id="main-content" tabIndex={-1} className="blog-page">
         <section className="container-x blog-hero">
           <div>
+            <nav className="post-breadcrumb" aria-label="Migas de pan">
+              <Link to="/">Inicio</Link>
+              <span aria-hidden="true">/</span>
+              <span>Blog</span>
+            </nav>
             <span className="eyebrow">
               <span className="dot" /> Diario de Karma
             </span>
-            <h1>Historias de finanzas compartidas.</h1>
+            <h1>Blog de finanzas compartidas para hogares reales.</h1>
           </div>
           <p>
-            Ideas cortas para hablar de dinero con más calma: rituales, presupuesto, objetivos y
-            pequeñas decisiones que sostienen el hogar.
+            Guías prácticas para hablar de dinero en pareja, organizar gastos del hogar, crear un
+            presupuesto familiar y convertir objetivos compartidos en decisiones concretas.
           </p>
         </section>
 
@@ -124,7 +153,7 @@ function BlogIndex() {
               <div className="story-featured-cover">
                 <img
                   src={featuredPost.featured_image || FALLBACK_BLOG_IMAGE}
-                  alt=""
+                  alt={`Ilustración del artículo: ${featuredPost.title}`}
                   width={1200}
                   height={900}
                 />
@@ -152,7 +181,7 @@ function BlogIndex() {
                 <div className="story-cover">
                   <img
                     src={post.featured_image || FALLBACK_BLOG_IMAGE}
-                    alt=""
+                    alt={`Ilustración del artículo: ${post.title}`}
                     loading="lazy"
                     width={1024}
                     height={1024}

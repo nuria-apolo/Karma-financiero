@@ -10,6 +10,7 @@ interface SitemapEntry {
   path: string;
   changefreq?: "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never";
   priority?: string;
+  lastmod?: string | null;
 }
 
 export const Route = createFileRoute("/sitemap.xml")({
@@ -25,6 +26,7 @@ export const Route = createFileRoute("/sitemap.xml")({
             path: `/blog/${p.slug}`,
             changefreq: "monthly" as const,
             priority: "0.6",
+            lastmod: p.updated_at || p.published_at,
           }));
         } catch (error) {
           console.error("[sitemap] Could not load published blog posts", error);
@@ -33,7 +35,7 @@ export const Route = createFileRoute("/sitemap.xml")({
         try {
           const { data, error } = await supabase
             .from("seo_pages")
-            .select("path,indexable,status")
+            .select("path,indexable,status,updated_at")
             .eq("status", "published");
 
           if (error) throw error;
@@ -75,6 +77,7 @@ export const Route = createFileRoute("/sitemap.xml")({
           [
             `  <url>`,
             `    <loc>${BASE_URL}${e.path}</loc>`,
+            e.lastmod ? `    <lastmod>${new Date(e.lastmod).toISOString()}</lastmod>` : null,
             e.changefreq ? `    <changefreq>${e.changefreq}</changefreq>` : null,
             e.priority ? `    <priority>${e.priority}</priority>` : null,
             `  </url>`,

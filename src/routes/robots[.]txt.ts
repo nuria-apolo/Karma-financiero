@@ -6,9 +6,13 @@ export const Route = createFileRoute("/robots.txt")({
     handlers: {
       GET: async () =>
         new Response(
-          ["User-agent: *", "Allow: /", "Sitemap: https://karmafinanciero.com/sitemap.xml"].join(
-            "\n",
-          ),
+          [
+            "User-agent: *",
+            "Allow: /",
+            "Disallow: /admin/",
+            "",
+            "Sitemap: https://karmafinanciero.com/sitemap.xml",
+          ].join("\n"),
           {
             headers: {
               "Content-Type": "text/plain; charset=utf-8",
