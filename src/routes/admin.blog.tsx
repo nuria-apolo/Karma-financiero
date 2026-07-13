@@ -38,7 +38,7 @@ import type { LegalPageRow } from "@/lib/legal-cms";
 type Collection = "blog" | "categories" | "access" | "legal";
 type AuthState = "loading" | "signed-out" | "unauthorized" | "ready";
 type StatusFilter = "all" | BlogStatus;
-type AuthFormMode = "signin" | "signup";
+type AuthFormMode = "signin" | "request-access";
 type AccessRequestRow = Tables<"blog_access_requests">;
 
 const BLOG_IMAGE_BUCKET = "blog-images";
@@ -307,7 +307,7 @@ function AdminBlogPage() {
     setLoginPassword("");
     setLoginPasswordConfirm("");
     setMessage(
-      "Cuenta creada. Revisa tu email para confirmarla. Despues un administrador debe aprobar tu acceso al CMS.",
+      "Solicitud iniciada. Revisa tu email para confirmar tu usuario y despues pide la aprobacion interna del CMS.",
     );
   }
 
@@ -345,7 +345,7 @@ function AdminBlogPage() {
     setMessage("");
     if (!loginEmail.trim()) {
       setMessage(
-        "Escribe primero tu email para enviarte el enlace de creacion o cambio de contrasena.",
+        "Escribe primero tu email para enviarte el enlace de recuperacion de contrasena.",
       );
       return;
     }
@@ -357,7 +357,7 @@ function AdminBlogPage() {
     setMessage(
       error
         ? toFriendlyAuthMessage(error.message)
-        : "Te hemos enviado un correo para crear o cambiar tu contrasena del CMS.",
+        : "Te hemos enviado un correo para recuperar tu contrasena del CMS.",
     );
   }
 
@@ -727,12 +727,12 @@ function AdminBlogPage() {
           <img src="/logo-karma.svg" alt="Karma Financiero" />
           <div>
             <span>CMS privado</span>
-            <h1>{authFormMode === "signin" ? "Entrar al panel" : "Crear cuenta"}</h1>
+            <h1>{authFormMode === "signin" ? "Entrar al panel" : "Solicitar acceso"}</h1>
           </div>
           <p className="admin-message">
             {authFormMode === "signin"
               ? "Acceso solo con usuario autorizado y contrasena segura."
-              : "Primero creas la cuenta, confirmas tu email y despues un administrador aprueba el acceso."}
+              : "Registra un usuario seguro, confirma tu email y solicita la aprobacion interna del CMS."}
           </p>
           <label>
             Email
@@ -749,11 +749,11 @@ function AdminBlogPage() {
               value={loginPassword}
               onChange={(event) => setLoginPassword(event.target.value)}
               type="password"
-              autoComplete="current-password"
+              autoComplete={authFormMode === "signin" ? "current-password" : "new-password"}
               required
             />
           </label>
-          {authFormMode === "signup" && (
+          {authFormMode === "request-access" && (
             <label>
               Repite la contrasena
               <input
@@ -766,20 +766,20 @@ function AdminBlogPage() {
             </label>
           )}
           <button className="admin-primary" type="submit">
-            {authFormMode === "signin" ? "Entrar" : "Crear cuenta"}
+            {authFormMode === "signin" ? "Entrar" : "Solicitar acceso"}
           </button>
           <button
             className="admin-link-button"
             type="button"
             onClick={() => {
               setMessage("");
-              setAuthFormMode(authFormMode === "signin" ? "signup" : "signin");
+              setAuthFormMode(authFormMode === "signin" ? "request-access" : "signin");
             }}
           >
-            {authFormMode === "signin" ? "Crear cuenta nueva" : "Ya tengo cuenta"}
+            {authFormMode === "signin" ? "Solicitar acceso" : "Ya tengo acceso"}
           </button>
           <button className="admin-link-button" type="button" onClick={handlePasswordReset}>
-            Crear o restablecer contrasena
+            Recuperar contrasena
           </button>
           {message && <p className="admin-message">{message}</p>}
         </form>
