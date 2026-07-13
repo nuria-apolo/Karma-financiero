@@ -11,10 +11,13 @@ import {
   getPostYear,
   readingTime,
 } from "@/lib/blog-cms";
-
+import { buildSeoHead, fetchSeoPage } from "@/lib/seo-cms";
 
 export const Route = createFileRoute("/blog/")({
-  loader: () => fetchPublishedPosts(),
+  loader: async () => {
+    const [blogData, seo] = await Promise.all([fetchPublishedPosts(), fetchSeoPage("/blog")]);
+    return { ...blogData, seo };
+  },
   headers: () => ({
     "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
     "CDN-Cache-Control": "no-store",
@@ -27,7 +30,8 @@ export const Route = createFileRoute("/blog/")({
       "@context": "https://schema.org",
       "@type": "Blog",
       name: "Diario de Karma — Blog de finanzas compartidas",
-      description: "Lecturas cortas sobre hablar de dinero en pareja, presupuesto del hogar y objetivos compartidos.",
+      description:
+        "Lecturas cortas sobre hablar de dinero en pareja, presupuesto del hogar y objetivos compartidos.",
       url: "https://karmafinanciero.com/blog",
       blogPosts: posts.map((post) => ({
         "@type": "BlogPosting",
@@ -41,31 +45,22 @@ export const Route = createFileRoute("/blog/")({
       })),
     };
 
-    return {
-      meta: [
-        { title: "Diario de Karma — Blog de finanzas compartidas" },
-        {
-          name: "description",
-          content:
-            "Lecturas cortas sobre hablar de dinero en pareja, presupuesto del hogar y objetivos compartidos.",
-        },
-        { property: "og:title", content: "Diario de Karma — Blog" },
-        {
-          property: "og:description",
-          content:
-            "Ideas prácticas sobre finanzas compartidas, presupuesto del hogar y objetivos en pareja.",
-        },
-        { property: "og:type", content: "website" },
-        { property: "og:url", content: "https://karmafinanciero.com/blog" },
-      ],
-      links: [{ rel: "canonical", href: "https://karmafinanciero.com/blog" }],
+    return buildSeoHead({
+      seo: loaderData?.seo,
+      defaults: {
+        path: "/blog",
+        title: "Diario de Karma — Blog de finanzas compartidas",
+        description:
+          "Lecturas cortas sobre hablar de dinero en pareja, presupuesto del hogar y objetivos compartidos.",
+        image: "/head-icon.png",
+      },
       scripts: [
         {
           type: "application/ld+json",
           children: JSON.stringify(blogListJsonLd),
         },
       ],
-    };
+    });
   },
   component: BlogIndex,
 });
@@ -74,7 +69,6 @@ function BlogIndex() {
   const loaderData = Route.useLoaderData();
   const [posts, setPosts] = useState<BlogPostRow[]>(loaderData.posts);
   const [categories, setCategories] = useState<BlogCategoryRow[]>(loaderData.categories);
-
 
   useEffect(() => {
     if (loaderData.posts.length > 0) return;
@@ -97,16 +91,17 @@ function BlogIndex() {
     <>
       <SiteHeader />
 
-
       <main id="main-content" tabIndex={-1} className="blog-page">
         <section className="container-x blog-hero">
           <div>
-            <span className="eyebrow"><span className="dot" /> Diario de Karma</span>
+            <span className="eyebrow">
+              <span className="dot" /> Diario de Karma
+            </span>
             <h1>Historias de finanzas compartidas.</h1>
           </div>
           <p>
-            Ideas cortas para hablar de dinero con más calma: rituales, presupuesto,
-            objetivos y pequeñas decisiones que sostienen el hogar.
+            Ideas cortas para hablar de dinero con más calma: rituales, presupuesto, objetivos y
+            pequeñas decisiones que sostienen el hogar.
           </p>
         </section>
 
@@ -119,7 +114,8 @@ function BlogIndex() {
             >
               <div className="story-featured-copy">
                 <span>
-                  {getCategoryName(categories, featuredPost.category)} · {readingTime(featuredPost.content)}
+                  {getCategoryName(categories, featuredPost.category)} ·{" "}
+                  {readingTime(featuredPost.content)}
                 </span>
                 <h2>{featuredPost.title}</h2>
                 <p>{featuredPost.excerpt}</p>
@@ -180,7 +176,6 @@ function BlogIndex() {
       </main>
 
       <SiteFooter />
-
     </>
   );
 }

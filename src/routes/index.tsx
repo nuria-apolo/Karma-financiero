@@ -3,52 +3,46 @@ import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import lotusKarmaIcon from "@/assets/lotus-karma-icon.png";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
+import { buildSeoHead, fetchSeoPage } from "@/lib/seo-cms";
 
 const WAITLIST_URL = "/lista-espera";
 
-
 export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "Karma Financiero — Finanzas compartidas con calma" },
-      {
-        name: "description",
-        content:
+  loader: () => fetchSeoPage("/"),
+  head: ({ loaderData }) =>
+    buildSeoHead({
+      seo: loaderData,
+      defaults: {
+        path: "/",
+        title: "Karma Financiero — Finanzas compartidas con calma",
+        description:
           "Organiza el dinero compartido con calma. Gestiona ingresos, gastos, objetivos y deudas en pareja o familia.",
+        image: "/head-icon.png",
       },
-      { property: "og:title", content: "Karma Financiero — Finanzas compartidas con calma" },
-      {
-        property: "og:description",
-        content: "Organiza el dinero que compartes con claridad y calma.",
-      },
-      { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://karmafinanciero.com/" },
-    ],
-    links: [{ rel: "canonical", href: "https://karmafinanciero.com/" }],
-    scripts: [
-      {
-        type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "Organization",
-          name: "Karma Financiero",
-          url: "https://karmafinanciero.com/",
-          logo: "https://karmafinanciero.com/favicon.png",
-          description:
-            "App para gestionar las finanzas compartidas del hogar con claridad y calma.",
-        }),
-      },
-      {
-        type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "WebSite",
-          name: "Karma Financiero",
-          url: "https://karmafinanciero.com/",
-        }),
-      },
-    ],
-  }),
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: "Karma Financiero",
+            url: "https://karmafinanciero.com/",
+            logo: "https://karmafinanciero.com/favicon.png",
+            description:
+              "App para gestionar las finanzas compartidas del hogar con claridad y calma.",
+          }),
+        },
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            name: "Karma Financiero",
+            url: "https://karmafinanciero.com/",
+          }),
+        },
+      ],
+    }),
   component: Landing,
 });
 
@@ -116,7 +110,13 @@ function Landing() {
   }, []);
 
   const plans = [
-    { id: "gratis", name: "Gratis", sub: "Pruébalo sin compromiso", price: "0€", cycle: "para siempre" },
+    {
+      id: "gratis",
+      name: "Gratis",
+      sub: "Pruébalo sin compromiso",
+      price: "0€",
+      cycle: "para siempre",
+    },
     { id: "pro", name: "Pro", sub: "Pensado para parejas", price: "2,99€", cycle: "/ mes" },
   ];
   const [activePlan, setActivePlan] = useState<string>("pro");
@@ -151,8 +151,8 @@ function Landing() {
               </h1>
               <p className="reveal d1">
                 <strong>Karma Financiero</strong> acompaña a parejas, familias y hogares para
-                ordenar ingresos, gastos, deudas y objetivos en un solo lugar — sin hojas de
-                cálculo ni discusiones.
+                ordenar ingresos, gastos, deudas y objetivos en un solo lugar — sin hojas de cálculo
+                ni discusiones.
               </p>
               <div className="g-hero-actions reveal d2">
                 <a className="btn-pill btn-pill-dark" href={WAITLIST_URL}>
@@ -209,7 +209,8 @@ function Landing() {
                     {new Intl.NumberFormat("es-ES", {
                       minimumFractionDigits: 2,
                       maximumFractionDigits: 2,
-                    }).format(displayedSavings)}€
+                    }).format(displayedSavings)}
+                    €
                   </span>
                 </div>
                 <div className="g-bars" aria-hidden="true">
@@ -237,19 +238,14 @@ function Landing() {
                 </div>
               </div>
             </div>
-
           </div>
-
         </section>
-
 
         {/* FEATURES - tabbed (Grovia "Built for high performance") */}
         <section className="section" id="features">
           <div className="container-x">
             <p className="section-eyebrow reveal">Funciones</p>
-            <h2 className="section-title reveal d1">
-              Hecho para hogares, impulsado por la calma
-            </h2>
+            <h2 className="section-title reveal d1">Hecho para hogares, impulsado por la calma</h2>
             <p className="section-lede reveal d1">
               Karma te da todo lo necesario para alinear el dinero del hogar, hacer seguimiento real
               y crecer con confianza — todo en un mismo lugar.
@@ -272,7 +268,9 @@ function Landing() {
                   aria-controls="feature-tab-panel"
                   tabIndex={activeTab === t.id ? 0 : -1}
                 >
-                  <span className="tab-ico" aria-hidden="true">{t.icon}</span>
+                  <span className="tab-ico" aria-hidden="true">
+                    {t.icon}
+                  </span>
                   {t.label}
                 </button>
               ))}
@@ -292,7 +290,6 @@ function Landing() {
             </div>
           </div>
         </section>
-
 
         {/* PRICING - dark Grovia style */}
         <section className="section" id="planes">
@@ -316,7 +313,9 @@ function Landing() {
                           <strong>{p.name}</strong>
                           <span>{p.sub}</span>
                         </span>
-                        <span className="pd-arrow" aria-hidden="true">→</span>
+                        <span className="pd-arrow" aria-hidden="true">
+                          →
+                        </span>
                       </button>
                     </li>
                   ))}
@@ -389,9 +388,7 @@ function Landing() {
             <span className="eyebrow" style={{ marginBottom: "1.4rem" }}>
               <span className="dot" /> Karma Financiero
             </span>
-            <h2>
-              Empieza hoy. Respira mejor mañana.
-            </h2>
+            <h2>Empieza hoy. Respira mejor mañana.</h2>
             <p>
               Una forma más tranquila y bonita de llevar las finanzas que compartes. Convierte el
               dinero en una conversación más fácil.
@@ -404,7 +401,6 @@ function Landing() {
       </main>
 
       <SiteFooter />
-
     </>
   );
 }
@@ -418,10 +414,22 @@ function PanelResumen() {
           <span className="pv-pill">Mes ▾</span>
         </div>
         <div className="pv-kpis">
-          <div className="pv-k k-yellow"><span>INGRESOS</span><strong>€3.200</strong></div>
-          <div className="pv-k k-gray"><span>GASTOS</span><strong>€1.760</strong></div>
-          <div className="pv-k k-green"><span>DISPONIBLE</span><strong>€1.440</strong></div>
-          <div className="pv-k k-white"><span>DEUDA</span><strong>€0</strong></div>
+          <div className="pv-k k-yellow">
+            <span>INGRESOS</span>
+            <strong>€3.200</strong>
+          </div>
+          <div className="pv-k k-gray">
+            <span>GASTOS</span>
+            <strong>€1.760</strong>
+          </div>
+          <div className="pv-k k-green">
+            <span>DISPONIBLE</span>
+            <strong>€1.440</strong>
+          </div>
+          <div className="pv-k k-white">
+            <span>DEUDA</span>
+            <strong>€0</strong>
+          </div>
         </div>
       </div>
       <div className="panel-text">
@@ -445,18 +453,52 @@ function PanelObjetivos() {
   return (
     <div className="panel-grid">
       <div className="panel-visual" aria-hidden="true">
-        <div className="pv-head"><strong>Objetivos del hogar</strong><span className="pv-pill">+ Nuevo</span></div>
+        <div className="pv-head">
+          <strong>Objetivos del hogar</strong>
+          <span className="pv-pill">+ Nuevo</span>
+        </div>
         <div className="mock-goals">
-          <div className="g"><div className="h"><span>Viaje verano</span><strong>€1.200 / €1.800</strong></div><div className="bar"><i style={{ width: "66%" }} /></div></div>
-          <div className="g"><div className="h"><span>Colchón emergencia</span><strong>€4.200 / €6.000</strong></div><div className="bar"><i style={{ width: "70%" }} /></div></div>
-          <div className="g"><div className="h"><span>Entrada piso</span><strong>€8.500 / €25.000</strong></div><div className="bar"><i style={{ width: "34%" }} /></div></div>
+          <div className="g">
+            <div className="h">
+              <span>Viaje verano</span>
+              <strong>€1.200 / €1.800</strong>
+            </div>
+            <div className="bar">
+              <i style={{ width: "66%" }} />
+            </div>
+          </div>
+          <div className="g">
+            <div className="h">
+              <span>Colchón emergencia</span>
+              <strong>€4.200 / €6.000</strong>
+            </div>
+            <div className="bar">
+              <i style={{ width: "70%" }} />
+            </div>
+          </div>
+          <div className="g">
+            <div className="h">
+              <span>Entrada piso</span>
+              <strong>€8.500 / €25.000</strong>
+            </div>
+            <div className="bar">
+              <i style={{ width: "34%" }} />
+            </div>
+          </div>
         </div>
       </div>
       <div className="panel-text">
         <p className="label">Objetivos compartidos</p>
         <h3>Del "algún día" al primer paso real</h3>
-        <p>Crea metas en pareja o familia y vélas avanzar mes a mes. Convierte conversaciones en progreso visible.</p>
-        <ul className="bullets"><li>Aportes automáticos</li><li>Plazos y recordatorios</li><li>Progreso compartido</li></ul>
+        <p>
+          Crea metas en pareja o familia y vélas avanzar mes a mes. Convierte conversaciones en
+          progreso visible.
+        </p>
+        <ul className="bullets">
+          <li>Aportes automáticos</li>
+          <li>Plazos y recordatorios</li>
+          <li>Progreso compartido</li>
+        </ul>
       </div>
     </div>
   );
@@ -466,18 +508,40 @@ function PanelDeudas() {
   return (
     <div className="panel-grid">
       <div className="panel-visual" aria-hidden="true">
-        <div className="pv-head"><strong>Deudas activas</strong><span className="pv-pill">Mes</span></div>
+        <div className="pv-head">
+          <strong>Deudas activas</strong>
+          <span className="pv-pill">Mes</span>
+        </div>
         <div className="mock-list">
-          <div className="row"><span>Hipoteca</span><span className="tag green">Fijo</span><strong>€820</strong></div>
-          <div className="row"><span>Préstamo coche</span><span className="tag blue">Fijo</span><strong>€210</strong></div>
-          <div className="row"><span>Tarjeta</span><span className="tag yellow">Variable</span><strong>€85</strong></div>
+          <div className="row">
+            <span>Hipoteca</span>
+            <span className="tag green">Fijo</span>
+            <strong>€820</strong>
+          </div>
+          <div className="row">
+            <span>Préstamo coche</span>
+            <span className="tag blue">Fijo</span>
+            <strong>€210</strong>
+          </div>
+          <div className="row">
+            <span>Tarjeta</span>
+            <span className="tag yellow">Variable</span>
+            <strong>€85</strong>
+          </div>
         </div>
       </div>
       <div className="panel-text">
         <p className="label">Salud financiera</p>
         <h3>Controla la deuda, mide tu margen</h3>
-        <p>Visualiza tu ratio de deuda y el dinero realmente disponible cada mes. Decisiones más justas y sostenibles.</p>
-        <ul className="bullets"><li>Ratio de deuda</li><li>Previsión a 12 meses</li><li>Alertas de margen</li></ul>
+        <p>
+          Visualiza tu ratio de deuda y el dinero realmente disponible cada mes. Decisiones más
+          justas y sostenibles.
+        </p>
+        <ul className="bullets">
+          <li>Ratio de deuda</li>
+          <li>Previsión a 12 meses</li>
+          <li>Alertas de margen</li>
+        </ul>
       </div>
     </div>
   );
@@ -487,7 +551,10 @@ function PanelVision() {
   return (
     <div className="panel-grid">
       <div className="panel-visual" aria-hidden="true">
-        <div className="pv-head"><strong>Visión a 12 meses</strong><span className="pv-pill">Año</span></div>
+        <div className="pv-head">
+          <strong>Visión a 12 meses</strong>
+          <span className="pv-pill">Año</span>
+        </div>
         <svg viewBox="0 0 320 160" preserveAspectRatio="none" className="pv-chart">
           <defs>
             <linearGradient id="vg" x1="0" x2="0" y1="0" y2="1">
@@ -495,15 +562,30 @@ function PanelVision() {
               <stop offset="100%" stopColor="#c3d6b6" stopOpacity="0" />
             </linearGradient>
           </defs>
-          <path d="M0,120 L40,110 L80,115 L120,90 L160,80 L200,60 L240,55 L280,35 L320,28 L320,160 L0,160 Z" fill="url(#vg)" />
-          <path d="M0,120 L40,110 L80,115 L120,90 L160,80 L200,60 L240,55 L280,35 L320,28" fill="none" stroke="#7d9b76" strokeWidth="2.4" />
+          <path
+            d="M0,120 L40,110 L80,115 L120,90 L160,80 L200,60 L240,55 L280,35 L320,28 L320,160 L0,160 Z"
+            fill="url(#vg)"
+          />
+          <path
+            d="M0,120 L40,110 L80,115 L120,90 L160,80 L200,60 L240,55 L280,35 L320,28"
+            fill="none"
+            stroke="#7d9b76"
+            strokeWidth="2.4"
+          />
         </svg>
       </div>
       <div className="panel-text">
         <p className="label">Visión</p>
         <h3>Mira a dónde vas, no solo dónde estás</h3>
-        <p>Karma proyecta tu patrimonio y tus objetivos para que sepas qué decisiones tomar ahora para vivir mejor mañana.</p>
-        <ul className="bullets"><li>Proyección de patrimonio</li><li>Escenarios "qué pasaría si"</li><li>Recomendaciones suaves</li></ul>
+        <p>
+          Karma proyecta tu patrimonio y tus objetivos para que sepas qué decisiones tomar ahora
+          para vivir mejor mañana.
+        </p>
+        <ul className="bullets">
+          <li>Proyección de patrimonio</li>
+          <li>Escenarios "qué pasaría si"</li>
+          <li>Recomendaciones suaves</li>
+        </ul>
       </div>
     </div>
   );

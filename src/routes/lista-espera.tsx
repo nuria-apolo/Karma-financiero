@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { FormEvent, useState } from "react";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
+import { buildSeoHead, fetchSeoPage } from "@/lib/seo-cms";
 
 type LeadStatus = "idle" | "submitting" | "sent" | "error";
 type LeadSearch = { email?: string };
@@ -12,28 +13,21 @@ const WAITLIST_SUPABASE_URL = "https://vyjcfuhohzmzvuxmbqgv.supabase.co";
 const WAITLIST_SUPABASE_KEY = "sb_publishable_4DLru48DNJm89EL3_lDGjA_Prs3Luw-";
 
 export const Route = createFileRoute("/lista-espera")({
+  loader: () => fetchSeoPage("/lista-espera"),
   validateSearch: (search: Record<string, unknown>): LeadSearch => ({
     email: typeof search.email === "string" ? search.email : undefined,
   }),
-  head: () => ({
-    meta: [
-      { title: "Únete a Karma Financiero — Lista de espera" },
-      {
-        name: "description",
-        content:
+  head: ({ loaderData }) =>
+    buildSeoHead({
+      seo: loaderData,
+      defaults: {
+        path: "/lista-espera",
+        title: "Únete a Karma Financiero — Lista de espera",
+        description:
           "Déjanos tu correo y te avisaremos cuando Karma Financiero esté listo para tu hogar.",
+        image: "/head-icon.png",
       },
-      { property: "og:title", content: "Únete a Karma Financiero" },
-      {
-        property: "og:description",
-        content:
-          "Apúntate para probar la app de finanzas compartidas con calma.",
-      },
-      { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://karmafinanciero.com/lista-espera" },
-    ],
-    links: [{ rel: "canonical", href: "https://karmafinanciero.com/lista-espera" }],
-  }),
+    }),
   component: LeadCapture,
 });
 
@@ -84,10 +78,10 @@ function LeadCapture() {
       <main id="main-content" tabIndex={-1} className="lead-page">
         <section className="container-x lead-hero">
           <div className="lead-copy">
-            <span className="eyebrow"><span className="dot" /> Acceso anticipado</span>
-            <h1>
-              Sé de los primeros en probar Karma Financiero.
-            </h1>
+            <span className="eyebrow">
+              <span className="dot" /> Acceso anticipado
+            </span>
+            <h1>Sé de los primeros en probar Karma Financiero.</h1>
             <p>
               Estamos preparando una forma más tranquila de ordenar gastos, objetivos y decisiones
               de dinero compartido. Déjanos tu correo y te avisaremos cuando abramos nuevos accesos.
@@ -130,7 +124,9 @@ function LeadCapture() {
             <label>
               ¿Cómo usarías Karma?
               <select name="profile" defaultValue="" required>
-                <option value="" disabled>Elige una opción</option>
+                <option value="" disabled>
+                  Elige una opción
+                </option>
                 <option value="pareja">Con mi pareja</option>
                 <option value="familia">Con mi familia</option>
                 <option value="compartido">En un hogar compartido</option>

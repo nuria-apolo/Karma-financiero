@@ -14,18 +14,19 @@ import {
   getPostYear,
   readingTime,
 } from "@/lib/blog-cms";
-
-
+import { buildSeoHead, fetchSeoPage } from "@/lib/seo-cms";
 
 export const Route = createFileRoute("/blog/$slug")({
   loader: async ({ params }) => {
-    const [{ post, categories }, { posts }] = await Promise.all([
+    const [{ post, categories }, { posts }, seo] = await Promise.all([
       fetchPublishedPost(params.slug),
       fetchPublishedPosts(),
+      fetchSeoPage(`/blog/${params.slug}`),
     ]);
     return {
       post,
       categories,
+      seo,
       related: posts.filter((item) => item.slug !== params.slug).slice(0, 3),
     };
   },
@@ -37,27 +38,19 @@ export const Route = createFileRoute("/blog/$slug")({
   head: ({ params, loaderData }) => {
     const post = loaderData?.post;
     if (!post) return { meta: [{ title: "Artículo no encontrado — Karma Financiero" }] };
-    const url = `https://karmafinanciero.com/blog/${params.slug}`;
     const rawImage = post.featured_image || FALLBACK_BLOG_IMAGE;
     const image = new URL(rawImage, "https://karmafinanciero.com").href;
     const description = post.seo_description || post.excerpt;
-    return {
-      meta: [
-        { title: post.seo_title || post.title },
-        { name: "description", content: description },
-        { property: "og:title", content: post.title },
-        { property: "og:description", content: description },
-        { property: "og:type", content: "article" },
-        { property: "og:url", content: url },
-        { property: "og:image", content: image },
-        { property: "og:image:secure_url", content: image },
-        { property: "og:image:alt", content: `Imagen de cabecera de ${post.title}` },
-        { name: "twitter:title", content: post.title },
-        { name: "twitter:description", content: description },
-        { name: "twitter:image", content: image },
-        { name: "twitter:image:alt", content: `Imagen de cabecera de ${post.title}` },
-      ],
-      links: [{ rel: "canonical", href: url }],
+    const url = `https://karmafinanciero.com/blog/${params.slug}`;
+    return buildSeoHead({
+      seo: loaderData?.seo,
+      defaults: {
+        path: `/blog/${params.slug}`,
+        title: post.seo_title || post.title,
+        description,
+        image,
+        type: "article",
+      },
       scripts: [
         {
           type: "application/ld+json",
@@ -82,7 +75,7 @@ export const Route = createFileRoute("/blog/$slug")({
           }),
         },
       ],
-    };
+    });
   },
   component: BlogPostPage,
 });
@@ -128,7 +121,6 @@ function BlogPostPage() {
     return clientChecked ? <BlogPostNotFound /> : <BlogPostLoading />;
   }
 
-
   const categoryName = getCategoryName(categories, post.category);
   const tone = getPostTone(post.category);
   const headings = getBlogHeadings(post.content);
@@ -137,10 +129,11 @@ function BlogPostPage() {
     <>
       <SiteHeader />
 
-
       <main id="main-content" tabIndex={-1} className="post-page">
         <div className="container-x" style={{ marginBottom: "1.5rem" }}>
-          <Link to="/blog" className="back-link">← Volver al diario</Link>
+          <Link to="/blog" className="back-link">
+            ← Volver al diario
+          </Link>
         </div>
 
         <div className="post-cover">
@@ -149,9 +142,13 @@ function BlogPostPage() {
         </div>
 
         <header className="post-head">
-          <span className="eyebrow"><span className="dot" /> {categoryName}</span>
+          <span className="eyebrow">
+            <span className="dot" /> {categoryName}
+          </span>
           <h1>{post.title}</h1>
-          <p className="post-meta">{formatPostDate(post.published_at)} · {readingTime(post.content)} de lectura</p>
+          <p className="post-meta">
+            {formatPostDate(post.published_at)} · {readingTime(post.content)} de lectura
+          </p>
         </header>
 
         {headings.length > 0 && (
@@ -180,7 +177,9 @@ function BlogPostPage() {
               objetivos y presupuesto del hogar en un solo lugar.
             </p>
           </div>
-          <Link className="btn-pill btn-pill-dark" to="/lista-espera">Apuntarme</Link>
+          <Link className="btn-pill btn-pill-dark" to="/lista-espera">
+            Apuntarme
+          </Link>
         </section>
 
         {related.length > 0 && (
@@ -209,7 +208,9 @@ function BlogPostPage() {
                     <h3>{p.title}</h3>
                     <p>{p.excerpt}</p>
                     <div className="story-meta">
-                      <span>{getCategoryName(categories, p.category)} · {readingTime(p.content)}</span>
+                      <span>
+                        {getCategoryName(categories, p.category)} · {readingTime(p.content)}
+                      </span>
                       <span className="arrow">Leer →</span>
                     </div>
                   </div>
@@ -221,7 +222,6 @@ function BlogPostPage() {
       </main>
 
       <SiteFooter />
-
     </>
   );
 }

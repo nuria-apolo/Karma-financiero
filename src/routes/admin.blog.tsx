@@ -16,6 +16,7 @@ import {
   Plus,
   Save,
   Search,
+  SearchCheck,
   Sparkles,
   Trash2,
   UserPlus,
@@ -180,13 +181,12 @@ function AdminBlogPage() {
       { data: categoryRows, error: categoriesError },
       { data: requestRows, error: requestsError },
       { data: legalRows, error: legalError },
-    ] =
-      await Promise.all([
-        supabase.from("blog_posts").select("*").order("updated_at", { ascending: false }),
-        supabase.from("blog_categories").select("*").order("name", { ascending: true }),
-        supabase.from("blog_access_requests").select("*").order("requested_at", { ascending: false }),
-        supabase.from("legal_pages").select("*").order("title", { ascending: true }),
-      ]);
+    ] = await Promise.all([
+      supabase.from("blog_posts").select("*").order("updated_at", { ascending: false }),
+      supabase.from("blog_categories").select("*").order("name", { ascending: true }),
+      supabase.from("blog_access_requests").select("*").order("requested_at", { ascending: false }),
+      supabase.from("legal_pages").select("*").order("title", { ascending: true }),
+    ]);
 
     if (postsError || categoriesError || requestsError || legalError) {
       setMessage(
@@ -344,7 +344,9 @@ function AdminBlogPage() {
   async function handlePasswordReset() {
     setMessage("");
     if (!loginEmail.trim()) {
-      setMessage("Escribe primero tu email para enviarte el enlace de creacion o cambio de contrasena.");
+      setMessage(
+        "Escribe primero tu email para enviarte el enlace de creacion o cambio de contrasena.",
+      );
       return;
     }
 
@@ -434,9 +436,7 @@ function AdminBlogPage() {
       return;
     }
 
-    const { data: publicUrlData } = supabase.storage
-      .from(BLOG_IMAGE_BUCKET)
-      .getPublicUrl(filePath);
+    const { data: publicUrlData } = supabase.storage.from(BLOG_IMAGE_BUCKET).getPublicUrl(filePath);
     const publicUrl = publicUrlData.publicUrl;
 
     const { data: updatedPost, error: updateError } = await supabase
@@ -454,9 +454,7 @@ function AdminBlogPage() {
     }
 
     setPostDraft(updatedPost);
-    setPosts((current) =>
-      current.map((post) => (post.id === updatedPost.id ? updatedPost : post)),
-    );
+    setPosts((current) => current.map((post) => (post.id === updatedPost.id ? updatedPost : post)));
     setMessage("Imagen subida y guardada.");
   }
 
@@ -499,9 +497,7 @@ function AdminBlogPage() {
 
     const status = nextStatus ?? (postDraft.status as BlogStatus);
     const publishedAt =
-      status === "published"
-        ? postDraft.published_at || new Date().toISOString()
-        : null;
+      status === "published" ? postDraft.published_at || new Date().toISOString() : null;
 
     const { data, error } = await supabase
       .from("blog_posts")
@@ -600,7 +596,9 @@ function AdminBlogPage() {
     }
 
     setCategories((current) =>
-      current.map((category) => (category.id === data.id ? data : category)).sort((a, b) => a.name.localeCompare(b.name)),
+      current
+        .map((category) => (category.id === data.id ? data : category))
+        .sort((a, b) => a.name.localeCompare(b.name)),
     );
     setCategoryDraft(data);
     setMessage("Categoria guardada.");
@@ -672,15 +670,13 @@ function AdminBlogPage() {
     setMessage("");
 
     if (decision === "approved") {
-      const { error: adminError } = await supabase
-        .from("blog_admins")
-        .upsert(
-          {
-            user_id: request.user_id,
-            email: request.email,
-          },
-          { onConflict: "user_id" },
-        );
+      const { error: adminError } = await supabase.from("blog_admins").upsert(
+        {
+          user_id: request.user_id,
+          email: request.email,
+        },
+        { onConflict: "user_id" },
+      );
 
       if (adminError) {
         setSaving(false);
@@ -724,7 +720,10 @@ function AdminBlogPage() {
   if (authState === "signed-out") {
     return (
       <main id="main-content" tabIndex={-1} className="admin-auth">
-        <form className="admin-auth-card" onSubmit={authFormMode === "signin" ? handleLogin : handleCreateAccount}>
+        <form
+          className="admin-auth-card"
+          onSubmit={authFormMode === "signin" ? handleLogin : handleCreateAccount}
+        >
           <img src="/logo-karma.svg" alt="Karma Financiero" />
           <div>
             <span>CMS privado</span>
@@ -737,7 +736,12 @@ function AdminBlogPage() {
           </p>
           <label>
             Email
-            <input value={loginEmail} onChange={(event) => setLoginEmail(event.target.value)} type="email" required />
+            <input
+              value={loginEmail}
+              onChange={(event) => setLoginEmail(event.target.value)}
+              type="email"
+              required
+            />
           </label>
           <label>
             Contrasena
@@ -792,9 +796,7 @@ function AdminBlogPage() {
             <span>Acceso pendiente</span>
             <h1>Tu usuario aun no esta autorizado</h1>
           </div>
-          <p>
-            Tu cuenta existe, pero todavia esta pendiente de aprobacion para entrar al CMS.
-          </p>
+          <p>Tu cuenta existe, pero todavia esta pendiente de aprobacion para entrar al CMS.</p>
           <p className="admin-message">
             Cuando un administrador revise tu solicitud, podras entrar aqui con normalidad.
           </p>
@@ -831,18 +833,33 @@ function AdminBlogPage() {
           <img src="/logo-karma.svg" alt="Karma Financiero" />
         </Link>
         <nav>
-          <button className={collection === "blog" ? "active" : ""} onClick={() => setCollection("blog")}>
+          <button
+            className={collection === "blog" ? "active" : ""}
+            onClick={() => setCollection("blog")}
+          >
             <FileText size={16} /> Blog
           </button>
-          <button className={collection === "categories" ? "active" : ""} onClick={() => setCollection("categories")}>
+          <button
+            className={collection === "categories" ? "active" : ""}
+            onClick={() => setCollection("categories")}
+          >
             <Folder size={16} /> Categorias
           </button>
-          <button className={collection === "access" ? "active" : ""} onClick={() => setCollection("access")}>
+          <button
+            className={collection === "access" ? "active" : ""}
+            onClick={() => setCollection("access")}
+          >
             <BadgeCheck size={16} /> Accesos
           </button>
-          <button className={collection === "legal" ? "active" : ""} onClick={() => setCollection("legal")}>
+          <button
+            className={collection === "legal" ? "active" : ""}
+            onClick={() => setCollection("legal")}
+          >
             <LayoutList size={16} /> Legal Pages
           </button>
+          <Link to="/admin/seo">
+            <SearchCheck size={16} /> SEO Manager
+          </Link>
         </nav>
         <div className="admin-user">
           <span>{session?.user.email}</span>
@@ -860,7 +877,12 @@ function AdminBlogPage() {
                 <span>Collection</span>
                 <h1>Blog</h1>
               </div>
-              <button className="admin-icon-button" type="button" onClick={createPost} aria-label="Nuevo articulo">
+              <button
+                className="admin-icon-button"
+                type="button"
+                onClick={createPost}
+                aria-label="Nuevo articulo"
+              >
                 <Plus size={18} />
               </button>
             </header>
@@ -868,9 +890,16 @@ function AdminBlogPage() {
             <div className="admin-tools">
               <label className="admin-search">
                 <Search size={15} />
-                <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Buscar articulos" />
+                <input
+                  value={query}
+                  onChange={(event) => setQuery(event.target.value)}
+                  placeholder="Buscar articulos"
+                />
               </label>
-              <select value={statusFilter} onChange={(event) => setStatusFilter(event.target.value as StatusFilter)}>
+              <select
+                value={statusFilter}
+                onChange={(event) => setStatusFilter(event.target.value as StatusFilter)}
+              >
                 <option value="all">Todos</option>
                 <option value="draft">Draft</option>
                 <option value="published">Live</option>
@@ -885,11 +914,16 @@ function AdminBlogPage() {
                   type="button"
                   onClick={() => selectPost(post)}
                 >
-                  <span className={`admin-status ${post.status === "published" ? "live" : "draft"}`}>
+                  <span
+                    className={`admin-status ${post.status === "published" ? "live" : "draft"}`}
+                  >
                     {post.status === "published" ? "Live" : "Draft"}
                   </span>
                   <strong>{post.title}</strong>
-                  <small>{getCategoryName(categories, post.category)} · {formatPostDate(post.published_at)}</small>
+                  <small>
+                    {getCategoryName(categories, post.category)} ·{" "}
+                    {formatPostDate(post.published_at)}
+                  </small>
                 </button>
               ))}
             </div>
@@ -904,10 +938,20 @@ function AdminBlogPage() {
                     <h2>{postDraft.title}</h2>
                   </div>
                   <div className="admin-actions">
-                    <button className="admin-secondary" type="button" onClick={() => savePost("draft")} disabled={saving}>
+                    <button
+                      className="admin-secondary"
+                      type="button"
+                      onClick={() => savePost("draft")}
+                      disabled={saving}
+                    >
                       <Save size={15} /> Draft
                     </button>
-                    <button className="admin-primary" type="button" onClick={() => savePost("published")} disabled={saving}>
+                    <button
+                      className="admin-primary"
+                      type="button"
+                      onClick={() => savePost("published")}
+                      disabled={saving}
+                    >
                       <Check size={15} /> Live
                     </button>
                   </div>
@@ -916,31 +960,51 @@ function AdminBlogPage() {
                 <div className="admin-form-grid">
                   <label>
                     Titulo
-                    <input value={postDraft.title} onChange={(event) => updatePost("title", event.target.value)} />
+                    <input
+                      value={postDraft.title}
+                      onChange={(event) => updatePost("title", event.target.value)}
+                    />
                   </label>
                   <label>
                     Slug
-                    <input value={postDraft.slug} onChange={(event) => updatePost("slug", slugify(event.target.value))} />
+                    <input
+                      value={postDraft.slug}
+                      onChange={(event) => updatePost("slug", slugify(event.target.value))}
+                    />
                   </label>
                   <label className="span-2">
                     Extracto
-                    <textarea value={postDraft.excerpt} onChange={(event) => updatePost("excerpt", event.target.value)} />
+                    <textarea
+                      value={postDraft.excerpt}
+                      onChange={(event) => updatePost("excerpt", event.target.value)}
+                    />
                   </label>
                   <label>
                     Categoria
-                    <select value={postDraft.category} onChange={(event) => updatePost("category", event.target.value)}>
+                    <select
+                      value={postDraft.category}
+                      onChange={(event) => updatePost("category", event.target.value)}
+                    >
                       {categories.map((category) => (
-                        <option key={category.id} value={category.slug}>{category.name}</option>
+                        <option key={category.id} value={category.slug}>
+                          {category.name}
+                        </option>
                       ))}
                     </select>
                   </label>
                   <label>
                     Autor
-                    <input value={postDraft.author} onChange={(event) => updatePost("author", event.target.value)} />
+                    <input
+                      value={postDraft.author}
+                      onChange={(event) => updatePost("author", event.target.value)}
+                    />
                   </label>
                   <label>
                     Estado
-                    <select value={postDraft.status} onChange={(event) => updatePost("status", event.target.value)}>
+                    <select
+                      value={postDraft.status}
+                      onChange={(event) => updatePost("status", event.target.value)}
+                    >
                       <option value="draft">Draft</option>
                       <option value="published">Live</option>
                     </select>
@@ -952,7 +1016,9 @@ function AdminBlogPage() {
                       <input
                         type="datetime-local"
                         value={toDateInput(postDraft.published_at) || nowForInput()}
-                        onChange={(event) => updatePost("published_at", fromDateInput(event.target.value))}
+                        onChange={(event) =>
+                          updatePost("published_at", fromDateInput(event.target.value))
+                        }
                       />
                     </span>
                   </label>
@@ -960,13 +1026,12 @@ function AdminBlogPage() {
                     <span className="admin-field-label">Imagen destacada</span>
                     <div className="admin-image-upload">
                       <div className="admin-image-thumb">
-                        <img
-                          src={postDraft.featured_image || FALLBACK_BLOG_IMAGE}
-                          alt=""
-                        />
+                        <img src={postDraft.featured_image || FALLBACK_BLOG_IMAGE} alt="" />
                       </div>
                       <div className="admin-image-controls">
-                        <label className={`admin-upload-button ${uploadingImage ? "is-loading" : ""}`}>
+                        <label
+                          className={`admin-upload-button ${uploadingImage ? "is-loading" : ""}`}
+                        >
                           {uploadingImage ? (
                             <LoaderCircle aria-hidden="true" size={17} />
                           ) : (
@@ -994,10 +1059,18 @@ function AdminBlogPage() {
 
                 <section className="admin-content-editor">
                   <div className="admin-editor-toolbar">
-                    <button type="button" onClick={() => appendContent("## Nuevo apartado")}>H2</button>
-                    <button type="button" onClick={() => appendContent("### Subapartado")}>H3</button>
-                    <button type="button" onClick={() => appendContent("- Punto importante")}>Lista</button>
-                    <button type="button" onClick={() => appendContent("**Texto destacado**")}>Bold</button>
+                    <button type="button" onClick={() => appendContent("## Nuevo apartado")}>
+                      H2
+                    </button>
+                    <button type="button" onClick={() => appendContent("### Subapartado")}>
+                      H3
+                    </button>
+                    <button type="button" onClick={() => appendContent("- Punto importante")}>
+                      Lista
+                    </button>
+                    <button type="button" onClick={() => appendContent("**Texto destacado**")}>
+                      Bold
+                    </button>
                   </div>
                   <textarea
                     value={postDraft.content}
@@ -1025,7 +1098,9 @@ function AdminBlogPage() {
 
                 <section className="admin-preview">
                   <div className="admin-preview-head">
-                    <span><Eye size={14} /> Vista previa</span>
+                    <span>
+                      <Eye size={14} /> Vista previa
+                    </span>
                     <small>{readingTime(postDraft.content)}</small>
                   </div>
                   <img src={postDraft.featured_image || FALLBACK_BLOG_IMAGE} alt="" />
@@ -1062,7 +1137,12 @@ function AdminBlogPage() {
                 <span>Collection</span>
                 <h1>Categorias</h1>
               </div>
-              <button className="admin-icon-button" type="button" onClick={createCategory} aria-label="Nueva categoria">
+              <button
+                className="admin-icon-button"
+                type="button"
+                onClick={createCategory}
+                aria-label="Nueva categoria"
+              >
                 <Plus size={18} />
               </button>
             </header>
@@ -1094,11 +1174,17 @@ function AdminBlogPage() {
             <div className="admin-form-grid">
               <label>
                 Nombre
-                <input value={categoryDraft.name} onChange={(event) => updateCategory("name", event.target.value)} />
+                <input
+                  value={categoryDraft.name}
+                  onChange={(event) => updateCategory("name", event.target.value)}
+                />
               </label>
               <label>
                 Slug
-                <input value={categoryDraft.slug} onChange={(event) => updateCategory("slug", slugify(event.target.value))} />
+                <input
+                  value={categoryDraft.slug}
+                  onChange={(event) => updateCategory("slug", slugify(event.target.value))}
+                />
               </label>
               <label className="span-2">
                 Descripcion
@@ -1130,11 +1216,15 @@ function AdminBlogPage() {
               {accessRequests.map((request) => (
                 <button
                   key={request.id}
-                  className={request.id === selectedAccessRequestId ? "admin-row active" : "admin-row"}
+                  className={
+                    request.id === selectedAccessRequestId ? "admin-row active" : "admin-row"
+                  }
                   type="button"
                   onClick={() => setSelectedAccessRequestId(request.id)}
                 >
-                  <span className={`admin-status ${request.status === "approved" ? "live" : "draft"}`}>
+                  <span
+                    className={`admin-status ${request.status === "approved" ? "live" : "draft"}`}
+                  >
                     {request.status}
                   </span>
                   <strong>{request.email}</strong>
@@ -1146,7 +1236,9 @@ function AdminBlogPage() {
           <section className="admin-editor">
             {accessRequests.find((request) => request.id === selectedAccessRequestId) ? (
               (() => {
-                const selectedRequest = accessRequests.find((request) => request.id === selectedAccessRequestId)!;
+                const selectedRequest = accessRequests.find(
+                  (request) => request.id === selectedAccessRequestId,
+                )!;
                 return (
                   <>
                     <header className="admin-editor-head">
@@ -1156,12 +1248,24 @@ function AdminBlogPage() {
                       </div>
                     </header>
                     <div className="admin-access-card">
-                      <p><strong>Email:</strong> {selectedRequest.email}</p>
-                      <p><strong>User ID:</strong> {selectedRequest.user_id}</p>
-                      <p><strong>Estado:</strong> {selectedRequest.status}</p>
-                      <p><strong>Solicitado:</strong> {new Date(selectedRequest.requested_at).toLocaleString("es-ES")}</p>
+                      <p>
+                        <strong>Email:</strong> {selectedRequest.email}
+                      </p>
+                      <p>
+                        <strong>User ID:</strong> {selectedRequest.user_id}
+                      </p>
+                      <p>
+                        <strong>Estado:</strong> {selectedRequest.status}
+                      </p>
+                      <p>
+                        <strong>Solicitado:</strong>{" "}
+                        {new Date(selectedRequest.requested_at).toLocaleString("es-ES")}
+                      </p>
                       {selectedRequest.reviewed_at && (
-                        <p><strong>Revisado:</strong> {new Date(selectedRequest.reviewed_at).toLocaleString("es-ES")}</p>
+                        <p>
+                          <strong>Revisado:</strong>{" "}
+                          {new Date(selectedRequest.reviewed_at).toLocaleString("es-ES")}
+                        </p>
                       )}
                     </div>
                     <div className="admin-actions">
@@ -1273,7 +1377,9 @@ function AdminBlogPage() {
                 <section className="admin-content-editor">
                   <div className="admin-editor-toolbar">
                     <span>Contenido</span>
-                    <small>Usa ## para cada apartado, - para listas y **texto** para negrita.</small>
+                    <small>
+                      Usa ## para cada apartado, - para listas y **texto** para negrita.
+                    </small>
                   </div>
                   <textarea
                     value={legalDraft.content}
@@ -1300,7 +1406,9 @@ function AdminBlogPage() {
 
                 <section className="admin-preview legal-admin-preview">
                   <div className="admin-preview-head">
-                    <span><Eye size={14} /> Vista previa del contenido</span>
+                    <span>
+                      <Eye size={14} /> Vista previa del contenido
+                    </span>
                     <small>{legalDraft.eyebrow}</small>
                   </div>
                   <h1>{legalDraft.title}</h1>
