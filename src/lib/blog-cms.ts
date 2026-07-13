@@ -1,6 +1,9 @@
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables, TablesInsert, TablesUpdate } from "@/integrations/supabase/types";
 
+const SUPABASE_REST_URL = "https://vyjcfuhohzmzvuxmbqgv.supabase.co";
+const SUPABASE_REST_KEY = "sb_publishable_4DLru48DNJm89EL3_lDGjA_Prs3Luw-";
+
 export type BlogStatus = "draft" | "published";
 export type BlogPostRow = Tables<"blog_posts">;
 export type BlogPostInsert = TablesInsert<"blog_posts">;
@@ -53,25 +56,99 @@ export function getPostTone(category: string, index = 0): BlogTone {
   return (["green", "yellow", "blue"] as BlogTone[])[index % 3];
 }
 
+async function withRetry<T>(operation: () => Promise<T>, label: string, attempts = 2): Promise<T> {
+  let lastError: unknown;
+
+  for (let attempt = 1; attempt <= attempts; attempt += 1) {
+    try {
+      return await operation();
+    } catch (error) {
+      lastError = error;
+      if (attempt < attempts) {
+        await new Promise((resolve) => setTimeout(resolve, 180 * attempt));
+      }
+    }
+  }
+
+  console.error(`[blog] ${label} failed after ${attempts} attempts`, lastError);
+  throw lastError;
+}
+
+async function fetchRest<T>(path: string): Promise<T> {
+  const response = await fetch(`${SUPABASE_REST_URL}/rest/v1/${path}`, {
+    headers: {
+      Accept: "application/json",
+      apikey: SUPABASE_REST_KEY,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(
+      `REST fallback failed for ${path}: ${response.status} ${await response.text()}`,
+    );
+  }
+
+  return (await response.json()) as T;
+}
+
+async function fetchPublishedPostsRest() {
+  const [posts, categories] = await Promise.all([
+    fetchRest<BlogPostRow[]>("blog_posts?select=*&status=eq.published&order=published_at.desc"),
+    fetchRest<BlogCategoryRow[]>("blog_categories?select=*&order=name.asc"),
+  ]);
+
+  return {
+    posts: posts ?? [],
+    categories: categories ?? [],
+  };
+}
+
+async function fetchPublishedPostRest(slug: string) {
+  const [posts, categories] = await Promise.all([
+    fetchRest<BlogPostRow[]>(
+      `blog_posts?select=*&slug=eq.${encodeURIComponent(slug)}&status=eq.published&limit=1`,
+    ),
+    fetchRest<BlogCategoryRow[]>("blog_categories?select=*&order=name.asc"),
+  ]);
+
+  return {
+    post: posts?.[0] ?? null,
+    categories: categories ?? [],
+  };
+}
+
 export async function fetchPublishedPosts() {
   try {
-    const [{ data: posts, error: postsError }, { data: categories, error: categoriesError }] =
-      await Promise.all([
-        supabase
+    const [postsResult, categoriesResult] = await Promise.allSettled([
+      withRetry(async () => {
+        const { data, error } = await supabase
           .from("blog_posts")
           .select("*")
           .eq("status", "published")
-          .order("published_at", { ascending: false }),
-        supabase.from("blog_categories").select("*").order("name", { ascending: true }),
-      ]);
+          .order("published_at", { ascending: false });
 
-    if (postsError) throw postsError;
-    if (categoriesError) throw categoriesError;
+        if (error) throw error;
+        return data ?? [];
+      }, "Published posts query"),
+      withRetry(async () => {
+        const { data, error } = await supabase
+          .from("blog_categories")
+          .select("*")
+          .order("name", { ascending: true });
 
-    return {
-      posts: posts ?? [],
-      categories: categories ?? [],
-    };
+        if (error) throw error;
+        return data ?? [];
+      }, "Blog categories query"),
+    ]);
+
+    if (postsResult.status === "fulfilled" && postsResult.value.length > 0) {
+      return {
+        posts: postsResult.value,
+        categories: categoriesResult.status === "fulfilled" ? categoriesResult.value : [],
+      };
+    }
+
+    return await fetchPublishedPostsRest();
   } catch (error) {
     console.error("[blog] Could not load published posts from Supabase", error);
     return {
@@ -80,7 +157,6 @@ export async function fetchPublishedPosts() {
     };
   }
 }
-
 
 export async function fetchPublishedPost(slug: string) {
   try {
@@ -103,11 +179,16 @@ export async function fetchPublishedPost(slug: string) {
       categories: categories ?? [],
     };
   } catch (error) {
-    console.error("[blog] Could not load published post from Supabase", error);
-    return {
-      post: null as BlogPostRow | null,
-      categories: [] as BlogCategoryRow[],
-    };
+    console.error("[blog] Could not load published post from Supabase client", error);
+
+    try {
+      return await fetchPublishedPostRest(slug);
+    } catch (restError) {
+      console.error("[blog] Could not load published post from REST fallback", restError);
+      return {
+        post: null as BlogPostRow | null,
+        categories: [] as BlogCategoryRow[],
+      };
+    }
   }
 }
-
