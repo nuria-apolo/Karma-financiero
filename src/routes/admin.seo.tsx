@@ -57,6 +57,13 @@ interface SeoSource {
   sourceType: SeoSourceType;
   sourceId: string | null;
   content?: string;
+  headings?: SeoHeading[];
+}
+
+interface SeoHeading {
+  id: string;
+  level: 1 | 2 | 3;
+  text: string;
 }
 
 interface SeoDraft {
@@ -93,6 +100,13 @@ const STATIC_SEO_SOURCES: SeoSource[] = [
     image: "/head-icon.png",
     sourceType: "static",
     sourceId: null,
+    headings: [
+      { id: "hero", level: 1, text: "Gestiona las finanzas compartidas de tu hogar" },
+      { id: "features", level: 2, text: "Hecho para hogares, impulsado por la calma" },
+      { id: "planes", level: 2, text: "Empieza simple, crece tranquilo" },
+      { id: "home-faq-title", level: 2, text: "Finanzas compartidas, sin hacerlo enorme" },
+      { id: "cta", level: 2, text: "Empieza hoy. Respira mejor mañana." },
+    ],
   },
   {
     path: "/lista-espera",
@@ -102,6 +116,7 @@ const STATIC_SEO_SOURCES: SeoSource[] = [
     image: "/head-icon.png",
     sourceType: "static",
     sourceId: null,
+    headings: [{ id: "lista-espera", level: 1, text: "Únete a la lista de espera" }],
   },
   {
     path: "/blog",
@@ -111,6 +126,11 @@ const STATIC_SEO_SOURCES: SeoSource[] = [
     image: "/head-icon.png",
     sourceType: "static",
     sourceId: null,
+    headings: [
+      { id: "blog", level: 1, text: "Blog de finanzas compartidas para hogares reales." },
+      { id: "featured", level: 2, text: "Artículo destacado" },
+      { id: "latest", level: 2, text: "Últimas lecturas" },
+    ],
   },
 ];
 
@@ -154,6 +174,12 @@ function buildSources(posts: BlogPostRow[], legalPages: LegalPageRow[]): SeoSour
     sourceType: "blog" as const,
     sourceId: post.id,
     content: post.content,
+    headings: [
+      { id: post.slug, level: 1 as const, text: post.title },
+      ...getBlogHeadings(post.content),
+      { id: "post-cta", level: 2 as const, text: "Ordena las cuentas compartidas con Karma" },
+      { id: "related", level: 2 as const, text: "Sigue leyendo" },
+    ],
   }));
 
   const legalSources = legalPages.map((page) => ({
@@ -164,6 +190,7 @@ function buildSources(posts: BlogPostRow[], legalPages: LegalPageRow[]): SeoSour
     sourceType: "legal" as const,
     sourceId: page.id,
     content: page.content,
+    headings: [{ id: page.slug, level: 1 as const, text: page.title }],
   }));
 
   return [...STATIC_SEO_SOURCES, ...blogSources, ...legalSources];
@@ -261,9 +288,8 @@ function AdminSeoPage() {
     });
   }, [pages, query, statusFilter]);
 
-  const selectedSource =
-    pages.find((page) => page.draft.path === selectedPath)?.source ?? sources[0];
-  const headings = selectedSource?.content ? getBlogHeadings(selectedSource.content) : [];
+  const selectedSource = pages.find((page) => page.draft.path === selectedPath)?.source ?? sources[0];
+  const headings = selectedSource?.headings ?? [];
 
   useEffect(() => {
     if (!pages.length) return;
@@ -959,7 +985,7 @@ function AdminSeoPage() {
                     ))}
                   </ol>
                 ) : (
-                  <p>No hay encabezados H2/H3 detectados en esta pagina.</p>
+                  <p>No hay encabezados detectados en esta pagina.</p>
                 )}
               </section>
             )}
