@@ -1,11 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import type { FormEvent } from "react";
+import type { ChangeEvent, FormEvent } from "react";
 import type { Session } from "@supabase/supabase-js";
 import {
   BadgeCheck,
   ExternalLink,
   FileText,
+  ImagePlus,
   LayoutList,
   Link2,
   LoaderCircle,
@@ -34,8 +35,19 @@ import {
 } from "@/lib/seo-cms";
 
 type AuthState = "loading" | "signed-out" | "unauthorized" | "ready";
-type SeoTab = "metadata" | "social" | "headings" | "schema" | "redirects";
+type SeoCollection = "pages" | "redirects";
+type SeoTab = "metadata" | "social" | "headings" | "schema";
 type StatusFilter = "all" | "published" | "draft" | "noindex";
+
+const SEO_IMAGE_BUCKET = "blog-images";
+const MAX_SEO_IMAGE_SIZE = 5 * 1024 * 1024;
+const SEO_IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp", "image/avif"]);
+const SEO_IMAGE_EXTENSIONS: Record<string, string> = {
+  "image/jpeg": "jpg",
+  "image/png": "png",
+  "image/webp": "webp",
+  "image/avif": "avif",
+};
 
 interface SeoSource {
   path: string;
@@ -165,6 +177,8 @@ function AdminSeoPage() {
   const [message, setMessage] = useState("");
   const [loadingData, setLoadingData] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [uploadingOgImage, setUploadingOgImage] = useState(false);
+  const [collection, setCollection] = useState<SeoCollection>("pages");
   const [tab, setTab] = useState<SeoTab>("metadata");
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
@@ -345,6 +359,47 @@ function AdminSeoPage() {
 
   function updateDraft<Key extends keyof SeoDraft>(key: Key, value: SeoDraft[Key]) {
     setDraft((current) => (current ? { ...current, [key]: value } : current));
+  }
+
+  async function uploadOgImage(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file || !draft) return;
+
+    if (!SEO_IMAGE_TYPES.has(file.type)) {
+      setMessage("Usa una imagen JPG, PNG, WebP o AVIF.");
+      return;
+    }
+
+    if (file.size > MAX_SEO_IMAGE_SIZE) {
+      setMessage("La imagen no puede superar los 5 MB.");
+      return;
+    }
+
+    setUploadingOgImage(true);
+    setMessage("");
+
+    const extension = SEO_IMAGE_EXTENSIONS[file.type];
+    const folder = slugFromPath(draft.path) || "home";
+    const filePath = `seo/${folder}/${crypto.randomUUID()}.${extension}`;
+    const { error: uploadError } = await supabase.storage
+      .from(SEO_IMAGE_BUCKET)
+      .upload(filePath, file, {
+        cacheControl: "3600",
+        contentType: file.type,
+        upsert: false,
+      });
+
+    if (uploadError) {
+      setUploadingOgImage(false);
+      setMessage(`No se pudo subir la imagen: ${uploadError.message}`);
+      return;
+    }
+
+    const { data: publicUrlData } = supabase.storage.from(SEO_IMAGE_BUCKET).getPublicUrl(filePath);
+    updateDraft("og_image", publicUrlData.publicUrl);
+    setUploadingOgImage(false);
+    setMessage("Imagen OG subida. Guarda los cambios para publicarla en esta pagina.");
   }
 
   async function saveSeoPage() {
@@ -528,9 +583,20 @@ function AdminSeoPage() {
           <Link to="/admin/blog">
             <BadgeCheck size={16} /> Accesos
           </Link>
-          <Link to="/admin/seo" className="active">
+          <button
+            type="button"
+            className={collection === "pages" ? "active" : ""}
+            onClick={() => setCollection("pages")}
+          >
             <SearchCheck size={16} /> SEO Manager
-          </Link>
+          </button>
+          <button
+            type="button"
+            className={collection === "redirects" ? "active" : ""}
+            onClick={() => setCollection("redirects")}
+          >
+            <Link2 size={16} /> Redirecciones
+          </button>
         </nav>
         <div className="admin-user">
           <span>{session?.user.email}</span>
@@ -543,52 +609,139 @@ function AdminSeoPage() {
       <section className="admin-list">
         <header className="admin-list-head">
           <div>
-            <span>SEO Manager</span>
-            <h1>Paginas</h1>
+            <span>{collection === "pages" ? "SEO Manager" : "Redirecciones"}</span>
+            <h1>{collection === "pages" ? "Paginas" : "301 / 302"}</h1>
           </div>
           {loadingData && <LoaderCircle className="admin-spin-icon" size={18} aria-hidden="true" />}
         </header>
 
-        <div className="admin-tools">
-          <label className="admin-search">
-            <Search size={15} />
-            <input
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder="Buscar URL o titulo"
-            />
-          </label>
-          <select
-            value={statusFilter}
-            onChange={(event) => setStatusFilter(event.target.value as StatusFilter)}
-          >
-            <option value="all">Todos</option>
-            <option value="published">Indexables</option>
-            <option value="draft">Draft</option>
-            <option value="noindex">Noindex</option>
-          </select>
-        </div>
+        {collection === "pages" ? (
+          <>
+            <div className="admin-tools">
+              <label className="admin-search">
+                <Search size={15} />
+                <input
+                  value={query}
+                  onChange={(event) => setQuery(event.target.value)}
+                  placeholder="Buscar URL o titulo"
+                />
+              </label>
+              <select
+                value={statusFilter}
+                onChange={(event) => setStatusFilter(event.target.value as StatusFilter)}
+              >
+                <option value="all">Todos</option>
+                <option value="published">Indexables</option>
+                <option value="draft">Draft</option>
+                <option value="noindex">Noindex</option>
+              </select>
+            </div>
 
-        <div className="admin-post-list">
-          {filteredPages.map((page) => (
-            <button
-              key={page.draft.path}
-              className={page.draft.path === selectedPath ? "admin-row active" : "admin-row"}
-              type="button"
-              onClick={() => selectPage(page.draft.path)}
-            >
-              <span className={`admin-status ${page.draft.indexable ? "live" : "draft"}`}>
-                {page.draft.indexable ? "Index" : "Noindex"}
-              </span>
-              <strong>{page.draft.path}</strong>
-              <small>{page.draft.title}</small>
-            </button>
-          ))}
-        </div>
+            <div className="admin-post-list">
+              {filteredPages.map((page) => (
+                <button
+                  key={page.draft.path}
+                  className={page.draft.path === selectedPath ? "admin-row active" : "admin-row"}
+                  type="button"
+                  onClick={() => selectPage(page.draft.path)}
+                >
+                  <span className={`admin-status ${page.draft.indexable ? "live" : "draft"}`}>
+                    {page.draft.indexable ? "Index" : "Noindex"}
+                  </span>
+                  <strong>{page.draft.path}</strong>
+                  <small>{page.draft.title}</small>
+                </button>
+              ))}
+            </div>
+          </>
+        ) : (
+          <div className="admin-post-list">
+            {redirects.map((redirect) => (
+              <div key={redirect.id} className="admin-row">
+                <span className={`admin-status ${redirect.active ? "live" : "draft"}`}>
+                  {redirect.status_code}
+                </span>
+                <strong>{redirect.from_path}</strong>
+                <small>{redirect.to_path}</small>
+              </div>
+            ))}
+          </div>
+        )}
       </section>
 
       <section className="admin-editor seo-editor">
-        {draft ? (
+        {collection === "redirects" ? (
+          <>
+            <header className="admin-editor-head">
+              <div>
+                <span>SEO Manager</span>
+                <h2>Redirecciones generales</h2>
+              </div>
+            </header>
+            <section className="seo-panel-card">
+              <h3>Redirecciones 301 / 302</h3>
+              <p>
+                Crea redirecciones globales para URLs antiguas, cambios de slug o rutas que quieras
+                consolidar sin editar una pagina concreta.
+              </p>
+              <div className="seo-redirect-form">
+                <input
+                  value={redirectDraft.from_path}
+                  onChange={(event) =>
+                    setRedirectDraft((current) => ({ ...current, from_path: event.target.value }))
+                  }
+                  placeholder="/url-antigua"
+                />
+                <input
+                  value={redirectDraft.to_path}
+                  onChange={(event) =>
+                    setRedirectDraft((current) => ({ ...current, to_path: event.target.value }))
+                  }
+                  placeholder="/url-nueva"
+                />
+                <select
+                  value={redirectDraft.status_code}
+                  onChange={(event) =>
+                    setRedirectDraft((current) => ({
+                      ...current,
+                      status_code: Number(event.target.value) as RedirectDraft["status_code"],
+                    }))
+                  }
+                >
+                  <option value={301}>301</option>
+                  <option value={302}>302</option>
+                  <option value={307}>307</option>
+                  <option value={308}>308</option>
+                </select>
+                <button
+                  className="admin-primary"
+                  type="button"
+                  onClick={saveRedirect}
+                  disabled={saving}
+                >
+                  <Link2 size={15} /> Guardar
+                </button>
+              </div>
+              <div className="seo-redirect-list">
+                {redirects.map((redirect) => (
+                  <div key={redirect.id}>
+                    <span>{redirect.status_code}</span>
+                    <strong>{redirect.from_path}</strong>
+                    <small>→ {redirect.to_path}</small>
+                    <button
+                      type="button"
+                      onClick={() => deleteRedirect(redirect.id)}
+                      aria-label="Eliminar redireccion"
+                    >
+                      <Trash2 size={14} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </section>
+            {message && <p className="admin-message admin-toast">{message}</p>}
+          </>
+        ) : draft ? (
           <>
             <header className="admin-editor-head">
               <div>
@@ -616,7 +769,6 @@ function AdminSeoPage() {
                 ["social", "Social / Open Graph"],
                 ["headings", "Encabezados"],
                 ["schema", "Schema"],
-                ["redirects", "Redirecciones"],
               ].map(([id, label]) => (
                 <button
                   key={id}
@@ -744,14 +896,41 @@ function AdminSeoPage() {
                       onChange={(event) => updateDraft("og_description", event.target.value)}
                     />
                   </label>
-                  <label className="span-2">
-                    Imagen OG
-                    <input
-                      value={draft.og_image}
-                      onChange={(event) => updateDraft("og_image", event.target.value)}
-                      placeholder="/head-icon.png o https://..."
-                    />
-                  </label>
+                  <div className="span-2 admin-image-field">
+                    <span className="admin-field-label">Imagen OG</span>
+                    <div className="admin-image-upload seo-image-upload">
+                      <div className="admin-image-thumb">
+                        <img src={draft.og_image || "/head-icon.png"} alt="" />
+                      </div>
+                      <div className="admin-image-controls">
+                        <label
+                          className={`admin-upload-button ${
+                            uploadingOgImage ? "is-loading" : ""
+                          }`}
+                        >
+                          {uploadingOgImage ? (
+                            <LoaderCircle aria-hidden="true" size={17} />
+                          ) : (
+                            <ImagePlus aria-hidden="true" size={17} />
+                          )}
+                          {uploadingOgImage ? "Subiendo..." : "Subir desde el ordenador"}
+                          <input
+                            type="file"
+                            accept="image/jpeg,image/png,image/webp,image/avif"
+                            onChange={uploadOgImage}
+                            disabled={uploadingOgImage}
+                          />
+                        </label>
+                        <small>JPG, PNG, WebP o AVIF · máximo 5 MB</small>
+                        <input
+                          aria-label="URL de la imagen Open Graph"
+                          value={draft.og_image}
+                          onChange={(event) => updateDraft("og_image", event.target.value)}
+                          placeholder="/head-icon.png o https://..."
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <aside className="seo-og-card">
                   <img src={draft.og_image || "/head-icon.png"} alt="" />
@@ -810,66 +989,6 @@ function AdminSeoPage() {
                   />
                 </label>
               </div>
-            )}
-
-            {tab === "redirects" && (
-              <section className="seo-panel-card">
-                <h3>Redirecciones 301</h3>
-                <div className="seo-redirect-form">
-                  <input
-                    value={redirectDraft.from_path}
-                    onChange={(event) =>
-                      setRedirectDraft((current) => ({ ...current, from_path: event.target.value }))
-                    }
-                    placeholder="/url-antigua"
-                  />
-                  <input
-                    value={redirectDraft.to_path}
-                    onChange={(event) =>
-                      setRedirectDraft((current) => ({ ...current, to_path: event.target.value }))
-                    }
-                    placeholder="/url-nueva"
-                  />
-                  <select
-                    value={redirectDraft.status_code}
-                    onChange={(event) =>
-                      setRedirectDraft((current) => ({
-                        ...current,
-                        status_code: Number(event.target.value) as RedirectDraft["status_code"],
-                      }))
-                    }
-                  >
-                    <option value={301}>301</option>
-                    <option value={302}>302</option>
-                    <option value={307}>307</option>
-                    <option value={308}>308</option>
-                  </select>
-                  <button
-                    className="admin-primary"
-                    type="button"
-                    onClick={saveRedirect}
-                    disabled={saving}
-                  >
-                    <Link2 size={15} /> Guardar
-                  </button>
-                </div>
-                <div className="seo-redirect-list">
-                  {redirects.map((redirect) => (
-                    <div key={redirect.id}>
-                      <span>{redirect.status_code}</span>
-                      <strong>{redirect.from_path}</strong>
-                      <small>→ {redirect.to_path}</small>
-                      <button
-                        type="button"
-                        onClick={() => deleteRedirect(redirect.id)}
-                        aria-label="Eliminar redireccion"
-                      >
-                        <Trash2 size={14} />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </section>
             )}
 
             {message && <p className="admin-message admin-toast">{message}</p>}
