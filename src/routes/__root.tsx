@@ -102,12 +102,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     links: [
       { rel: "stylesheet", href: appCss },
       { rel: "icon", type: "image/png", href: karmaIcon.url },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap",
-      },
     ],
     scripts: [
       {
@@ -129,6 +123,17 @@ window.gtag = gtag;
   });
   gtag('set', 'ads_data_redaction', !granted);
   gtag('set', 'url_passthrough', !granted);
+  window.loadKarmaAnalytics = function(){
+    if (window.__karmaAnalyticsLoaded) return;
+    window.__karmaAnalyticsLoaded = true;
+    var head = document.getElementsByTagName('head')[0];
+    var ga = document.createElement('script');
+    ga.async = true;
+    ga.src = 'https://www.googletagmanager.com/gtag/js?id=G-B04NPYW44V';
+    head.appendChild(ga);
+    gtag('js', new Date());
+    gtag('config', 'G-B04NPYW44V');
+  };
   window.loadKarmaMetricool = function(){
     if (window.__karmaMetricoolLoaded) return;
     window.__karmaMetricoolLoaded = true;
@@ -143,14 +148,13 @@ window.gtag = gtag;
     };
     head.appendChild(script);
   };
-  if (granted) window.loadKarmaMetricool();
-})();
-gtag('js', new Date());
-gtag('config', 'G-B04NPYW44V');`,
-      },
-      {
-        src: "https://www.googletagmanager.com/gtag/js?id=G-B04NPYW44V",
-        async: true,
+  if (granted) {
+    window.setTimeout(function(){
+      window.loadKarmaAnalytics();
+      window.loadKarmaMetricool();
+    }, 1200);
+  }
+})();`,
       },
     ],
   }),

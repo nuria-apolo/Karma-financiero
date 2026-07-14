@@ -25,6 +25,7 @@ export function CookieBanner() {
     const granted = value === "accepted" ? "granted" : "denied";
     const w = window as unknown as {
       gtag?: (...args: unknown[]) => void;
+      loadKarmaAnalytics?: () => void;
       loadKarmaMetricool?: () => void;
     };
     if (typeof w.gtag === "function") {
@@ -34,6 +35,9 @@ export function CookieBanner() {
         ad_personalization: granted,
         analytics_storage: granted,
       });
+    }
+    if (value === "accepted" && typeof w.loadKarmaAnalytics === "function") {
+      w.loadKarmaAnalytics();
     }
     if (value === "accepted" && typeof w.loadKarmaMetricool === "function") {
       w.loadKarmaMetricool();
@@ -46,14 +50,20 @@ export function CookieBanner() {
   return (
     <aside className="cookie-banner" aria-labelledby="cookie-banner-title">
       <div className="cookie-banner-inner">
-        <h2 id="cookie-banner-title" className="sr-only">Preferencias de cookies</h2>
+        <h2 id="cookie-banner-title" className="sr-only">
+          Preferencias de cookies
+        </h2>
         <p>
           Usamos cookies propias y de terceros para mejorar tu experiencia y analizar el uso del
           sitio. Puedes aceptarlas, rechazarlas o leer más en nuestra{" "}
           <Link to="/legal/cookies">Política de cookies</Link>.
         </p>
         <div className="cookie-banner-actions">
-          <button type="button" className="btn-pill btn-pill-ghost" onClick={() => save("rejected")}>
+          <button
+            type="button"
+            className="btn-pill btn-pill-ghost"
+            onClick={() => save("rejected")}
+          >
             Rechazar
           </button>
           <button type="button" className="btn-pill btn-pill-dark" onClick={() => save("accepted")}>

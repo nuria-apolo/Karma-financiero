@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
-import lotusKarmaIcon from "@/assets/lotus-karma-icon.png";
+import lotusKarmaIcon from "@/assets/lotus-karma-icon.webp";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { buildSeoHead, fetchSeoPage } from "@/lib/seo-cms";
@@ -226,21 +226,27 @@ function Landing() {
                 </div>
                 <ul className="g-people">
                   <li className="active">
-                    <img className="ava ava-img" src="https://i.pravatar.cc/80?img=47" alt="" />
+                    <span className="ava ava-person ava-person-maria" aria-hidden="true">
+                      M
+                    </span>
                     <div>
                       <strong>María</strong>
                       <span>Propietario</span>
                     </div>
                   </li>
                   <li>
-                    <img className="ava ava-img" src="https://i.pravatar.cc/80?img=12" alt="" />
+                    <span className="ava ava-person ava-person-oscar" aria-hidden="true">
+                      O
+                    </span>
                     <div>
                       <strong>Oscar</strong>
                       <span>Invitado</span>
                     </div>
                   </li>
                   <li>
-                    <img className="ava ava-img" src="https://i.pravatar.cc/80?img=33" alt="" />
+                    <span className="ava ava-person ava-person-gael" aria-hidden="true">
+                      G
+                    </span>
                     <div>
                       <strong>Gael</strong>
                       <span>Invitado</span>
