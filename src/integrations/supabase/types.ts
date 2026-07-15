@@ -296,6 +296,99 @@ export type Database = {
         }
         Relationships: []
       }
+      seo_pages: {
+        Row: {
+          canonical_url: string | null
+          created_at: string
+          description: string
+          follow_links: boolean
+          id: string
+          indexable: boolean
+          og_description: string | null
+          og_image: string | null
+          og_title: string | null
+          path: string
+          schema_json: Json | null
+          schema_type: string
+          source_id: string | null
+          source_type: string
+          status: string
+          title: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          canonical_url?: string | null
+          created_at?: string
+          description?: string
+          follow_links?: boolean
+          id?: string
+          indexable?: boolean
+          og_description?: string | null
+          og_image?: string | null
+          og_title?: string | null
+          path: string
+          schema_json?: Json | null
+          schema_type?: string
+          source_id?: string | null
+          source_type?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          canonical_url?: string | null
+          created_at?: string
+          description?: string
+          follow_links?: boolean
+          id?: string
+          indexable?: boolean
+          og_description?: string | null
+          og_image?: string | null
+          og_title?: string | null
+          path?: string
+          schema_json?: Json | null
+          schema_type?: string
+          source_id?: string | null
+          source_type?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
+      seo_redirects: {
+        Row: {
+          active: boolean
+          created_at: string
+          from_path: string
+          id: string
+          status_code: number
+          to_path: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          from_path: string
+          id?: string
+          status_code?: number
+          to_path: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          from_path?: string
+          id?: string
+          status_code?: number
+          to_path?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       suppressed_emails: {
         Row: {
           created_at: string
