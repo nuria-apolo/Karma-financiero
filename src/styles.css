@@ -2136,12 +2136,6 @@ button {
 .post-sidebar {
   position: sticky;
   top: 7.5rem;
-  display: grid;
-  gap: 1.35rem;
-  max-height: calc(100vh - 8.5rem);
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  scrollbar-width: thin;
 }
 .post-toc {
   width: 100%;
@@ -2243,9 +2237,9 @@ button {
   width: 100%;
   margin: 0;
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 1.1rem;
-  align-items: start;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: clamp(1.25rem, 3vw, 2rem);
+  align-items: center;
   border: 1px solid rgba(20, 20, 20, 0.08);
   border-radius: var(--radius-lg);
   padding: clamp(1.25rem, 3vw, 1.8rem);
@@ -2292,6 +2286,10 @@ button {
 }
 .post-waitlist .btn-pill {
   justify-self: start;
+}
+.post-bottom-cta {
+  width: min(calc(100% - 2rem), 1160px);
+  margin: 0 auto clamp(4rem, 7vw, 6rem);
 }
 .post-related {
   padding-bottom: 5rem;
@@ -3186,6 +3184,10 @@ button {
   .post-waitlist .btn-pill {
     width: 100%;
   }
+  .post-waitlist {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
   .post-cover {
     aspect-ratio: 4 / 3;
     border-radius: var(--radius);
@@ -3209,8 +3211,9 @@ button {
   .post-sidebar {
     position: static;
     order: -1;
-    max-height: none;
-    overflow: visible;
+  }
+  .post-bottom-cta {
+    width: min(calc(100% - 2rem), 720px);
   }
 }
 @media (max-width: 520px) {
@@ -3251,6 +3254,9 @@ button {
   .post-body-layout {
     width: min(calc(100% - 1.25rem), 720px);
     margin-top: 2.25rem;
+  }
+  .post-bottom-cta {
+    width: min(calc(100% - 1.25rem), 720px);
   }
   .post-toc,
   .post-waitlist {

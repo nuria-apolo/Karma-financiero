@@ -242,7 +242,7 @@ function BlogPostPage() {
             <BlogContent content={post.content} />
           </article>
 
-          <aside className="post-sidebar" aria-label="Navegación y acceso anticipado">
+          <aside className="post-sidebar" aria-label="Tabla de contenidos">
             {headings.length > 0 && (
               <nav className="post-toc" aria-labelledby="post-toc-title">
                 <h2 id="post-toc-title">Tabla de contenidos</h2>
@@ -255,22 +255,25 @@ function BlogPostPage() {
                 </ol>
               </nav>
             )}
-
-            <section className={`post-waitlist tone-${tone}`} aria-label="Lista de espera">
-              <div>
-                <span>Acceso anticipado</span>
-                <h2>Ordena las cuentas compartidas con Karma</h2>
-                <p>
-                  Únete a la lista de espera y recibe la primera versión para gestionar gastos,
-                  objetivos y presupuesto del hogar en un solo lugar.
-                </p>
-              </div>
-              <Link className="btn-pill btn-pill-dark" to="/lista-espera">
-                Apuntarme
-              </Link>
-            </section>
           </aside>
         </div>
+
+        <section
+          className={`post-waitlist post-bottom-cta tone-${tone}`}
+          aria-label="Lista de espera"
+        >
+          <div>
+            <span>Acceso anticipado</span>
+            <h2>Ordena las cuentas compartidas con Karma</h2>
+            <p>
+              Únete a la lista de espera y recibe la primera versión para gestionar gastos,
+              objetivos y presupuesto del hogar en un solo lugar.
+            </p>
+          </div>
+          <Link className="btn-pill btn-pill-dark" to="/lista-espera">
+            Apuntarme
+          </Link>
+        </section>
 
         {related.length > 0 && (
           <section className="container-x post-related">
