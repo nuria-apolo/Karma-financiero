@@ -200,7 +200,7 @@ function BlogPostPage() {
 
   const categoryName = getCategoryName(categories, post.category);
   const tone = getPostTone(post.category);
-  const headings = getBlogHeadings(post.content);
+  const headings = getBlogHeadings(post.content).filter((heading) => heading.level === 2);
 
   return (
     <>
@@ -248,7 +248,7 @@ function BlogPostPage() {
                 <h2 id="post-toc-title">Tabla de contenidos</h2>
                 <ol>
                   {headings.map((heading) => (
-                    <li className={heading.level === 3 ? "is-nested" : undefined} key={heading.id}>
+                    <li key={heading.id}>
                       <a href={`#${heading.id}`}>{heading.text}</a>
                     </li>
                   ))}
