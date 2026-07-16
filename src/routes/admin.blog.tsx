@@ -1,19 +1,27 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import type { Session } from "@supabase/supabase-js";
 import {
+  AtSign,
   BadgeCheck,
+  Bold,
   Calendar,
   Check,
+  Code2,
   Eye,
   FileText,
   Folder,
   ImagePlus,
+  Italic,
   LayoutList,
+  Link2,
+  List,
+  ListOrdered,
   LoaderCircle,
   LogOut,
   Plus,
+  Quote,
   Save,
   Search,
   SearchCheck,
@@ -122,6 +130,8 @@ function AdminBlogPage() {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [saving, setSaving] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [uploadingContentImage, setUploadingContentImage] = useState(false);
+  const contentTextareaRef = useRef<HTMLTextAreaElement | null>(null);
 
   useEffect(() => {
     let mounted = true;
@@ -344,9 +354,7 @@ function AdminBlogPage() {
   async function handlePasswordReset() {
     setMessage("");
     if (!loginEmail.trim()) {
-      setMessage(
-        "Escribe primero tu email para enviarte el enlace de recuperacion de contrasena.",
-      );
+      setMessage("Escribe primero tu email para enviarte el enlace de recuperacion de contrasena.");
       return;
     }
 
@@ -393,34 +401,91 @@ function AdminBlogPage() {
     setPostDraft((current) => (current ? { ...current, [key]: value } : current));
   }
 
-  function appendContent(snippet: string) {
+  function insertContentSnippet(snippet: string, selectOffset = snippet.length) {
+    const textarea = contentTextareaRef.current;
     setPostDraft((current) => {
       if (!current) return current;
-      const separator = current.content.trim() ? "\n\n" : "";
-      return { ...current, content: `${current.content}${separator}${snippet}` };
+
+      if (!textarea) {
+        const separator = current.content.trim() ? "\n\n" : "";
+        return { ...current, content: `${current.content}${separator}${snippet}` };
+      }
+
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const before = current.content.slice(0, start);
+      const after = current.content.slice(end);
+      const prefix = before && !before.endsWith("\n\n") ? "\n\n" : "";
+      const suffix = after && !after.startsWith("\n\n") ? "\n\n" : "";
+      const nextContent = `${before}${prefix}${snippet}${suffix}${after}`;
+      const nextCursor = start + prefix.length + selectOffset;
+
+      requestAnimationFrame(() => {
+        textarea.focus();
+        textarea.setSelectionRange(nextCursor, nextCursor);
+      });
+
+      return { ...current, content: nextContent };
     });
   }
 
-  async function uploadFeaturedImage(event: ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-    event.target.value = "";
-    if (!file || !postDraft) return;
+  function insertContentBlock(prefix: string, fallback: string) {
+    const textarea = contentTextareaRef.current;
+    const selected = textarea
+      ? postDraft?.content.slice(textarea.selectionStart, textarea.selectionEnd).trim()
+      : "";
+    insertContentSnippet(`${prefix}${selected || fallback}`);
+  }
 
-    if (!BLOG_IMAGE_TYPES.has(file.type)) {
-      setMessage("Usa una imagen JPG, PNG, WebP o AVIF.");
+  function insertInlineMarkup(before: string, after: string, fallback: string) {
+    const textarea = contentTextareaRef.current;
+    if (!textarea || !postDraft) {
+      insertContentSnippet(`${before}${fallback}${after}`);
       return;
+    }
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selected = postDraft.content.slice(start, end) || fallback;
+    const nextContent = `${postDraft.content.slice(0, start)}${before}${selected}${after}${postDraft.content.slice(end)}`;
+    const selectionStart = start + before.length;
+    const selectionEnd = selectionStart + selected.length;
+
+    setPostDraft({ ...postDraft, content: nextContent });
+    requestAnimationFrame(() => {
+      textarea.focus();
+      textarea.setSelectionRange(selectionStart, selectionEnd);
+    });
+  }
+
+  function insertLink() {
+    const url = window.prompt("URL del enlace", "https://");
+    if (!url) return;
+    const safeUrl = url.trim();
+    if (!/^https?:\/\//.test(safeUrl) && !safeUrl.startsWith("mailto:")) {
+      setMessage("El enlace debe empezar por https://, http:// o mailto:");
+      return;
+    }
+    insertInlineMarkup("[", `](${safeUrl})`, "Texto del enlace");
+  }
+
+  function insertMention() {
+    const mention = window.prompt("Mencion", "@Karma Financiero");
+    if (!mention) return;
+    insertContentSnippet(mention.trim());
+  }
+
+  async function uploadBlogImageFile(file: File, folderPrefix: string) {
+    if (!BLOG_IMAGE_TYPES.has(file.type)) {
+      throw new Error("Usa una imagen JPG, PNG, WebP o AVIF.");
     }
 
     if (file.size > MAX_BLOG_IMAGE_SIZE) {
-      setMessage("La imagen no puede superar los 5 MB.");
-      return;
+      throw new Error("La imagen no puede superar los 5 MB.");
     }
 
-    setUploadingImage(true);
-    setMessage("");
-
     const extension = BLOG_IMAGE_EXTENSIONS[file.type];
-    const folder = slugify(postDraft.slug || postDraft.title) || "articulo";
+    const folder = slugify(folderPrefix) || "articulo";
     const filePath = `${folder}/${crypto.randomUUID()}.${extension}`;
     const { error: uploadError } = await supabase.storage
       .from(BLOG_IMAGE_BUCKET)
@@ -430,14 +495,29 @@ function AdminBlogPage() {
         upsert: false,
       });
 
-    if (uploadError) {
-      setUploadingImage(false);
-      setMessage(`No se pudo subir la imagen: ${uploadError.message}`);
-      return;
-    }
+    if (uploadError) throw uploadError;
 
     const { data: publicUrlData } = supabase.storage.from(BLOG_IMAGE_BUCKET).getPublicUrl(filePath);
-    const publicUrl = publicUrlData.publicUrl;
+    return publicUrlData.publicUrl;
+  }
+
+  async function uploadFeaturedImage(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file || !postDraft) return;
+
+    setUploadingImage(true);
+    setMessage("");
+    let publicUrl = "";
+    try {
+      publicUrl = await uploadBlogImageFile(file, postDraft.slug || postDraft.title);
+    } catch (error) {
+      setUploadingImage(false);
+      setMessage(
+        `No se pudo subir la imagen: ${error instanceof Error ? error.message : "Error desconocido"}`,
+      );
+      return;
+    }
 
     const { data: updatedPost, error: updateError } = await supabase
       .from("blog_posts")
@@ -458,12 +538,37 @@ function AdminBlogPage() {
     setMessage("Imagen subida y guardada.");
   }
 
+  async function uploadContentImage(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file || !postDraft) return;
+
+    setUploadingContentImage(true);
+    setMessage("");
+
+    try {
+      const publicUrl = await uploadBlogImageFile(file, postDraft.slug || postDraft.title);
+      const altText = window.prompt(
+        "Texto alternativo de la imagen",
+        file.name.replace(/\.[^.]+$/, ""),
+      );
+      insertContentSnippet(`![${altText?.trim() || "Imagen del articulo"}](${publicUrl})`);
+      setMessage("Imagen insertada en el contenido. Guarda el articulo para conservar el cambio.");
+    } catch (error) {
+      setMessage(
+        `No se pudo insertar la imagen: ${error instanceof Error ? error.message : "Error desconocido"}`,
+      );
+    } finally {
+      setUploadingContentImage(false);
+    }
+  }
+
   async function createPost() {
     setSaving(true);
     setMessage("");
     const title = "Nuevo articulo";
     const slug = `${slugify(title)}-${Date.now().toString().slice(-5)}`;
-    const category = categories[0]?.slug ?? "metodo";
+    const category = categories[0]?.slug ?? "consejos";
 
     const { data, error } = await supabase
       .from("blog_posts")
@@ -559,31 +664,12 @@ function AdminBlogPage() {
     setCategoryDraft((current) => ({ ...current, [key]: value }));
   }
 
-  async function createCategory() {
-    const name = "Nueva categoria";
-    const slug = `${slugify(name)}-${Date.now().toString().slice(-4)}`;
-    const { data, error } = await supabase
-      .from("blog_categories")
-      .insert({ name, slug, description: "" })
-      .select("*")
-      .single();
-
-    if (error) {
-      setMessage(error.message);
-      return;
-    }
-
-    setCategories((current) => [...current, data].sort((a, b) => a.name.localeCompare(b.name)));
-    selectCategory(data);
-    setMessage("Categoria creada.");
-  }
-
   async function saveCategory() {
     const { data, error } = await supabase
       .from("blog_categories")
       .update({
         name: categoryDraft.name,
-        slug: slugify(categoryDraft.slug || categoryDraft.name),
+        slug: categoryDraft.slug,
         description: categoryDraft.description || null,
       })
       .eq("id", categoryDraft.id)
@@ -602,24 +688,6 @@ function AdminBlogPage() {
     );
     setCategoryDraft(data);
     setMessage("Categoria guardada.");
-  }
-
-  async function deleteCategory() {
-    if (!categoryDraft.id) return;
-    const shouldDelete = window.confirm(`Eliminar la categoria "${categoryDraft.name}"?`);
-    if (!shouldDelete) return;
-
-    const { error } = await supabase.from("blog_categories").delete().eq("id", categoryDraft.id);
-    if (error) {
-      setMessage(error.message);
-      return;
-    }
-
-    const nextCategories = categories.filter((category) => category.id !== categoryDraft.id);
-    setCategories(nextCategories);
-    setCategoryDraft(nextCategories[0] ?? createEmptyCategory());
-    setSelectedCategoryId(nextCategories[0]?.id ?? "");
-    setMessage("Categoria eliminada.");
   }
 
   function selectLegalPage(page: LegalPageRow) {
@@ -1059,20 +1127,87 @@ function AdminBlogPage() {
 
                 <section className="admin-content-editor">
                   <div className="admin-editor-toolbar">
-                    <button type="button" onClick={() => appendContent("## Nuevo apartado")}>
-                      H2
+                    <label className="admin-inline-upload-button" aria-label="Insertar imagen">
+                      {uploadingContentImage ? (
+                        <LoaderCircle aria-hidden="true" size={18} />
+                      ) : (
+                        <Plus aria-hidden="true" size={18} />
+                      )}
+                      <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp,image/avif"
+                        onChange={uploadContentImage}
+                        disabled={uploadingContentImage}
+                      />
+                    </label>
+                    <select
+                      aria-label="Formato de bloque"
+                      defaultValue="paragraph"
+                      onChange={(event) => {
+                        if (event.target.value === "h2") {
+                          insertContentBlock("## ", "Nuevo apartado");
+                        }
+                        if (event.target.value === "h3") {
+                          insertContentBlock("### ", "Subapartado");
+                        }
+                        event.target.value = "paragraph";
+                      }}
+                    >
+                      <option value="paragraph">Paragraph</option>
+                      <option value="h2">H2</option>
+                      <option value="h3">H3</option>
+                    </select>
+                    <button type="button" onClick={insertLink} aria-label="Insertar enlace">
+                      <Link2 size={17} />
                     </button>
-                    <button type="button" onClick={() => appendContent("### Subapartado")}>
-                      H3
+                    <button
+                      type="button"
+                      onClick={() => insertInlineMarkup("**", "**", "Texto destacado")}
+                      aria-label="Negrita"
+                    >
+                      <Bold size={17} />
                     </button>
-                    <button type="button" onClick={() => appendContent("- Punto importante")}>
-                      Lista
+                    <button
+                      type="button"
+                      onClick={() => insertInlineMarkup("*", "*", "Texto en cursiva")}
+                      aria-label="Cursiva"
+                    >
+                      <Italic size={17} />
                     </button>
-                    <button type="button" onClick={() => appendContent("**Texto destacado**")}>
-                      Bold
+                    <button
+                      type="button"
+                      onClick={() => insertContentBlock("> ", "Cita destacada")}
+                      aria-label="Cita"
+                    >
+                      <Quote size={17} />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => insertContentBlock("- ", "Punto importante")}
+                      aria-label="Lista"
+                    >
+                      <List size={17} />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => insertContentSnippet("1. Primer punto\n2. Segundo punto")}
+                      aria-label="Lista numerada"
+                    >
+                      <ListOrdered size={17} />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => insertContentSnippet("```\nCodigo o nota tecnica\n```")}
+                      aria-label="Codigo"
+                    >
+                      <Code2 size={17} />
+                    </button>
+                    <button type="button" onClick={insertMention} aria-label="Mencionar">
+                      <AtSign size={17} />
                     </button>
                   </div>
                   <textarea
+                    ref={contentTextareaRef}
                     value={postDraft.content}
                     onChange={(event) => updatePost("content", event.target.value)}
                     aria-label="Contenido del articulo"
@@ -1136,15 +1271,8 @@ function AdminBlogPage() {
               <div>
                 <span>Collection</span>
                 <h1>Categorias</h1>
+                <p>Base fija: Consejos, Recursos y Noticias.</p>
               </div>
-              <button
-                className="admin-icon-button"
-                type="button"
-                onClick={createCategory}
-                aria-label="Nueva categoria"
-              >
-                <Plus size={18} />
-              </button>
             </header>
             <div className="admin-post-list">
               {categories.map((category) => (
@@ -1181,10 +1309,10 @@ function AdminBlogPage() {
               </label>
               <label>
                 Slug
-                <input
-                  value={categoryDraft.slug}
-                  onChange={(event) => updateCategory("slug", slugify(event.target.value))}
-                />
+                <input value={categoryDraft.slug} readOnly aria-describedby="category-slug-note" />
+                <small id="category-slug-note">
+                  Slug bloqueado para mantener la estructura SEO.
+                </small>
               </label>
               <label className="span-2">
                 Descripcion
@@ -1195,9 +1323,10 @@ function AdminBlogPage() {
               </label>
             </div>
             <footer className="admin-danger-zone">
-              <button className="admin-danger" type="button" onClick={deleteCategory}>
-                <Trash2 size={15} /> Eliminar categoria
-              </button>
+              <p className="admin-message">
+                Estas categorias son estructurales. Puedes editar nombre y descripcion, pero no
+                eliminarlas.
+              </p>
             </footer>
           </section>
         </>

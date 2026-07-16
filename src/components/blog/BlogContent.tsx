@@ -47,21 +47,39 @@ export function getBlogHeadings(content: string): BlogHeading[] {
 
 function renderInline(text: string) {
   const parts = text.split(
-    /(\*\*[^*]+\*\*|\[[^\]]+\]\((?:https?:\/\/|mailto:)[^)]+\)|(?:https?:\/\/[^\s]+)|(?:[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}))/g,
+    /(`[^`]+`|\*\*[^*]+\*\*|\*[^*]+\*|\[[^\]]+\]\((?:https?:\/\/|mailto:)[^)]+\)|(?:https?:\/\/[^\s]+)|(?:[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}))/g,
   );
   return parts.map((part, index) => {
+    if (part.startsWith("`") && part.endsWith("`")) {
+      return <code key={index}>{part.slice(1, -1)}</code>;
+    }
     if (part.startsWith("**") && part.endsWith("**")) {
       return <strong key={index}>{part.slice(2, -2)}</strong>;
     }
+    if (part.startsWith("*") && part.endsWith("*")) {
+      return <em key={index}>{part.slice(1, -1)}</em>;
+    }
     const markdownLink = part.match(/^\[([^\]]+)\]\(((?:https?:\/\/|mailto:)[^)]+)\)$/);
     if (markdownLink) {
-      return <a key={index} href={markdownLink[2]}>{markdownLink[1]}</a>;
+      return (
+        <a key={index} href={markdownLink[2]}>
+          {markdownLink[1]}
+        </a>
+      );
     }
     if (/^https?:\/\//.test(part)) {
-      return <a key={index} href={part}>{part}</a>;
+      return (
+        <a key={index} href={part}>
+          {part}
+        </a>
+      );
     }
     if (/^[\w.+-]+@[\w.-]+\.[A-Za-z]{2,}$/.test(part)) {
-      return <a key={index} href={`mailto:${part}`}>{part}</a>;
+      return (
+        <a key={index} href={`mailto:${part}`}>
+          {part}
+        </a>
+      );
     }
     return <span key={index}>{part}</span>;
   });
@@ -74,6 +92,16 @@ function createList(items: string[], key: string) {
         <li key={`${key}-${index}`}>{renderInline(item.replace(/^- /, ""))}</li>
       ))}
     </ul>
+  );
+}
+
+function createOrderedList(items: string[], key: string) {
+  return (
+    <ol key={key}>
+      {items.map((item, index) => (
+        <li key={`${key}-${index}`}>{renderInline(item.replace(/^\d+\. /, ""))}</li>
+      ))}
+    </ol>
   );
 }
 
@@ -108,9 +136,42 @@ export function BlogContent({ content }: { content: string }) {
       return;
     }
 
-    const lines = block.split("\n").map((line) => line.trim()).filter(Boolean);
+    const lines = block
+      .split("\n")
+      .map((line) => line.trim())
+      .filter(Boolean);
+    const image = block.match(/^!\[([^\]]*)\]\((https?:\/\/[^)]+|\/[^)]+)\)$/);
+    if (image) {
+      nodes.push(
+        <figure className="blog-content-image" key={index}>
+          <img src={image[2]} alt={image[1]} loading="lazy" />
+          {image[1] ? <figcaption>{image[1]}</figcaption> : null}
+        </figure>,
+      );
+      return;
+    }
+
+    if (block.startsWith("> ")) {
+      nodes.push(<blockquote key={index}>{renderInline(block.replace(/^> /, ""))}</blockquote>);
+      return;
+    }
+
+    if (block.startsWith("```") && block.endsWith("```")) {
+      nodes.push(
+        <pre key={index}>
+          <code>{block.replace(/^```[a-zA-Z0-9_-]*\n?/, "").replace(/\n?```$/, "")}</code>
+        </pre>,
+      );
+      return;
+    }
+
     if (lines.length > 0 && lines.every((line) => line.startsWith("- "))) {
       nodes.push(createList(lines, `list-${index}`));
+      return;
+    }
+
+    if (lines.length > 0 && lines.every((line) => /^\d+\. /.test(line))) {
+      nodes.push(createOrderedList(lines, `ordered-list-${index}`));
       return;
     }
 

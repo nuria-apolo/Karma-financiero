@@ -50,9 +50,9 @@ export function getCategoryName(categories: BlogCategoryRow[], slug: string) {
 }
 
 export function getPostTone(category: string, index = 0): BlogTone {
-  if (category === "convivencia") return "green";
-  if (category === "objetivos") return "blue";
-  if (category === "metodo") return "yellow";
+  if (["consejos", "convivencia", "pareja", "ahorro"].includes(category)) return "green";
+  if (["recursos", "metodo", "objetivos"].includes(category)) return "blue";
+  if (category === "noticias") return "yellow";
   return (["green", "yellow", "blue"] as BlogTone[])[index % 3];
 }
 

@@ -2230,8 +2230,61 @@ button {
   gap: 0.6rem;
   padding-left: 1.2rem;
 }
+.post-content ol {
+  display: grid;
+  gap: 0.6rem;
+  padding-left: 1.35rem;
+}
 .post-content strong {
   color: var(--ink);
+}
+.post-content em {
+  font-style: italic;
+}
+.post-content code {
+  border-radius: 0.45rem;
+  background: rgba(20, 20, 20, 0.06);
+  padding: 0.08rem 0.32rem;
+  font-size: 0.92em;
+}
+.post-content pre {
+  overflow-x: auto;
+  border-radius: 1rem;
+  background: #151515;
+  color: #fbfaf7;
+  padding: 1rem;
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+.post-content pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+}
+.post-content blockquote {
+  border-left: 0.32rem solid var(--yellow);
+  border-radius: 0 1rem 1rem 0;
+  background: rgba(255, 255, 255, 0.5);
+  padding: 1rem 1.1rem;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2vw, 1.65rem);
+  line-height: 1.25;
+}
+.blog-content-image {
+  display: grid;
+  gap: 0.55rem;
+  margin: 1rem 0;
+}
+.blog-content-image img {
+  width: 100%;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.blog-content-image figcaption {
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-align: center;
 }
 .post-waitlist {
   width: 100%;
@@ -2497,6 +2550,7 @@ button {
 .admin-icon-button,
 .admin-link-button,
 .admin-editor-toolbar button,
+.admin-inline-upload-button,
 .admin-user button {
   display: inline-flex;
   align-items: center;
@@ -2540,7 +2594,8 @@ button {
 .admin-secondary:hover,
 .admin-danger:hover,
 .admin-icon-button:hover,
-.admin-editor-toolbar button:hover {
+.admin-editor-toolbar button:hover,
+.admin-inline-upload-button:hover {
   transform: translateY(-1px);
 }
 .admin-primary:disabled,
@@ -2807,13 +2862,43 @@ button {
   display: flex;
   gap: 0.4rem;
   flex-wrap: wrap;
+  align-items: center;
 }
-.admin-editor-toolbar button {
-  min-height: 2rem;
-  padding: 0.35rem 0.7rem;
+.admin-editor-toolbar button,
+.admin-editor-toolbar select,
+.admin-inline-upload-button {
+  min-height: 2.45rem;
+  padding: 0.55rem 0.75rem;
   border-radius: 999px;
   color: #151515;
   background: #f2f0ea;
+  border: 0;
+}
+.admin-editor-toolbar button,
+.admin-inline-upload-button {
+  min-width: 2.45rem;
+}
+.admin-editor-toolbar select {
+  min-width: 10rem;
+  font-weight: 600;
+}
+.admin-inline-upload-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.admin-inline-upload-button input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+.admin-inline-upload-button svg {
+  flex: 0 0 auto;
 }
 .admin-content-editor textarea {
   min-height: 20rem;
