@@ -237,36 +237,40 @@ function BlogPostPage() {
           </p>
         </header>
 
-        {headings.length > 0 && (
-          <nav className="post-toc" aria-labelledby="post-toc-title">
-            <h2 id="post-toc-title">Tabla de contenidos</h2>
-            <ol>
-              {headings.map((heading) => (
-                <li className={heading.level === 3 ? "is-nested" : undefined} key={heading.id}>
-                  <a href={`#${heading.id}`}>{heading.text}</a>
-                </li>
-              ))}
-            </ol>
-          </nav>
-        )}
+        <div className="post-body-layout">
+          <article className="post-content">
+            <BlogContent content={post.content} />
+          </article>
 
-        <article className="post-content">
-          <BlogContent content={post.content} />
-        </article>
+          <aside className="post-sidebar" aria-label="Navegación y acceso anticipado">
+            {headings.length > 0 && (
+              <nav className="post-toc" aria-labelledby="post-toc-title">
+                <h2 id="post-toc-title">Tabla de contenidos</h2>
+                <ol>
+                  {headings.map((heading) => (
+                    <li className={heading.level === 3 ? "is-nested" : undefined} key={heading.id}>
+                      <a href={`#${heading.id}`}>{heading.text}</a>
+                    </li>
+                  ))}
+                </ol>
+              </nav>
+            )}
 
-        <section className={`post-waitlist tone-${tone}`} aria-label="Lista de espera">
-          <div>
-            <span>Acceso anticipado</span>
-            <h2>Ordena las cuentas compartidas con Karma</h2>
-            <p>
-              Únete a la lista de espera y recibe la primera versión para gestionar gastos,
-              objetivos y presupuesto del hogar en un solo lugar.
-            </p>
-          </div>
-          <Link className="btn-pill btn-pill-dark" to="/lista-espera">
-            Apuntarme
-          </Link>
-        </section>
+            <section className={`post-waitlist tone-${tone}`} aria-label="Lista de espera">
+              <div>
+                <span>Acceso anticipado</span>
+                <h2>Ordena las cuentas compartidas con Karma</h2>
+                <p>
+                  Únete a la lista de espera y recibe la primera versión para gestionar gastos,
+                  objetivos y presupuesto del hogar en un solo lugar.
+                </p>
+              </div>
+              <Link className="btn-pill btn-pill-dark" to="/lista-espera">
+                Apuntarme
+              </Link>
+            </section>
+          </aside>
+        </div>
 
         {related.length > 0 && (
           <section className="container-x post-related">
