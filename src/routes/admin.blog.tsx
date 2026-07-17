@@ -1202,6 +1202,17 @@ function AdminBlogPage() {
                     >
                       <Code2 size={17} />
                     </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        insertContentSnippet(
+                          '<div class="karma-html-block">\n  <p>Contenido HTML</p>\n</div>',
+                        )
+                      }
+                      aria-label="Insertar HTML"
+                    >
+                      HTML
+                    </button>
                     <button type="button" onClick={insertMention} aria-label="Mencionar">
                       <AtSign size={17} />
                     </button>

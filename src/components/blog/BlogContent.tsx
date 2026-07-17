@@ -22,6 +22,107 @@ function headingSlug(value: string) {
     .replace(/(^-|-$)+/g, "");
 }
 
+const ALLOWED_HTML_TAGS = new Set([
+  "a",
+  "b",
+  "blockquote",
+  "br",
+  "code",
+  "div",
+  "em",
+  "figcaption",
+  "figure",
+  "h2",
+  "h3",
+  "hr",
+  "i",
+  "img",
+  "li",
+  "ol",
+  "p",
+  "pre",
+  "span",
+  "strong",
+  "ul",
+]);
+
+const ALLOWED_HTML_ATTRS = new Set([
+  "alt",
+  "aria-label",
+  "class",
+  "height",
+  "href",
+  "loading",
+  "rel",
+  "src",
+  "target",
+  "title",
+  "width",
+]);
+
+function escapeHtmlAttribute(value: string) {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+function isSafeUrl(value: string) {
+  return /^(https?:\/\/|mailto:|tel:|\/|#)/i.test(value.trim());
+}
+
+function sanitizeHtml(html: string) {
+  return html
+    .replace(/<!--[\s\S]*?-->/g, "")
+    .replace(
+      /<(script|style|iframe|object|embed|form|input|button|textarea|select|link|meta|base|svg|math)[\s\S]*?<\/\1>/gi,
+      "",
+    )
+    .replace(
+      /<\/?(script|style|iframe|object|embed|form|input|button|textarea|select|link|meta|base|svg|math)[^>]*>/gi,
+      "",
+    )
+    .replace(/<\/?([a-z][a-z0-9-]*)(\s[^<>]*)?>/gi, (fullMatch, rawTag, rawAttrs = "") => {
+      const tag = String(rawTag).toLowerCase();
+      const isClosing = fullMatch.startsWith("</");
+
+      if (!ALLOWED_HTML_TAGS.has(tag)) return "";
+      if (isClosing) return `</${tag}>`;
+
+      const attrs: string[] = [];
+      String(rawAttrs).replace(
+        /([a-zA-Z_:][-a-zA-Z0-9_:.]*)\s*=\s*("([^"]*)"|'([^']*)'|([^\s"'>`=]+))/g,
+        (_attrMatch, rawName, _rawValue, doubleQuoted, singleQuoted, unquoted) => {
+          const name = String(rawName).toLowerCase();
+          const value = String(doubleQuoted ?? singleQuoted ?? unquoted ?? "").trim();
+
+          if (!ALLOWED_HTML_ATTRS.has(name)) return "";
+          if (name.startsWith("on") || name === "style" || name === "srcdoc") return "";
+          if ((name === "href" || name === "src") && !isSafeUrl(value)) return "";
+          if (name === "target" && value !== "_blank") return "";
+          if (name === "loading" && !["lazy", "eager"].includes(value)) return "";
+
+          attrs.push(`${name}="${escapeHtmlAttribute(value)}"`);
+          return "";
+        },
+      );
+
+      if (tag === "a" && attrs.some((attr) => attr.startsWith('target="_blank"'))) {
+        const hasRel = attrs.some((attr) => attr.startsWith("rel="));
+        if (!hasRel) attrs.push('rel="noopener noreferrer"');
+      }
+
+      const suffix =
+        fullMatch.endsWith("/>") || tag === "br" || tag === "hr" || tag === "img" ? " /" : "";
+      return `<${tag}${attrs.length ? ` ${attrs.join(" ")}` : ""}${suffix}>`;
+    });
+}
+
+function looksLikeHtml(block: string) {
+  return /^<\/?[a-z][a-z0-9-]*(\s|>|\/>)/i.test(block.trim());
+}
+
 export function getBlogHeadings(content: string): BlogHeading[] {
   const counts = new Map<string, number>();
 
@@ -161,6 +262,17 @@ export function BlogContent({ content }: { content: string }) {
         <pre key={index}>
           <code>{block.replace(/^```[a-zA-Z0-9_-]*\n?/, "").replace(/\n?```$/, "")}</code>
         </pre>,
+      );
+      return;
+    }
+
+    if (looksLikeHtml(block)) {
+      nodes.push(
+        <div
+          className="blog-html-block"
+          dangerouslySetInnerHTML={{ __html: sanitizeHtml(block) }}
+          key={index}
+        />,
       );
       return;
     }

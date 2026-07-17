@@ -2286,6 +2286,18 @@ button {
   font-size: 0.85rem;
   text-align: center;
 }
+.blog-html-block {
+  display: grid;
+  gap: 1rem;
+}
+.blog-html-block > * {
+  margin: 0;
+}
+.blog-html-block a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
 .post-waitlist {
   width: 100%;
   margin: 0;
