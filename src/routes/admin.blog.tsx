@@ -616,8 +616,6 @@ function AdminBlogPage() {
         author: postDraft.author || "Karma Financiero",
         status,
         published_at: publishedAt,
-        seo_title: postDraft.seo_title || null,
-        seo_description: postDraft.seo_description || null,
       })
       .eq("id", postDraft.id)
       .select("*")
@@ -1224,23 +1222,6 @@ function AdminBlogPage() {
                     aria-label="Contenido del articulo"
                   />
                 </section>
-
-                <div className="admin-form-grid">
-                  <label>
-                    SEO title
-                    <input
-                      value={postDraft.seo_title ?? ""}
-                      onChange={(event) => updatePost("seo_title", event.target.value)}
-                    />
-                  </label>
-                  <label>
-                    SEO description
-                    <textarea
-                      value={postDraft.seo_description ?? ""}
-                      onChange={(event) => updatePost("seo_description", event.target.value)}
-                    />
-                  </label>
-                </div>
 
                 <section className="admin-preview">
                   <div className="admin-preview-head">
