@@ -95,7 +95,7 @@ export function buildSeoHead(options: {
   const path = normalizeSeoPath(defaults.path);
   const title = seo?.title || defaults.title;
   const description = seo?.description || defaults.description;
-  const canonical = seo?.canonical_url || absoluteUrl(path);
+  const canonical = absoluteUrl(seo?.canonical_url || path);
   const ogTitle = seo?.og_title || title;
   const ogDescription = seo?.og_description || description;
   const image = absoluteUrl(seo?.og_image || defaults.image || "/head-icon.png", path);
@@ -107,16 +107,21 @@ export function buildSeoHead(options: {
       { title },
       { name: "description", content: description },
       { name: "robots", content: robotsContent(seo) },
+      { property: "og:site_name", content: "Karma Financiero" },
+      { property: "og:locale", content: "es_ES" },
       { property: "og:title", content: ogTitle },
       { property: "og:description", content: ogDescription },
       { property: "og:type", content: type },
       { property: "og:url", content: canonical },
       { property: "og:image", content: image },
       { property: "og:image:secure_url", content: image },
+      { property: "og:image:alt", content: ogTitle },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: ogTitle },
       { name: "twitter:description", content: ogDescription },
       { name: "twitter:image", content: image },
+      { name: "twitter:image:alt", content: ogTitle },
+      { name: "twitter:url", content: canonical },
     ],
     links: [{ rel: "canonical", href: canonical }],
     scripts: [
