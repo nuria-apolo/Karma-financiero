@@ -3,7 +3,7 @@ import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import lotusKarmaIcon from "@/assets/lotus-karma-icon.webp";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
-import { buildSeoHead, fetchSeoPage } from "@/lib/seo-cms";
+import { buildSeoHead, fetchSeoPage, SEO_CONTENT_HEADERS } from "@/lib/seo-cms";
 
 const WAITLIST_URL = "/lista-espera";
 const FAQS = [
@@ -26,6 +26,7 @@ const FAQS = [
 
 export const Route = createFileRoute("/")({
   loader: () => fetchSeoPage("/"),
+  headers: () => SEO_CONTENT_HEADERS,
   head: ({ loaderData }) =>
     buildSeoHead({
       seo: loaderData,

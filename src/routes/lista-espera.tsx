@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { FormEvent, useState } from "react";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
-import { buildSeoHead, fetchSeoPage } from "@/lib/seo-cms";
+import { buildSeoHead, fetchSeoPage, SEO_CONTENT_HEADERS } from "@/lib/seo-cms";
 
 type LeadStatus = "idle" | "submitting" | "sent" | "error";
 type LeadSearch = { email?: string };
@@ -14,6 +14,7 @@ const WAITLIST_SUPABASE_KEY = "sb_publishable_4DLru48DNJm89EL3_lDGjA_Prs3Luw-";
 
 export const Route = createFileRoute("/lista-espera")({
   loader: () => fetchSeoPage("/lista-espera"),
+  headers: () => SEO_CONTENT_HEADERS,
   validateSearch: (search: Record<string, unknown>): LeadSearch => ({
     email: typeof search.email === "string" ? search.email : undefined,
   }),

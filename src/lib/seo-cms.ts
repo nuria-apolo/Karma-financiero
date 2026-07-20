@@ -2,6 +2,11 @@ import { supabase } from "@/integrations/supabase/client";
 import type { Json, Tables, TablesInsert, TablesUpdate } from "@/integrations/supabase/types";
 
 export const SITE_URL = "https://karmafinanciero.com";
+export const SEO_CONTENT_HEADERS = {
+  "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+  "CDN-Cache-Control": "no-store",
+  "Cloudflare-CDN-Cache-Control": "no-store",
+};
 
 export type SeoPageRow = Tables<"seo_pages">;
 export type SeoPageInsert = TablesInsert<"seo_pages">;
