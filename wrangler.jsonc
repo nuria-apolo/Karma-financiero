@@ -8,16 +8,6 @@
     "binding": "ASSETS",
     "directory": ".output/public"
   },
-  "routes": [
-    {
-      "pattern": "karmafinanciero.com",
-      "custom_domain": true
-    },
-    {
-      "pattern": "www.karmafinanciero.com",
-      "custom_domain": true
-    }
-  ],
   "observability": {
     "enabled": true,
     "head_sampling_rate": 1
