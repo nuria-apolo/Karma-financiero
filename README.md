@@ -71,3 +71,13 @@ SUPABASE_SERVICE_ROLE_KEY=
 ```
 
 Las variables `VITE_*` se usan en cliente. Las variables sin `VITE_` se usan en servidor.
+
+## Despliegue en Cloudflare
+
+La landing se despliega como el Worker `karma-financiero-landing` desde la rama
+`main`. El workflow de GitHub está en `.github/workflows/deploy-cloudflare.yml`.
+
+El primer despliegue requiere configurar en GitHub Actions los secretos
+`CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `VITE_SUPABASE_URL` y
+`VITE_SUPABASE_PUBLISHABLE_KEY`. El token debe tener permisos de despliegue de
+Workers y gestión de dominios personalizados.

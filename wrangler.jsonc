@@ -1,0 +1,25 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "karma-financiero-landing",
+  "main": ".output/server/index.mjs",
+  "compatibility_date": "2026-08-08",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "binding": "ASSETS",
+    "directory": ".output/public"
+  },
+  "routes": [
+    {
+      "pattern": "karmafinanciero.com",
+      "custom_domain": true
+    },
+    {
+      "pattern": "www.karmafinanciero.com",
+      "custom_domain": true
+    }
+  ],
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  }
+}

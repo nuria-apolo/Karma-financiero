@@ -8,6 +8,8 @@
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
+    "deploy:cloudflare": "pnpm build && wrangler deploy --config wrangler.jsonc",
+    "deploy:cloudflare:dry-run": "pnpm build && wrangler deploy --config wrangler.jsonc --dry-run",
     "lint": "eslint .",
     "format": "prettier --write ."
   },
@@ -70,7 +72,6 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.32.0",
-    "@lovable.dev/vite-tanstack-config": "2.7.3",
     "@types/node": "^22.16.5",
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
@@ -85,6 +86,7 @@
     "prettier": "^3.7.3",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.56.1",
-    "vite": "^7.3.6"
+    "vite": "^7.3.6",
+    "wrangler": "^4.118.0"
   }
 }

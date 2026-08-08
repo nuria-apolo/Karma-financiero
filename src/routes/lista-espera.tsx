@@ -8,7 +8,7 @@ type LeadStatus = "idle" | "submitting" | "sent" | "error";
 type LeadSearch = { email?: string };
 
 // Public client credentials for the dedicated Karma waitlist project.
-// Keeping these separate prevents Lovable Cloud from routing leads to its legacy database.
+// Keeping these separate preserves the landing's independent waitlist database.
 const WAITLIST_SUPABASE_URL = "https://vyjcfuhohzmzvuxmbqgv.supabase.co";
 const WAITLIST_SUPABASE_KEY = "sb_publishable_4DLru48DNJm89EL3_lDGjA_Prs3Luw-";
 

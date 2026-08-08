@@ -12,8 +12,7 @@ const allowedOrigins = new Set([
 
 function corsHeaders(request: Request) {
   const origin = request.headers.get("origin") || "";
-  const isLovablePreview = /^https:\/\/[a-z0-9-]+\.(lovableproject\.com|lovable\.app)$/i.test(origin);
-  const allowedOrigin = allowedOrigins.has(origin) || isLovablePreview;
+  const allowedOrigin = allowedOrigins.has(origin);
   return {
     "Access-Control-Allow-Origin": allowedOrigin
       ? origin

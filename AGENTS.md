@@ -1,10 +1,11 @@
-<!-- LOVABLE:BEGIN -->
-> [!IMPORTANT]
-> This project is connected to [Lovable](https://lovable.dev). Avoid rewriting
-> published git history — force pushing, or rebasing/amending/squashing commits
-> that are already pushed — as it rewrites history on Lovable's side and the
-> user will likely lose their project history.
->
-> Commits you push to the connected branch sync back to Lovable and show up in
-> the editor, so keep the branch in a working state.
-<!-- LOVABLE:END -->
+# Karma Financiero Landing
+
+This repository is deployed from GitHub to the Cloudflare Worker
+`karma-financiero-landing`.
+
+- Production deploys use `.github/workflows/deploy-cloudflare.yml`.
+- The custom domains are `karmafinanciero.com` and `www.karmafinanciero.com`.
+- Use only the GitHub and Cloudflare deployment path; do not rewrite published
+  Git history.
+- Keep this landing's Supabase project separate from the app repository and its
+  `app.karmafinanciero.com` Worker.
