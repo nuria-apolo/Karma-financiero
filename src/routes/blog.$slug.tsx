@@ -77,6 +77,33 @@ const FAQ_BY_SLUG: Record<string, Array<{ question: string; answer: string }>> =
         "Separando los hechos de las culpas: primero se mira qué ha ocurrido, después se decide qué merece atención y al final se elige un solo cambio.",
     },
   ],
+  "cuentas-comunes-sin-perder-independencia": [
+    {
+      question: "¿Es mejor tener una cuenta conjunta o cuentas separadas?",
+      answer:
+        "Depende de cómo queráis organizaros. Para muchas parejas, el modelo híbrido —una cuenta común para gastos compartidos y cuentas personales para lo individual— ofrece claridad sin perder autonomía.",
+    },
+    {
+      question: "¿Qué porcentaje debe aportar cada persona a la cuenta común?",
+      answer:
+        "No hay un porcentaje universal. Podéis aportar a partes iguales, según ingresos o con otro criterio acordado. Lo importante es que el sistema tenga en cuenta la capacidad económica, las responsabilidades y la sensación de equilibrio.",
+    },
+    {
+      question: "¿El 50/50 es injusto si se gana distinto?",
+      answer:
+        "Puede serlo si la diferencia de ingresos hace que el esfuerzo pese mucho más sobre una persona. En esos casos, podéis valorar una aportación proporcional y revisarla cuando cambien los ingresos o los gastos.",
+    },
+    {
+      question: "¿Qué pasa si una persona no quiere una cuenta conjunta?",
+      answer:
+        "Podéis empezar con una cuenta operativa para gastos concretos, con límites claros y una revisión pactada. La confianza se construye con acuerdos transparentes y sostenibles, no obligando a utilizar un único modelo.",
+    },
+    {
+      question: "¿Hay que compartir también los gastos personales?",
+      answer:
+        "No necesariamente. Los gastos personales pueden mantenerse fuera de la cuenta común siempre que no comprometan los pagos del hogar, las deudas o los objetivos que sí habéis decidido compartir.",
+    },
+  ],
 };
 
 function selectRelatedPosts(posts: BlogPostRow[], slug: string) {
