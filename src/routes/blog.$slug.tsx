@@ -315,7 +315,7 @@ function BlogPostPage() {
 
         <div className="post-body-layout">
           <article className="post-content">
-            <BlogContent content={post.content} faqItems={FAQ_BY_SLUG[params.slug]} />
+            <BlogContent content={post.content} faqItems={FAQ_BY_SLUG[slug]} />
           </article>
 
           <aside className="post-sidebar" aria-label="Tabla de contenidos">
