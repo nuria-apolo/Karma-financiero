@@ -6,6 +6,11 @@ export type BlogHeading = {
   text: string;
 };
 
+export type BlogFaqItem = {
+  question: string;
+  answer: string;
+};
+
 function headingText(value: string) {
   return value
     .replace(/\*\*([^*]+)\*\*/g, "$1")
@@ -206,7 +211,7 @@ function createOrderedList(items: string[], key: string) {
   );
 }
 
-export function BlogContent({ content }: { content: string }) {
+export function BlogContent({ content, faqItems }: { content: string; faqItems?: BlogFaqItem[] }) {
   const headings = getBlogHeadings(content);
   let headingIndex = 0;
   const blocks = content
@@ -215,8 +220,11 @@ export function BlogContent({ content }: { content: string }) {
     .filter(Boolean);
 
   const nodes: ReactNode[] = [];
+  let faqSectionActive = false;
 
   blocks.forEach((block, index) => {
+    if (faqSectionActive) return;
+
     if (block.startsWith("### ")) {
       const heading = headings[headingIndex++];
       nodes.push(
@@ -229,9 +237,28 @@ export function BlogContent({ content }: { content: string }) {
 
     if (block.startsWith("## ")) {
       const heading = headings[headingIndex++];
+      const headingValue = block.replace(/^## /, "").trim();
+
+      if (faqItems?.length && headingText(headingValue).toLowerCase() === "preguntas frecuentes") {
+        faqSectionActive = true;
+        nodes.push(
+          <section className="blog-faq-accordion" aria-labelledby={heading.id} key={index}>
+            <h2 id={heading.id}>{renderInline(headingValue)}</h2>
+            <p className="blog-faq-note">Haz clic en una pregunta para ver la respuesta.</p>
+            {faqItems.map((faq) => (
+              <details key={faq.question}>
+                <summary>{renderInline(faq.question)}</summary>
+                <div className="blog-faq-answer">{renderInline(faq.answer)}</div>
+              </details>
+            ))}
+          </section>,
+        );
+        return;
+      }
+
       nodes.push(
         <h2 id={heading.id} key={index}>
-          {renderInline(block.replace(/^## /, ""))}
+          {renderInline(headingValue)}
         </h2>,
       );
       return;

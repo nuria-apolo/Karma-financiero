@@ -2271,6 +2271,72 @@ button {
   font-size: clamp(1.25rem, 2vw, 1.65rem);
   line-height: 1.25;
 }
+.blog-faq-accordion {
+  display: grid;
+  gap: 0;
+  margin-top: 1rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  border: 1px solid var(--border-c);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+.blog-faq-accordion h2 {
+  margin: 0 0 0.35rem;
+}
+.blog-faq-note {
+  margin: 0 0 1rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.blog-faq-accordion details {
+  border-top: 1px solid var(--border-c);
+}
+.blog-faq-accordion details:last-child {
+  border-bottom: 1px solid var(--border-c);
+}
+.blog-faq-accordion summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 0.15rem;
+  cursor: pointer;
+  list-style: none;
+  color: var(--ink);
+  font-size: 1rem;
+  font-weight: 600;
+}
+.blog-faq-accordion summary::-webkit-details-marker {
+  display: none;
+}
+.blog-faq-accordion summary::after {
+  content: "+";
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  flex: 0 0 1.75rem;
+  border-radius: 50%;
+  background: var(--bg);
+  color: var(--ink);
+  font-size: 1.35rem;
+  font-weight: 400;
+  line-height: 1;
+}
+.blog-faq-accordion details[open] summary {
+  color: var(--ink);
+}
+.blog-faq-accordion details[open] summary::after {
+  content: "−";
+  background: var(--yellow);
+}
+.blog-faq-answer {
+  padding: 0 3rem 1rem 0.15rem;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.6;
+}
 .blog-content-image {
   display: grid;
   gap: 0.55rem;
