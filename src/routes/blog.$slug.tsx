@@ -49,6 +49,36 @@ const RELATED_BY_SLUG: Record<string, string[]> = {
   ],
 };
 
+const FAQ_BY_SLUG: Record<string, Array<{ question: string; answer: string }>> = {
+  "gastos-invisibles-del-hogar": [
+    {
+      question: "¿Qué son exactamente los gastos invisibles del hogar?",
+      answer:
+        "Son pagos pequeños, repetidos, automáticos o irregulares que no se identifican con claridad dentro del presupuesto. No siempre son innecesarios; se vuelven invisibles cuando no se revisan ni tienen una función reconocible.",
+    },
+    {
+      question: "¿Los gastos invisibles son lo mismo que los gastos hormiga?",
+      answer:
+        "No exactamente. Los gastos hormiga suelen referirse a pequeñas compras frecuentes. Los gastos invisibles incluyen también suscripciones, cuotas, comisiones, renovaciones y gastos irregulares que se olvidan al planificar.",
+    },
+    {
+      question: "¿Cada cuánto conviene revisar los gastos del hogar?",
+      answer:
+        "Una revisión breve mensual ayuda a detectar repeticiones y cambios. Además, conviene hacer una revisión más amplia cada pocos meses para localizar cuotas anuales, tarifas y gastos irregulares.",
+    },
+    {
+      question: "¿Hay que eliminar todos los gastos pequeños?",
+      answer:
+        "No. La finalidad es saber qué función cumple cada gasto y decidir con información. Un gasto pequeño puede ser válido si aporta valor y está contemplado en el presupuesto.",
+    },
+    {
+      question: "¿Cómo se revisan sin discutir?",
+      answer:
+        "Separando los hechos de las culpas: primero se mira qué ha ocurrido, después se decide qué merece atención y al final se elige un solo cambio.",
+    },
+  ],
+};
+
 function selectRelatedPosts(posts: BlogPostRow[], slug: string) {
   const preferred = RELATED_BY_SLUG[slug] ?? [];
   const preferredPosts = preferred
@@ -151,6 +181,25 @@ export const Route = createFileRoute("/blog/$slug")({
             ],
           }),
         },
+        ...(FAQ_BY_SLUG[params.slug]
+          ? [
+              {
+                type: "application/ld+json",
+                children: JSON.stringify({
+                  "@context": "https://schema.org",
+                  "@type": "FAQPage",
+                  mainEntity: FAQ_BY_SLUG[params.slug].map((faq) => ({
+                    "@type": "Question",
+                    name: faq.question,
+                    acceptedAnswer: {
+                      "@type": "Answer",
+                      text: faq.answer,
+                    },
+                  })),
+                }),
+              },
+            ]
+          : []),
       ],
     });
   },
