@@ -31,13 +31,16 @@ export function SiteHeader() {
           <img src={karmaLogo} alt="Karma Financiero" className="brand-logo" />
         </Link>
         <nav className="nav-links" aria-label="Principal">
-          <Link to="/" hash="features">Funciones</Link>
-          <Link to="/" hash="planes">Planes</Link>
-          <Link to="/" hash="planes">Precio</Link>
+          <Link to="/" hash="features">
+            Funciones
+          </Link>
+          <Link to="/" hash="planes">
+            Precios
+          </Link>
           <Link to="/blog">Blog</Link>
         </nav>
         <Link className="nav-cta" to="/lista-espera">
-          Probar gratis
+          Lista de espera
         </Link>
         <button
           ref={menuButtonRef}
@@ -56,12 +59,17 @@ export function SiteHeader() {
           aria-label="Principal móvil"
           inert={!menuOpen}
         >
-          <Link to="/" hash="features" onClick={closeMenu}>Funciones</Link>
-          <Link to="/" hash="planes" onClick={closeMenu}>Planes</Link>
-          <Link to="/" hash="planes" onClick={closeMenu}>Precio</Link>
-          <Link to="/blog" onClick={closeMenu}>Blog</Link>
+          <Link to="/" hash="features" onClick={closeMenu}>
+            Funciones
+          </Link>
+          <Link to="/" hash="planes" onClick={closeMenu}>
+            Precios
+          </Link>
+          <Link to="/blog" onClick={closeMenu}>
+            Blog
+          </Link>
           <Link className="nav-mobile-cta" to="/lista-espera" onClick={closeMenu}>
-            Probar gratis
+            Lista de espera
           </Link>
         </nav>
       </div>

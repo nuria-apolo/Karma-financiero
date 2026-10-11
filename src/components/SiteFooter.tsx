@@ -61,10 +61,7 @@ export function SiteFooter() {
               Funciones
             </Link>
             <Link to="/" hash="planes">
-              Planes
-            </Link>
-            <Link to="/" hash="planes">
-              Precio
+              Precios
             </Link>
             <Link to="/blog">Blog</Link>
             <Link to="/lista-espera">Lista de espera</Link>
